@@ -1,0 +1,85 @@
+/**
+ * Shared file between builds so that they can all use the same dependencies and
+ * maven repositories.
+ **/
+ext {
+    compileSdkVersion = 28
+    minSdkVersion = 21
+    targetSdkVersion = 28
+    versionCode = 1
+    versionName = "1.0"
+}
+
+ext.deps = [:]
+def versions = [:]
+versions.android_gradle_plugin = "3.1.3"
+versions.support = "28.0.0-alpha3"
+versions.room = "1.1.1"
+versions.kotlin = "1.2.50"
+versions.constraint_layout = "1.1.2"
+versions.junit = "4.12"
+versions.atsl_runner = "1.0.2"
+versions.espresso = "3.0.2"
+versions.rxandroid = "2.1.0"
+versions.rxjava2 = "2.2.2"
+versions.rxkotlin = "2.2.0"
+versions.stetho = "1.5.0"
+versions.lifecycle = "1.1.1"
+
+def deps = [:]
+
+deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
+
+def support = [:]
+support.app_compat = "com.android.support:appcompat-v7:$versions.support"
+support.design = "com.android.support:design:$versions.support"
+deps.support = support
+
+deps.constraint_layout = "com.android.support.constraint:constraint-layout:$versions.constraint_layout"
+
+def room = [:]
+room.runtime = "android.arch.persistence.room:runtime:$versions.room"
+room.compiler = "android.arch.persistence.room:compiler:$versions.room"
+//room.rxjava2 = "android.arch.persistence.room:rxjava2:$versions.room"
+//room.testing = "android.arch.persistence.room:testing:$versions.room"
+deps.room = room
+
+def kotlin = [:]
+kotlin.stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+kotlin.test = "org.jetbrains.kotlin:kotlin-test-junit:$versions.kotlin"
+kotlin.plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+kotlin.allopen = "org.jetbrains.kotlin:kotlin-allopen:$versions.kotlin"
+deps.kotlin = kotlin
+
+def rxjava = [:]
+rxjava.rxandroid = "io.reactivex.rxjava2:rxandroid:$versions.rxandroid"
+rxjava.rxjava2 = "io.reactivex.rxjava2:rxjava:$versions.rxjava2"
+rxjava.rxkotlin = "io.reactivex.rxjava2:rxkotlin:$versions.rxkotlin"
+deps.rxjava = rxjava
+
+def lifecycle = [:]
+lifecycle.runtime = "android.arch.lifecycle:runtime:$versions.lifecycle"
+lifecycle.extensions = "android.arch.lifecycle:extensions:$versions.lifecycle"
+lifecycle.compiler = "android.arch.lifecycle:compiler:$versions.lifecycle"
+lifecycle.livedata = "android.arch.lifecycle:livedata:$versions.lifecycle"
+deps.lifecycle = lifecycle
+
+deps.stetho = "com.facebook.stetho:stetho:$versions.stetho"
+
+deps.junit = "junit:junit:$versions.junit"
+
+def atsl = [:]
+atsl.runner = "com.android.support.test:runner:$versions.atsl_runner"
+deps.atsl = atsl
+
+def espresso = [:]
+espresso.core = "com.android.support.test.espresso:espresso-core:$versions.espresso"
+deps.espresso = espresso
+
+ext.deps = deps
+
+def addRepos(RepositoryHandler handler) {
+    handler.google()
+    handler.jcenter()
+}
+ext.addRepos = this.&addRepos
