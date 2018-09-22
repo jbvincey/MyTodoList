@@ -25,6 +25,7 @@ versions.rxjava2 = "2.2.2"
 versions.rxkotlin = "2.2.0"
 versions.stetho = "1.5.0"
 versions.lifecycle = "1.1.1"
+versions.koin = "1.0.0"
 
 def deps = [:]
 
@@ -63,6 +64,15 @@ lifecycle.extensions = "android.arch.lifecycle:extensions:$versions.lifecycle"
 lifecycle.compiler = "android.arch.lifecycle:compiler:$versions.lifecycle"
 lifecycle.livedata = "android.arch.lifecycle:livedata:$versions.lifecycle"
 deps.lifecycle = lifecycle
+
+def koin = [:]
+koin.kotlin = "org.koin:koin-core:$versions.koin"
+koin.ext = "org.koin:koin-core-ext:$versions.koin"
+koin.test = "org.koin:koin-test:$versions.koin"
+koin.android = "org.koin:koin-android:$versions.koin"
+koin.androidscope = "org.koin:koin-android-scope:$versions.koin"
+koin.viewmodel = "org.koin:koin-android-viewmodel:$versions.koin"
+deps.koin = koin
 
 deps.stetho = "com.facebook.stetho:stetho:$versions.stetho"
 

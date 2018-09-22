@@ -1,24 +1,28 @@
-package com.jbvincey.mytodolist
+package com.jbvincey.mytodolist.features.todolist
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.jbvincey.mytodolist.R
+import com.jbvincey.mytodolist.models.Todo
 
 import kotlinx.android.synthetic.main.activity_todo_list.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class TodoListActivity : AppCompatActivity() {
+
+    private val viewModel: TodoListViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_todo_list)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+        val todolist: LiveData<List<Todo>> = viewModel.todoList
+        todolist.observe(this, Observer {  })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

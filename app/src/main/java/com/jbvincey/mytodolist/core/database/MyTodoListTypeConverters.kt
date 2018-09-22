@@ -1,4 +1,4 @@
-package com.jbvincey.mytodolist.database
+package com.jbvincey.mytodolist.core.database
 
 import android.arch.persistence.room.TypeConverter
 import java.util.Date

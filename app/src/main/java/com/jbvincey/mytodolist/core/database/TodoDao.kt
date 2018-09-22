@@ -1,4 +1,4 @@
-package com.jbvincey.mytodolist.database
+package com.jbvincey.mytodolist.core.database
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
