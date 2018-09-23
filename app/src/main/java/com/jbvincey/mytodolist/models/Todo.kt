@@ -14,5 +14,6 @@ data class Todo(
         val name: String,
         val completed: Boolean,
         val creationDate: Date,
-        val completionDate: Date
+        val completionDate: Date,
+        val archived: Boolean
 )
