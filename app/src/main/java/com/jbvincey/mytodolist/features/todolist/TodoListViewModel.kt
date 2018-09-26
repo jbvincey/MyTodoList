@@ -8,7 +8,7 @@ import com.jbvincey.mytodolist.models.Todo
 /**
  * Created by jbvincey on 19/09/2018.
  */
-class TodoListViewModel(private val todoRepository: TodoRepository): ViewModel() {
+class TodoListViewModel(todoRepository: TodoRepository): ViewModel() {
 
         val todoList: LiveData<List<Todo>> = todoRepository.getAllTodos()
 

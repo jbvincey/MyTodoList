@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">My Todo List</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Add to do -->
+    <string name="add_todo_hint">Task name</string>
+    <string name="action_add_todo">Add todo</string>
+
 </resources>

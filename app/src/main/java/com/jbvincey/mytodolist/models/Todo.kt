@@ -1,6 +1,7 @@
 package com.jbvincey.mytodolist.models
 
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
@@ -14,6 +15,10 @@ data class Todo(
         val name: String,
         val completed: Boolean,
         val creationDate: Date,
-        val completionDate: Date,
+        val completionDate: Date?,
         val archived: Boolean
-)
+) {
+    @Ignore
+    constructor(name: String) : this(0, name, false, Date(), null, false)
+
+}
