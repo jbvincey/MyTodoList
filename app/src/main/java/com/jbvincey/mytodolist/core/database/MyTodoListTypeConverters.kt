@@ -8,10 +8,14 @@ import java.util.Date
  */
 class MyTodoListTypeConverters {
 
-    @TypeConverter
-    fun toDate(date: Date): Long = date.time
+    companion object {
+        private const val DATE_LONG_NULL = -1L
+    }
 
     @TypeConverter
-    fun fromDate(dateLong: Long) = Date(dateLong)
+    fun toDate(date: Date?): Long = date?.time ?: DATE_LONG_NULL
+
+    @TypeConverter
+    fun fromDate(dateLong: Long) = if (dateLong != DATE_LONG_NULL) Date(dateLong) else null
 
 }
