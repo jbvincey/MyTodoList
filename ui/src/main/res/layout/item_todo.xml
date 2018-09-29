@@ -6,7 +6,7 @@
 
         <variable
             name="item"
-            type="com.jbvincey.mytodolist.core.models.Todo" />
+            type="com.jbvincey.ui.recycler.cells.todo.TodoViewModel" />
 
     </data>
 

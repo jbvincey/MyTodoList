@@ -3,7 +3,7 @@ package com.jbvincey.mytodolist.core.database
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
-import com.jbvincey.mytodolist.models.Todo
+import com.jbvincey.mytodolist.core.models.Todo
 
 /**
  * Created by jbvincey on 16/09/2018.

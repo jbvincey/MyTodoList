@@ -7,14 +7,14 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.jbvincey.mytodolist.R
 import com.jbvincey.mytodolist.features.addtodo.AddTodoActivity
-import com.jbvincey.mytodolist.ui.adapter.TodoListAdapter
+import com.jbvincey.ui.recycler.cells.todo.TodoListAdapter
 
 import kotlinx.android.synthetic.main.activity_todo_list.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class TodoListActivity : AppCompatActivity() {
 
-    private val viewModel: TodoListViewModel by viewModel()
+    private val viewModel: TodoListArchViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +29,7 @@ class TodoListActivity : AppCompatActivity() {
 
         val adapter = TodoListAdapter()
         todoRecyclerView.adapter = adapter
-        viewModel.todoList.observe(this, Observer {
+        viewModel.todoViewModelList.observe(this, Observer {
             it?.let(adapter::submitList)
         })
 

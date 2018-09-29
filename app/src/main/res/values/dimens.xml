@@ -1,11 +1,3 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-
-    <!-- Lists -->
-    <dimen name="list_margn_horizontal">16dp</dimen>
-
-    <!-- Texts -->
-    <dimen name="item_todo_title_fontSize">24sp</dimen>
-    <dimen name="item_todo_title_marginEnd">8dp</dimen>
-
 </resources>

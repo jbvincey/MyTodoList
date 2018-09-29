@@ -13,7 +13,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
  */
 class AddTodoActivity : AppCompatActivity() {
 
-    private val viewModel: AddTodoViewModel by viewModel()
+    private val viewModel: AddTodoArchViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

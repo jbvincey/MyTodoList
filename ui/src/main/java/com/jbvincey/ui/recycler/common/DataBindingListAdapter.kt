@@ -1,4 +1,4 @@
-package com.jbvincey.mytodolist.ui.adapter
+package com.jbvincey.ui.recycler.common
 
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding

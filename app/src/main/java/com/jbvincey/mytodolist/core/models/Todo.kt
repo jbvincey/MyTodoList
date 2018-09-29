@@ -1,4 +1,4 @@
-package com.jbvincey.mytodolist.models
+package com.jbvincey.mytodolist.core.models
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore

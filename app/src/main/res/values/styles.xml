@@ -17,17 +17,4 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-
-    <!-- Items -->
-    <style name="Item" />
-
-    <style name="Item.Todo" />
-
-    <style name="Item.Todo.Title">
-        <item name="android:textSize">@dimen/item_todo_title_fontSize</item>
-        <item name="android:textColor">@color/item_todo_title</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
 </resources>

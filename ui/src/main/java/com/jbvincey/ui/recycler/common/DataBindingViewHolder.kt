@@ -1,11 +1,11 @@
-package com.jbvincey.mytodolist.ui.adapter
+package com.jbvincey.ui.recycler.common
 
 import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView
-import com.jbvincey.mytodolist.BR
+import com.jbvincey.ui.BR
 
 /**
- * Created by jbvincey on 22/09/2018.
+ * Created by jbvincey on 26/09/2018.
  */
 class DataBindingViewHolder<T>(private val binding: ViewDataBinding)
     : RecyclerView.ViewHolder(binding.root) {
