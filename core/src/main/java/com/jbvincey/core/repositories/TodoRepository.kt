@@ -1,8 +1,8 @@
-package com.jbvincey.mytodolist.core.repositories
+package com.jbvincey.core.repositories
 
 import android.arch.lifecycle.LiveData
-import com.jbvincey.mytodolist.core.database.TodoDao
-import com.jbvincey.mytodolist.core.models.Todo
+import com.jbvincey.core.database.TodoDao
+import com.jbvincey.core.models.Todo
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 

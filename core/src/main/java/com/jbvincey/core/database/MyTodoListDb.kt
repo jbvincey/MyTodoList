@@ -1,9 +1,9 @@
-package com.jbvincey.mytodolist.core.database
+package com.jbvincey.core.database
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
-import com.jbvincey.mytodolist.core.models.Todo
+import com.jbvincey.core.models.Todo
 
 /**
  * Created by jbvincey on 16/09/2018.

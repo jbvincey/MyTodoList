@@ -1,7 +1,7 @@
 package com.jbvincey.mytodolist.features.todolist
 
-import com.jbvincey.mytodolist.core.transformers.Transformer
-import com.jbvincey.mytodolist.core.models.Todo
+import com.jbvincey.core.models.Todo
+import com.jbvincey.core.transformers.Transformer
 import com.jbvincey.ui.recycler.cells.todo.TodoViewModel
 
 /**

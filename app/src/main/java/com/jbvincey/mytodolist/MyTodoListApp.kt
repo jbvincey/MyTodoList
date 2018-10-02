@@ -2,6 +2,7 @@ package com.jbvincey.mytodolist
 
 import android.app.Application
 import com.facebook.stetho.Stetho
+import com.jbvincey.core.dependencies.coreModule
 import com.jbvincey.mytodolist.dependencies.appModule
 import org.koin.android.ext.android.startKoin
 
@@ -13,7 +14,7 @@ class MyTodoListApp: Application() {
     override fun onCreate() {
         super.onCreate()
 
-        startKoin(this, listOf(appModule))
+        startKoin(this, listOf(appModule, coreModule))
         Stetho.initializeWithDefaults(this)
     }
 

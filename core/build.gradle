@@ -1,42 +1,50 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
+
     defaultConfig {
-        applicationId "com.sample.mytodolist"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.versionCode
         versionName rootProject.versionName
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding {
-        enabled = true
-    }
+
 }
 
 dependencies {
-    //implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation deps.kotlin.stdlib
-    implementation deps.support.app_compat
-    implementation deps.support.design
-    implementation deps.constraint_layout
-    implementation deps.stetho
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation project(":ui")
-    implementation project(":core")
+    api deps.support.app_compat
+    implementation deps.room.runtime
+    api deps.lifecycle.runtime
+    api deps.lifecycle.extensions
+    api deps.lifecycle.livedata
+    api deps.rxjava.rxandroid
+    api deps.rxjava.rxjava2
+    api deps.rxjava.rxkotlin
+    api deps.koin.kotlin
+    api deps.koin.ext
+    api deps.koin.android
+    api deps.koin.androidscope
+    api deps.koin.viewmodel
+
+    kapt deps.room.compiler
 
     testImplementation deps.junit
-    testImplementation deps.koin.test
     androidTestImplementation deps.atsl.runner
     androidTestImplementation deps.espresso.core
 }

@@ -1,8 +1,8 @@
-package com.jbvincey.mytodolist.core.database
+package com.jbvincey.core.database
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
-import com.jbvincey.mytodolist.core.models.Todo
+import com.jbvincey.core.models.Todo
 
 /**
  * Created by jbvincey on 16/09/2018.

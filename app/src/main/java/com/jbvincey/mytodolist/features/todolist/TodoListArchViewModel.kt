@@ -3,8 +3,8 @@ package com.jbvincey.mytodolist.features.todolist
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import com.jbvincey.mytodolist.core.repositories.TodoRepository
-import com.jbvincey.mytodolist.core.models.Todo
+import com.jbvincey.core.models.Todo
+import com.jbvincey.core.repositories.TodoRepository
 import com.jbvincey.ui.recycler.cells.todo.TodoViewModel
 
 /**
