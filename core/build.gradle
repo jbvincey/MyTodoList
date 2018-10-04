@@ -28,22 +28,31 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    // appcompat
     api deps.support.app_compat
-    implementation deps.room.runtime
+
+    // lifecycle
     api deps.lifecycle.runtime
     api deps.lifecycle.extensions
     api deps.lifecycle.livedata
+
+    // rxjava
     api deps.rxjava.rxandroid
     api deps.rxjava.rxjava2
     api deps.rxjava.rxkotlin
+
+    // koin
     api deps.koin.kotlin
     api deps.koin.ext
     api deps.koin.android
     api deps.koin.androidscope
     api deps.koin.viewmodel
 
+    // room
+    implementation deps.room.runtime
     kapt deps.room.compiler
 
+    // tests
     testImplementation deps.junit
     androidTestImplementation deps.atsl.runner
     androidTestImplementation deps.espresso.core

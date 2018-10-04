@@ -31,10 +31,12 @@ android {
 dependencies {
     //implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation deps.support.app_compat
-    implementation deps.support.design
-    implementation deps.constraint_layout
+    // app compat and design
+    api deps.support.app_compat
+    api deps.support.design
+    api deps.constraint_layout
 
+    // tests
     testImplementation deps.junit
     androidTestImplementation deps.atsl.runner
     androidTestImplementation deps.espresso.core
