@@ -2,8 +2,6 @@ package com.jbvincey.core.dependencies
 
 import android.arch.persistence.room.Room
 import com.jbvincey.core.database.MyTodoListDb
-import com.jbvincey.core.navigation.NavigationHandler
-import com.jbvincey.core.navigation.NavigationHandlerImpl
 import com.jbvincey.core.repositories.TodoRepository
 import com.jbvincey.core.repositories.TodoRepositoryImpl
 import org.koin.android.ext.koin.androidContext
@@ -24,7 +22,5 @@ val coreModule = module {
     }
 
     single { get<MyTodoListDb>().getTodoDao() }
-
-    factory { NavigationHandlerImpl() as NavigationHandler }
 
 }

@@ -4,7 +4,7 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import com.jbvincey.core.navigation.NavigationHandler
+import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.ui.recycler.cells.todo.TodoListAdapter
 
 import kotlinx.android.synthetic.main.activity_todo_list.*

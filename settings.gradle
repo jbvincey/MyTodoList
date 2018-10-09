@@ -1,1 +1,1 @@
-include ':app', ':ui', ':core', ':featuretodolist', ':featureaddtodo'
+include ':app', ':ui', ':core', ':featuretodolist', ':featureaddtodo', ':navigation'

@@ -1,15 +1,14 @@
-package com.jbvincey.core.navigation
+package com.jbvincey.navigation
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.support.annotation.StringRes
-import com.jbvincey.core.R
 
 /**
  * Created by jbvincey on 08/10/2018.
  */
-class NavigationHandlerImpl(): NavigationHandler {
+class NavigationHandlerImpl: NavigationHandler {
 
     override fun buildTodoListIntent(context: Context): Intent {
         return buildBaseIntent(R.string.feature_path_todolist, context)

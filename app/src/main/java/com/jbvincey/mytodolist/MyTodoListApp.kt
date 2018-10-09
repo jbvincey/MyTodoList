@@ -4,6 +4,7 @@ import android.app.Application
 import com.facebook.stetho.Stetho
 import com.jbvincey.core.dependencies.coreModule
 import com.jbvincey.featureaddtodo.featureAddTodoModule
+import com.jbvincey.navigation.navigationModule
 import com.jbvincey.todolist.featureTodoListModule
 import org.koin.android.ext.android.startKoin
 
@@ -17,6 +18,7 @@ class MyTodoListApp: Application() {
 
         startKoin(this, listOf(
                 coreModule,
+                navigationModule,
                 featureTodoListModule,
                 featureAddTodoModule
         ))

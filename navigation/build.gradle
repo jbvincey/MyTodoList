@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -28,10 +27,14 @@ android {
 dependencies {
     //implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    // internal modules
-    api project(":ui")
-    api project(":core")
-    api project(":navigation")
+    // app compat
+    api deps.support.app_compat
+
+    // koin
+    implementation deps.koin.kotlin
+    implementation deps.koin.ext
+    implementation deps.koin.android
+    implementation deps.koin.androidscope
 
     // tests
     testImplementation deps.junit

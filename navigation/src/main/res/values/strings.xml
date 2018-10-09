@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="app_name">Navigation</string>
+
+    <!-- navigation -->
+    <string name="app_scheme">mytodolist</string>
+    <string name="app_host">mytodolist.jbvincey.com</string>
+
+    <!-- features -->
+    <string name="feature_path_todolist">/todolist</string>
+    <string name="feature_path_addtodo">/addtodo</string>
+
+</resources>

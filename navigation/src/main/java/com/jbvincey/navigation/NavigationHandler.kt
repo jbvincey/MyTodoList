@@ -1,4 +1,4 @@
-package com.jbvincey.core.navigation
+package com.jbvincey.navigation
 
 import android.content.Context
 import android.content.Intent
