@@ -1,3 +1,7 @@
 <resources>
     <string name="action_settings">Settings</string>
+
+    <!-- navigation -->
+    <string name="feature_path_todolist">/todolist</string>
+
 </resources>

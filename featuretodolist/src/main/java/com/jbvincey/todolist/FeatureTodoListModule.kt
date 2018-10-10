@@ -1,5 +1,6 @@
 package com.jbvincey.todolist
 
+import com.jbvincey.navigation.TodoListNavigationHandler
 import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 
@@ -11,5 +12,7 @@ val featureTodoListModule = module {
     viewModel { TodoListArchViewModel(get(), get()) }
 
     factory { TodoViewModelTransformer() }
+
+    factory { TodoListNavigationHandlerImpl() as TodoListNavigationHandler }
 
 }

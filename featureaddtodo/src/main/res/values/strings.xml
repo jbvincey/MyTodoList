@@ -1,5 +1,9 @@
 <resources>
-    <!-- Add to do -->
+
     <string name="add_todo_hint">Task name</string>
     <string name="action_add_todo">Add todo</string>
+
+    <!-- navigation -->
+    <string name="feature_path_addtodo">/addtodo</string>
+
 </resources>
