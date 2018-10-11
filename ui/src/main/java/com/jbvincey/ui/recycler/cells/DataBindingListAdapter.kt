@@ -1,4 +1,4 @@
-package com.jbvincey.ui.recycler.common
+package com.jbvincey.ui.recycler.cells
 
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding

@@ -2,15 +2,15 @@ package com.jbvincey.todolist
 
 import com.jbvincey.core.models.Todo
 import com.jbvincey.core.transformers.Transformer
-import com.jbvincey.ui.recycler.cells.todo.TodoViewModel
+import com.jbvincey.ui.recycler.cells.CheckableCellViewModel
 
 /**
  * Created by jbvincey on 28/09/2018.
  */
-class TodoViewModelTransformer: Transformer<Todo, TodoViewModel> {
+class TodoTransformer: Transformer<Todo, CheckableCellViewModel> {
 
-    override fun transform(source: Todo): TodoViewModel {
-        return TodoViewModel(
+    override fun transform(source: Todo): CheckableCellViewModel {
+        return CheckableCellViewModel(
                 source.id,
                 source.name,
                 source.completed,

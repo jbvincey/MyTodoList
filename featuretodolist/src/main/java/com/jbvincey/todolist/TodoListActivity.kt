@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.jbvincey.navigation.NavigationHandler
-import com.jbvincey.ui.recycler.cells.todo.TodoListAdapter
+import com.jbvincey.ui.recycler.cells.CheckableCellAdapter
 
 import kotlinx.android.synthetic.main.activity_todo_list.*
 import org.koin.android.ext.android.inject
@@ -28,9 +28,9 @@ class TodoListActivity : AppCompatActivity() {
 
         todoRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        val adapter = TodoListAdapter()
+        val adapter = CheckableCellAdapter()
         todoRecyclerView.adapter = adapter
-        viewModel.todoViewModelList.observe(this, Observer {
+        viewModel.checkableCellViewModelList.observe(this, Observer {
             it?.let(adapter::submitList)
         })
     }

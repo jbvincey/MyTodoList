@@ -6,7 +6,7 @@
 
         <variable
             name="item"
-            type="com.jbvincey.ui.recycler.cells.todo.TodoViewModel" />
+            type="com.jbvincey.ui.recycler.cells.CheckableCellViewModel" />
 
     </data>
 
