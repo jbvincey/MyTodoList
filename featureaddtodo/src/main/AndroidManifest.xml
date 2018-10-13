@@ -3,7 +3,9 @@
 
     <application>
 
-        <activity android:name="com.jbvincey.featureaddtodo.AddTodoActivity">
+        <activity
+            android:name="com.jbvincey.featureaddtodo.AddTodoActivity"
+            android:windowSoftInputMode="stateVisible" >
 
             <!-- navigation deeplink -->
             <intent-filter>

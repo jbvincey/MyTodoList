@@ -12,9 +12,12 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/list_margn_horizontal"
-        android:paddingEnd="@dimen/list_margn_horizontal">
+        android:layout_height="@dimen/item_checkable_cell_height"
+        android:paddingStart="@dimen/list_margin_horizontal"
+        android:paddingEnd="@dimen/list_margin_horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/item_todo_title"
@@ -22,7 +25,7 @@
             android:layout_height="wrap_content"
             android:text="@{item.name}"
             android:enabled="@{!item.completed}"
-            android:layout_marginEnd="@dimen/item_todo_title_marginEnd"
+            android:layout_marginEnd="@dimen/item_checkable_cell_title_marginEnd"
             style="@style/Item.Todo.Title"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

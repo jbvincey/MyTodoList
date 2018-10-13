@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.inputmethod.EditorInfo
 import kotlinx.android.synthetic.main.activity_add_todo.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -18,6 +19,26 @@ class AddTodoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_todo)
         setSupportActionBar(toolbar)
+
+        initView()
+    }
+
+    fun initView() {
+        addTodoEditText.setOnEditorActionListener { v, actionId, even ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_GO -> {
+                    saveTodoAndFinish()
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    fun saveTodoAndFinish() {
+        //todo refact + use validator
+        viewModel.addTodo(addTodoEditText.text.toString())
+        finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -32,8 +53,7 @@ class AddTodoActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_add_todo -> {
-                viewModel.addTodo(addTodoEditText.text.toString())
-                finish()
+                saveTodoAndFinish()
                 true
             }
             else -> super.onOptionsItemSelected(item)

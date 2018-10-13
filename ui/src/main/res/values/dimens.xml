@@ -2,10 +2,11 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <!-- Lists -->
-    <dimen name="list_margn_horizontal">16dp</dimen>
+    <dimen name="list_margin_horizontal">16dp</dimen>
 
-    <!-- Texts -->
-    <dimen name="item_todo_title_fontSize">24sp</dimen>
-    <dimen name="item_todo_title_marginEnd">8dp</dimen>
+    <!-- Checkable cells -->
+    <dimen name="item_checkable_cell_height">48dp</dimen>
+    <dimen name="item_checkable_cell_title_fontSize">20sp</dimen>
+    <dimen name="item_checkable_cell_title_marginEnd">8dp</dimen>
 
 </resources>
