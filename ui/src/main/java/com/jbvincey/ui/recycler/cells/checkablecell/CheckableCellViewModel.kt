@@ -1,4 +1,4 @@
-package com.jbvincey.ui.recycler.cells
+package com.jbvincey.ui.recycler.cells.checkablecell
 
 import java.util.*
 

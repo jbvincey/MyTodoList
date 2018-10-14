@@ -1,7 +1,8 @@
-package com.jbvincey.ui.recycler.cells
+package com.jbvincey.ui.recycler.cells.checkablecell
 
 import android.support.v7.util.DiffUtil
 import com.jbvincey.ui.R
+import com.jbvincey.ui.recycler.cells.DataBindingListAdapter
 
 /**
  * Created by jbvincey on 22/09/2018.

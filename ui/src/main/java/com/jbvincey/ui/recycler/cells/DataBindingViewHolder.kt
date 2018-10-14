@@ -7,11 +7,11 @@ import com.jbvincey.ui.BR
 /**
  * Created by jbvincey on 26/09/2018.
  */
-class DataBindingViewHolder<T>(private val binding: ViewDataBinding)
+class DataBindingViewHolder<ViewModel>(private val binding: ViewDataBinding)
     : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: T) {
-        binding.setVariable(BR.item, item)
+    fun bind(viewModel: ViewModel) {
+        binding.setVariable(BR.viewModel, viewModel)
         binding.executePendingBindings()
     }
 

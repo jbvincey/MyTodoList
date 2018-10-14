@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel" />
+
+    </data>
+
+    <merge
+        tools:layout_width="match_parent"
+        tools:layout_height="@dimen/cell_checkable_height"
+        tools:parentTag="android.support.constraint.ConstraintLayout">
+
+        <TextView
+            android:id="@+id/cell_checkable_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.name}"
+            android:enabled="@{!viewModel.completed}"
+            android:layout_marginEnd="@dimen/cell_checkable_title_marginEnd"
+            style="@style/Cell.Checkable.Title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cell_checkable_checkbox" />
+
+        <CheckBox
+            android:id="@+id/cell_checkable_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="@{viewModel.completed}"
+            app:layout_constraintTop_toTopOf="@+id/cell_checkable_title"
+            app:layout_constraintBottom_toBottomOf="@+id/cell_checkable_title"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </merge>
+</layout>

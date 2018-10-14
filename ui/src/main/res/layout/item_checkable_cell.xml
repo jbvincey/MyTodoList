@@ -1,45 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
-            name="item"
-            type="com.jbvincey.ui.recycler.cells.CheckableCellViewModel" />
+            name="viewModel"
+            type="com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel" />
 
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_checkable_cell_height"
-        android:paddingStart="@dimen/list_margin_horizontal"
-        android:paddingEnd="@dimen/list_margin_horizontal"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?android:attr/selectableItemBackground">
+        android:layout_height="@dimen/cell_checkable_height"
+        bind:viewModel="@{viewModel}" />
 
-        <TextView
-            android:id="@+id/item_todo_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{item.name}"
-            android:enabled="@{!item.completed}"
-            android:layout_marginEnd="@dimen/item_checkable_cell_title_marginEnd"
-            style="@style/Item.Todo.Title"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/item_todo_checkbox" />
-
-        <CheckBox
-            android:id="@+id/item_todo_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="@{item.completed}"
-            app:layout_constraintTop_toTopOf="@+id/item_todo_title"
-            app:layout_constraintBottom_toBottomOf="@+id/item_todo_title"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-    </android.support.constraint.ConstraintLayout>
 </layout>

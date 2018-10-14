@@ -5,8 +5,8 @@
     <dimen name="list_margin_horizontal">16dp</dimen>
 
     <!-- Checkable cells -->
-    <dimen name="item_checkable_cell_height">48dp</dimen>
-    <dimen name="item_checkable_cell_title_fontSize">20sp</dimen>
-    <dimen name="item_checkable_cell_title_marginEnd">8dp</dimen>
+    <dimen name="cell_checkable_height">48dp</dimen>
+    <dimen name="cell_checkable_title_fontSize">20sp</dimen>
+    <dimen name="cell_checkable_title_marginEnd">8dp</dimen>
 
 </resources>

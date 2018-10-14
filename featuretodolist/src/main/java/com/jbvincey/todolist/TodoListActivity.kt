@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.jbvincey.navigation.NavigationHandler
-import com.jbvincey.ui.recycler.cells.CheckableCellAdapter
+import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellAdapter
 
 import kotlinx.android.synthetic.main.activity_todo_list.*
 import org.koin.android.ext.android.inject

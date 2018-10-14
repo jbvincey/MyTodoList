@@ -27,13 +27,13 @@
 
 
     <!-- Items -->
-    <style name="Item" />
+    <style name="Cell" />
 
-    <style name="Item.Todo" />
+    <style name="Cell.Checkable" />
 
-    <style name="Item.Todo.Title">
-        <item name="android:textSize">@dimen/item_checkable_cell_title_fontSize</item>
-        <item name="android:textColor">@color/item_todo_title</item>
+    <style name="Cell.Checkable.Title">
+        <item name="android:textSize">@dimen/cell_checkable_title_fontSize</item>
+        <item name="android:textColor">@color/cell_checkable_title</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
