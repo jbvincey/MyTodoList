@@ -1,6 +1,8 @@
 package com.jbvincey.featureaddtodo
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -20,14 +22,17 @@ class AddTodoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_todo)
         setSupportActionBar(toolbar)
 
-        initView()
+        initEditText()
+        observeAddTodoState()
     }
 
-    fun initView() {
-        addTodoEditText.setOnEditorActionListener { v, actionId, even ->
+    //region view setup
+
+    private fun initEditText() {
+        addTodoEditText.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_GO -> {
-                    saveTodoAndFinish()
+                    saveTodo()
                     true
                 }
                 else -> false
@@ -35,12 +40,37 @@ class AddTodoActivity : AppCompatActivity() {
         }
     }
 
-    fun saveTodoAndFinish() {
-        //todo refact + use validator
+    //endregion
+
+    //region addtodo
+
+    private fun observeAddTodoState() {
+        viewModel.addTodoState.observe(this, Observer { state ->
+
+            when(state) {
+
+                AddTodoArchViewModel.AddTodoState.SUCCESS -> finish()
+
+                AddTodoArchViewModel.AddTodoState.ERROR -> displayAddTodoErrorSnack()
+            }
+        })
+    }
+
+    private fun displayAddTodoErrorSnack() {
+        Snackbar.make(findViewById(R.id.addTodoRoot), R.string.add_todo_error, Snackbar.LENGTH_LONG)
+                .setAction(R.string.add_todo_retry) { saveTodo() }
+                .show()
+    }
+
+    private fun saveTodo() {
+        //todo use validator
         viewModel.addTodo(addTodoEditText.text.toString())
         finish()
     }
 
+    //endregion
+
+    //region menu
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_add_todo, menu)
@@ -53,10 +83,13 @@ class AddTodoActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_add_todo -> {
-                saveTodoAndFinish()
+                saveTodo()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    //endregion
+
 }

@@ -15,7 +15,9 @@ interface TodoRepository {
 
     fun getTodoById(id: Long): LiveData<Todo>
 
-    fun addTodo(todoName: String)
+    fun addTodo(todoName: String): Completable
+
+    fun changeTodoCompleted(id: Long): Completable
 
 }
 
@@ -25,10 +27,14 @@ class TodoRepositoryImpl(private val todoDao: TodoDao): TodoRepository {
 
     override fun getTodoById(id: Long): LiveData<Todo> = todoDao.getTodoById(id)
 
-    override fun addTodo(todoName: String) {
-        Completable.create {
-            todoDao.insertTodo(Todo(todoName))
-        }.subscribeOn(Schedulers.io()).subscribe()
+    override fun addTodo(todoName: String): Completable {
+        return Completable.create { todoDao.insertTodo(Todo(todoName)) }
+                .subscribeOn(Schedulers.io())
+    }
+
+    override fun changeTodoCompleted(id: Long): Completable {
+        return Completable.create { todoDao.changeTodoCompleted(id) }
+                .subscribeOn(Schedulers.io())
     }
 
 }

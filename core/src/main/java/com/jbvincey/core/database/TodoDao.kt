@@ -22,4 +22,7 @@ interface TodoDao {
     @Query("SELECT * FROM todos WHERE id = :id")
     fun getTodoById(id: Long): LiveData<Todo>
 
+    @Query("UPDATE todos Set completed = NOT completed WHERE id = :id")
+    fun changeTodoCompleted(id: Long)
+
 }

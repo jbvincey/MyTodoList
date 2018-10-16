@@ -22,10 +22,21 @@ class TodoListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_todo_list)
         setSupportActionBar(toolbar)
 
+        initView()
+    }
+
+    private fun initView() {
+        initFabButton()
+        initRecycler()
+    }
+
+    private fun initFabButton() {
         fabButton.setOnClickListener {
             startActivity(navigationHandler.buildAddTodoIntent(this))
         }
+    }
 
+    private fun initRecycler() {
         todoRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         val adapter = CheckableCellAdapter()

@@ -11,5 +11,6 @@ data class CheckableCellViewModel(
         val completed: Boolean,
         val creationDate: Date,
         val completionDate: Date?,
-        val archived: Boolean
+        val archived: Boolean,
+        val callback: CheckableCellCallback
 )
