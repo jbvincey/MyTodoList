@@ -6,12 +6,20 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellAdapter
+import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel
+import io.reactivex.Completable
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 import kotlinx.android.synthetic.main.activity_todo_list.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 class TodoListActivity : AppCompatActivity() {
+
+    companion object {
+        const val CHECKABLE_CELL_UPDATE_DELAY = 150L
+    }
 
     private val viewModel: TodoListArchViewModel by viewModel()
 
@@ -42,8 +50,16 @@ class TodoListActivity : AppCompatActivity() {
         val adapter = CheckableCellAdapter()
         todoRecyclerView.adapter = adapter
         viewModel.checkableCellViewModelList.observe(this, Observer {
-            it?.let(adapter::submitList)
+            updateCheckableCellListWithDelay(it, adapter)
         })
+    }
+
+    private fun updateCheckableCellListWithDelay(checkableCellList: List<CheckableCellViewModel>?,
+                                                 adapter: CheckableCellAdapter) {
+
+        Completable.timer(CHECKABLE_CELL_UPDATE_DELAY, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { checkableCellList?.let(adapter::submitList) }
     }
 
 }
