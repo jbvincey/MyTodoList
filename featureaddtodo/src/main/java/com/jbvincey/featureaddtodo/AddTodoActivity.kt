@@ -20,13 +20,24 @@ class AddTodoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_todo)
-        setSupportActionBar(toolbar)
 
-        initEditText()
-        observeAddTodoState()
+        initView()
     }
 
     //region view setup
+
+    private fun initView() {
+        initToolbar()
+        initEditText()
+
+        observeAddTodoState()
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(toolbar)
+        toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24px)
+        toolbar.setNavigationOnClickListener { finish() }
+    }
 
     private fun initEditText() {
         addTodoEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -71,6 +82,7 @@ class AddTodoActivity : AppCompatActivity() {
     //endregion
 
     //region menu
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_add_todo, menu)
