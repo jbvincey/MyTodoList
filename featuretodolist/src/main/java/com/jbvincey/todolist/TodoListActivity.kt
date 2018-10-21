@@ -28,16 +28,20 @@ class TodoListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_todo_list)
-        setSupportActionBar(toolbar)
 
         initView()
     }
 
     private fun initView() {
+        initToolbar()
         initFabButton()
         initRecycler()
     }
 
+    private fun initToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
     private fun initFabButton() {
         fabButton.setOnClickListener {
             startActivity(navigationHandler.buildAddTodoIntent(this))

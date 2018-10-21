@@ -30,6 +30,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppTheme.Toolbar.Title" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+    </style>
 
     <!-- Items -->
     <style name="Cell" />

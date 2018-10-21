@@ -1,6 +1,7 @@
 <resources>
 
     <string name="add_todo_hint">Task name</string>
+    <string name="add_todo_title">Add Todo</string>
     <string name="action_add_todo">Add todo</string>
 
     <string name="add_todo_error">An error occurred</string>

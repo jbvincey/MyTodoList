@@ -6,7 +6,7 @@
 
     <!-- Checkable cells -->
     <dimen name="cell_checkable_height">48dp</dimen>
-    <dimen name="cell_checkable_title_fontSize">20sp</dimen>
+    <dimen name="cell_checkable_title_fontSize">18sp</dimen>
     <dimen name="cell_checkable_title_marginEnd">8dp</dimen>
 
 </resources>

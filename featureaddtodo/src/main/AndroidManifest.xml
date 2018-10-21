@@ -5,7 +5,8 @@
 
         <activity
             android:name="com.jbvincey.featureaddtodo.AddTodoActivity"
-            android:windowSoftInputMode="stateVisible" >
+            android:windowSoftInputMode="stateVisible"
+            android:label="@string/add_todo_title">
 
             <!-- navigation deeplink -->
             <intent-filter>
