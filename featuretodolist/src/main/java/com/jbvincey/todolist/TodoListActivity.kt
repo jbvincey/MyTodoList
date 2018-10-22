@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.jbvincey.navigation.NavigationHandler
+import com.jbvincey.ui.appbar.AppbarElevationRecyclerScrollListener
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellAdapter
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel
 import io.reactivex.Completable
@@ -42,6 +43,7 @@ class TodoListActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }
+
     private fun initFabButton() {
         fabButton.setOnClickListener {
             startActivity(navigationHandler.buildAddTodoIntent(this))
@@ -50,6 +52,8 @@ class TodoListActivity : AppCompatActivity() {
 
     private fun initRecycler() {
         todoRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        todoRecyclerView.addOnScrollListener(AppbarElevationRecyclerScrollListener(appbarLayout))
 
         val adapter = CheckableCellAdapter()
         todoRecyclerView.adapter = adapter

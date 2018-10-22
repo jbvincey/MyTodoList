@@ -1,0 +1,58 @@
+package com.jbvincey.ui.appbar
+
+import android.animation.ValueAnimator
+import android.support.design.widget.AppBarLayout
+import android.support.v7.widget.RecyclerView
+import com.jbvincey.ui.R
+
+/**
+ * Created by jbvincey on 22/10/2018.
+ */
+class AppbarElevationRecyclerScrollListener(private val appBarLayout: AppBarLayout) : RecyclerView.OnScrollListener() {
+
+    companion object {
+        const val SCROLL_DIRECTION_UP = -1
+        const val ELEVATION_ANIMATION_DURATION = 300L
+    }
+
+    private val displayElevationValueAnimator: ValueAnimator
+    private val hideElevationValueAnimator: ValueAnimator
+
+    private var isDisplayingAppBarElevation = false
+
+    init {
+        val appbarElevation = appBarLayout.resources.getDimension(R.dimen.appbar_elevation)
+
+        displayElevationValueAnimator = ValueAnimator.ofFloat(0F, appbarElevation)
+        displayElevationValueAnimator.duration = ELEVATION_ANIMATION_DURATION
+        displayElevationValueAnimator.addUpdateListener { valueAnimator ->
+            appBarLayout.elevation = valueAnimator.animatedValue as Float
+        }
+
+        hideElevationValueAnimator = ValueAnimator.ofFloat(appbarElevation, 0F)
+        hideElevationValueAnimator.duration = ELEVATION_ANIMATION_DURATION
+        hideElevationValueAnimator.addUpdateListener { valueAnimator ->
+            appBarLayout.elevation = valueAnimator.animatedValue as Float
+        }
+
+    }
+
+    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        super.onScrolled(recyclerView, dx, dy)
+
+        val canScrollVertically = recyclerView.canScrollVertically(SCROLL_DIRECTION_UP)
+
+        if (canScrollVertically && !isDisplayingAppBarElevation) {
+            isDisplayingAppBarElevation = true
+            hideElevationValueAnimator.cancel()
+            displayElevationValueAnimator.start()
+
+        } else if (!canScrollVertically && isDisplayingAppBarElevation) {
+            isDisplayingAppBarElevation = false
+            displayElevationValueAnimator.cancel()
+            hideElevationValueAnimator.start()
+        }
+    }
+
+
+}

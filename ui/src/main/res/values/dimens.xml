@@ -1,6 +1,9 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
 
+    <!-- AppBar -->
+    <dimen name="appbar_elevation">4dp</dimen>
+
     <!-- Lists -->
     <dimen name="list_margin_horizontal">16dp</dimen>
 
