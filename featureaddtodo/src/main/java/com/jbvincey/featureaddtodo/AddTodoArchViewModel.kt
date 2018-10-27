@@ -15,16 +15,14 @@ class AddTodoArchViewModel(private val todoRepository: TodoRepository): ViewMode
     fun addTodo(todoName: String) {
         todoRepository.addTodo(todoName)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    addTodoState.value = AddTodoState.SUCCESS
-                }, {
-                    addTodoState.value = AddTodoState.ERROR
-                })
-    }
-
-    enum class AddTodoState {
-        SUCCESS,
-        ERROR
+                .subscribe(
+                        { addTodoState.value = Success },
+                        { addTodoState.value = UnknownError }
+                )
     }
 
 }
+
+sealed class AddTodoState
+object Success: AddTodoState()
+object UnknownError: AddTodoState()

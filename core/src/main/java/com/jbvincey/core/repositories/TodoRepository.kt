@@ -28,13 +28,17 @@ class TodoRepositoryImpl(private val todoDao: TodoDao): TodoRepository {
     override fun getTodoById(id: Long): LiveData<Todo> = todoDao.getTodoById(id)
 
     override fun addTodo(todoName: String): Completable {
-        return Completable.create { todoDao.insertTodo(Todo(todoName)) }
-                .subscribeOn(Schedulers.io())
+        return Completable.create {
+            todoDao.insertTodo(Todo(todoName))
+            it.onComplete()
+        }.subscribeOn(Schedulers.io())
     }
 
     override fun changeTodoCompleted(id: Long): Completable {
-        return Completable.create { todoDao.changeTodoCompleted(id) }
-                .subscribeOn(Schedulers.io())
+        return Completable.create {
+            todoDao.changeTodoCompleted(id)
+            it.onComplete()
+        }.subscribeOn(Schedulers.io())
     }
 
 }

@@ -26,6 +26,7 @@ versions.rxkotlin = "2.2.0"
 versions.stetho = "1.5.0"
 versions.lifecycle = "1.1.1"
 versions.koin = "1.0.0"
+versions.design = "1.0.1"
 
 def deps = [:]
 
@@ -37,6 +38,8 @@ support.design = "com.android.support:design:$versions.support"
 deps.support = support
 
 deps.constraint_layout = "com.android.support.constraint:constraint-layout:$versions.constraint_layout"
+
+deps.design = "com.jbvincey:design:$versions.design"
 
 def room = [:]
 room.runtime = "android.arch.persistence.room:runtime:$versions.room"

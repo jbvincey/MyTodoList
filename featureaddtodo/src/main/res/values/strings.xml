@@ -10,4 +10,8 @@
     <!-- navigation -->
     <string name="feature_path_addtodo">/addtodo</string>
 
+    <!-- Validation -->
+    <string name="validation_todo_name_regex">..*</string>
+    <string name="validation_todo_name_errortext">Task name needs at least one character</string>
+
 </resources>

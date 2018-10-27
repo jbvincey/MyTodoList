@@ -6,7 +6,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.inputmethod.EditorInfo
+import com.jbvincey.design.widget.ValidationInputEditTextListener
 import kotlinx.android.synthetic.main.activity_add_todo.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -29,7 +29,6 @@ class AddTodoActivity : AppCompatActivity() {
     private fun initView() {
         initToolbar()
         initEditText()
-
         observeAddTodoState()
     }
 
@@ -40,15 +39,7 @@ class AddTodoActivity : AppCompatActivity() {
     }
 
     private fun initEditText() {
-        addTodoEditText.setOnEditorActionListener { _, actionId, _ ->
-            return@setOnEditorActionListener when (actionId) {
-                EditorInfo.IME_ACTION_GO -> {
-                    saveTodo()
-                    true
-                }
-                else -> false
-            }
-        }
+        addTodoEditText.validationInputEditTextListener = ValidationInputEditTextListener { saveTodo() }
     }
 
     //endregion
@@ -57,12 +48,9 @@ class AddTodoActivity : AppCompatActivity() {
 
     private fun observeAddTodoState() {
         viewModel.addTodoState.observe(this, Observer { state ->
-
             when(state) {
-
-                AddTodoArchViewModel.AddTodoState.SUCCESS -> finish()
-
-                AddTodoArchViewModel.AddTodoState.ERROR -> displayAddTodoErrorSnack()
+                is Success -> finish()
+                is UnknownError -> displayAddTodoErrorSnack()
             }
         })
     }
@@ -74,9 +62,7 @@ class AddTodoActivity : AppCompatActivity() {
     }
 
     private fun saveTodo() {
-        //todo use validator
         viewModel.addTodo(addTodoEditText.text.toString())
-        finish()
     }
 
     //endregion
@@ -95,7 +81,7 @@ class AddTodoActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_add_todo -> {
-                saveTodo()
+                addTodoEditText.validateText()
                 true
             }
             else -> super.onOptionsItemSelected(item)

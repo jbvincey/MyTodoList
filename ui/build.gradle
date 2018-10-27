@@ -38,6 +38,7 @@ dependencies {
     api deps.support.app_compat
     api deps.support.design
     api deps.constraint_layout
+    api deps.design
 
     // tests
     testImplementation deps.junit
