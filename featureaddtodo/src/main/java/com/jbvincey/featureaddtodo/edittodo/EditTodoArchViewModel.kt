@@ -19,6 +19,8 @@ class EditTodoArchViewModel(private val todoRepository: TodoRepository): ViewMod
     }
     val editTodoState = MutableLiveData<EditTodoState>()
     val deleteTodoState = MutableLiveData<DeleteTodoState>()
+    val archiveTodoState = MutableLiveData<ArchiveTodoState>()
+    val unarchiveTodoState = MutableLiveData<UnarchiveTodoState>()
 
     fun editTodo(todoName: String) {
         todoRepository.editTodo(todoName, todoId.value!!)
@@ -38,6 +40,23 @@ class EditTodoArchViewModel(private val todoRepository: TodoRepository): ViewMod
                 )
     }
 
+    fun archiveTodo() {
+        todoRepository.archiveTodo(todoId.value!!)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { archiveTodoState.value = ArchiveTodoState.Success },
+                        { archiveTodoState.value = ArchiveTodoState.UnknownError }
+                )
+    }
+
+    fun unarchiveTodo() {
+        todoRepository.unarchiveTodo(todoId.value!!)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { unarchiveTodoState.value = UnarchiveTodoState.Success },
+                        { unarchiveTodoState.value = UnarchiveTodoState.UnknownError }
+                )
+    }
 }
 
 sealed class EditTodoState {
@@ -48,4 +67,14 @@ sealed class EditTodoState {
 sealed class DeleteTodoState {
     object Success : DeleteTodoState()
     object UnknownError : DeleteTodoState()
+}
+
+sealed class ArchiveTodoState {
+    object Success : ArchiveTodoState()
+    object UnknownError : ArchiveTodoState()
+}
+
+sealed class UnarchiveTodoState {
+    object Success : UnarchiveTodoState()
+    object UnknownError : UnarchiveTodoState()
 }

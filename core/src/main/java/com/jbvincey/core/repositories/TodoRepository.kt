@@ -23,6 +23,10 @@ interface TodoRepository {
 
     fun deleteTodo(id: Long): Completable
 
+    fun archiveTodo(id: Long): Completable
+
+    fun unarchiveTodo(id: Long): Completable
+
 }
 
 class TodoRepositoryImpl(private val todoDao: TodoDao): TodoRepository {
@@ -55,6 +59,20 @@ class TodoRepositoryImpl(private val todoDao: TodoDao): TodoRepository {
     override fun deleteTodo(id: Long): Completable {
         return Completable.create {
             todoDao.deleteTodo(id)
+            it.onComplete()
+        }.subscribeOn(Schedulers.io())
+    }
+
+    override fun archiveTodo(id: Long): Completable {
+        return Completable.create {
+            todoDao.updateTodoArchived(id, true)
+            it.onComplete()
+        }.subscribeOn(Schedulers.io())
+    }
+
+    override fun unarchiveTodo(id: Long): Completable {
+        return Completable.create {
+            todoDao.updateTodoArchived(id, false)
             it.onComplete()
         }.subscribeOn(Schedulers.io())
     }

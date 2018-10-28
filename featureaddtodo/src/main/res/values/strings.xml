@@ -6,11 +6,14 @@
 
     <string name="error_message">An error occurred</string>
     <string name="retry">retry</string>
+    <string name="unarchive_success">%1$s was unarchived</string>
 
     <!-- menu -->
     <string name="action_add_todo">Add todo</string>
     <string name="action_edit_todo">Edit todo</string>
-    <string name="action_delete_todo">Edit todo</string>
+    <string name="action_delete_todo">Delete todo</string>
+    <string name="action_archive_todo">Delete todo</string>
+    <string name="action_unarchive_todo">Delete todo</string>
 
     <!-- navigation -->
     <string name="feature_path_addtodo">/addtodo</string>

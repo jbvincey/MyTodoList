@@ -30,4 +30,8 @@ interface TodoDao {
 
     @Query("UPDATE todos Set name = :name WHERE id = :id")
     fun updateTodoName(name: String, id: Long)
+
+    @Query("UPDATE todos Set archived = :archive WHERE id = :id")
+    fun updateTodoArchived(id: Long, archive: Boolean)
+
 }
