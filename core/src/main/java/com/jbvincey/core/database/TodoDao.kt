@@ -16,6 +16,9 @@ interface TodoDao {
     @Delete
     fun deleteTodo(todo: Todo)
 
+    @Query("DELETE FROM todos WHERE id = :id")
+    fun deleteTodo(id: Long)
+
     @Query("SELECT * FROM todos")
     fun getAllTodos(): LiveData<List<Todo>>
 
@@ -25,4 +28,6 @@ interface TodoDao {
     @Query("UPDATE todos Set completed = NOT completed WHERE id = :id")
     fun changeTodoCompleted(id: Long)
 
+    @Query("UPDATE todos Set name = :name WHERE id = :id")
+    fun updateTodoName(name: String, id: Long)
 }

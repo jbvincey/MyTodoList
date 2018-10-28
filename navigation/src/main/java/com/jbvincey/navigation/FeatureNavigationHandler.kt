@@ -1,6 +1,7 @@
 package com.jbvincey.navigation
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 
 /**
@@ -10,12 +11,16 @@ interface FeatureNavigationHandler {
 
     fun buildFeaturePath(context: Context, vararg parameters: Any): String
 
-    fun buildIntentParams(): Bundle? {
+    fun buildIntentParams(vararg parameters: Any): Bundle? {
         return null
     }
 
 }
 
+interface TodoListNavigationHandler: FeatureNavigationHandler
+
 interface AddTodoNavigationHandler: FeatureNavigationHandler
 
-interface TodoListNavigationHandler: FeatureNavigationHandler
+interface EditTodoNavigationHandler: FeatureNavigationHandler {
+    fun retrieveTodoId(intent: Intent): Long
+}

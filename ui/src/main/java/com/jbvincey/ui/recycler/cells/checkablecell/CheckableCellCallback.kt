@@ -7,4 +7,6 @@ interface CheckableCellCallback {
 
     fun onCheckChanged(id: Long)
 
+    fun onClick(id: Long)
+
 }

@@ -14,11 +14,14 @@ interface NavigationHandler {
 
     fun buildAddTodoIntent(context: Context): Intent
 
+    fun buildEditTodoIntent(context: Context, todoId: Long): Intent
+
 }
 
 class NavigationHandlerImpl(
+        private val todoListNavigationHandler: TodoListNavigationHandler,
         private val addTodoNavigationHandler: AddTodoNavigationHandler,
-        private val todoListNavigationHandler: TodoListNavigationHandler
+        private val editTodoNavigationHandler: EditTodoNavigationHandler
 ): NavigationHandler {
 
     override fun buildTodoListIntent(context: Context): Intent {
@@ -33,6 +36,14 @@ class NavigationHandlerImpl(
         return buildIntent(
                 addTodoNavigationHandler.buildFeaturePath(context),
                 addTodoNavigationHandler.buildIntentParams(),
+                context
+        )
+    }
+
+    override fun buildEditTodoIntent(context: Context, todoId: Long): Intent {
+        return buildIntent(
+                editTodoNavigationHandler.buildFeaturePath(context),
+                editTodoNavigationHandler.buildIntentParams(todoId),
                 context
         )
     }

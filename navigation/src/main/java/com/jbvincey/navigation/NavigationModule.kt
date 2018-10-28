@@ -8,6 +8,6 @@ import org.koin.dsl.module.module
 
 val navigationModule = module {
 
-    factory { NavigationHandlerImpl(get(), get()) as NavigationHandler }
+    factory { NavigationHandlerImpl(get(), get(), get()) as NavigationHandler }
 
 }

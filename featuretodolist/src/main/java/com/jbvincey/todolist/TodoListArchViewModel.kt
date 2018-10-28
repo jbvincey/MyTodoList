@@ -1,6 +1,7 @@
 package com.jbvincey.todolist
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import com.jbvincey.core.models.Todo
@@ -34,10 +35,11 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
     }
 
     private val todoList: LiveData<List<Todo>> = todoRepository.getAllTodos()
-
     val checkableCellViewModelList: LiveData<List<CheckableCellViewModel>> = Transformations.map(todoList) {
         sortAndTransformTodoList(it)
     }
+
+    val todoClicked: MutableLiveData<Long> = MutableLiveData()
 
     private fun sortAndTransformTodoList(todoList: List<Todo>): List<CheckableCellViewModel> {
         val sortedTodoList = todoList.toMutableList()
@@ -49,6 +51,10 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
         todoRepository.changeTodoCompleted(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe()
+    }
+
+    override fun onClick(id: Long) {
+        todoClicked.value = id
     }
 }
 

@@ -1,14 +1,20 @@
 <resources>
 
+    <!-- layout -->
     <string name="add_todo_hint">Task name</string>
     <string name="add_todo_title">Add Todo</string>
-    <string name="action_add_todo">Add todo</string>
 
-    <string name="add_todo_error">An error occurred</string>
-    <string name="add_todo_retry">retry</string>
+    <string name="error_message">An error occurred</string>
+    <string name="retry">retry</string>
+
+    <!-- menu -->
+    <string name="action_add_todo">Add todo</string>
+    <string name="action_edit_todo">Edit todo</string>
+    <string name="action_delete_todo">Edit todo</string>
 
     <!-- navigation -->
     <string name="feature_path_addtodo">/addtodo</string>
+    <string name="feature_path_edittodo">/edittodo</string>
 
     <!-- Validation -->
     <string name="validation_todo_name_regex">..*</string>

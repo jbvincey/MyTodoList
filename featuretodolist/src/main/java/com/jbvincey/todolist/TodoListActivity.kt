@@ -37,6 +37,7 @@ class TodoListActivity : AppCompatActivity() {
         initToolbar()
         initFabButton()
         initRecycler()
+        observeTodoClick()
     }
 
     private fun initToolbar() {
@@ -68,6 +69,14 @@ class TodoListActivity : AppCompatActivity() {
         Completable.timer(CHECKABLE_CELL_UPDATE_DELAY, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { checkableCellList?.let(adapter::submitList) }
+    }
+
+    private fun observeTodoClick() {
+        viewModel.todoClicked.observe(this, Observer { todoId ->
+            if (todoId != null) {
+                startActivity(navigationHandler.buildEditTodoIntent(this, todoId))
+            }
+        })
     }
 
 }

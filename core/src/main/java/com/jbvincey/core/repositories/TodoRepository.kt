@@ -17,7 +17,11 @@ interface TodoRepository {
 
     fun addTodo(todoName: String): Completable
 
+    fun editTodo(todoName: String, todoId: Long): Completable
+
     fun changeTodoCompleted(id: Long): Completable
+
+    fun deleteTodo(id: Long): Completable
 
 }
 
@@ -34,9 +38,23 @@ class TodoRepositoryImpl(private val todoDao: TodoDao): TodoRepository {
         }.subscribeOn(Schedulers.io())
     }
 
+    override fun editTodo(todoName: String, todoId: Long): Completable {
+        return Completable.create {
+            todoDao.updateTodoName(todoName, todoId)
+            it.onComplete()
+        }.subscribeOn(Schedulers.io())
+    }
+
     override fun changeTodoCompleted(id: Long): Completable {
         return Completable.create {
             todoDao.changeTodoCompleted(id)
+            it.onComplete()
+        }.subscribeOn(Schedulers.io())
+    }
+
+    override fun deleteTodo(id: Long): Completable {
+        return Completable.create {
+            todoDao.deleteTodo(id)
             it.onComplete()
         }.subscribeOn(Schedulers.io())
     }

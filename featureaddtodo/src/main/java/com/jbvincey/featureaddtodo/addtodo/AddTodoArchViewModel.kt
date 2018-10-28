@@ -1,4 +1,4 @@
-package com.jbvincey.featureaddtodo
+package com.jbvincey.featureaddtodo.addtodo
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel

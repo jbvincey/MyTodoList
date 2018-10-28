@@ -1,6 +1,7 @@
-package com.jbvincey.featureaddtodo
+package com.jbvincey.featureaddtodo.addtodo
 
 import android.content.Context
+import com.jbvincey.featureaddtodo.R
 import com.jbvincey.navigation.AddTodoNavigationHandler
 
 /**
