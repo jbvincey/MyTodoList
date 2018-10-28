@@ -24,6 +24,7 @@
             android:paddingEnd="@dimen/list_margin_horizontal"
             android:layout_marginEnd="@dimen/cell_checkable_title_marginEnd"
             android:text="@{viewModel.name}"
+            android:textColor="@{viewModel.completed ? @color/grey_light_1 : @color/grey_dark_1}"
             android:gravity="center_vertical"
             android:background="?attr/selectableItemBackground"
             android:onClickListener="@{(view) -> viewModel.callback.onClick(viewModel.id)}"
