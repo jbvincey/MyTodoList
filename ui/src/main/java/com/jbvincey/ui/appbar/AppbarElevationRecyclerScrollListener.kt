@@ -8,7 +8,10 @@ import com.jbvincey.ui.R
 /**
  * Created by jbvincey on 22/10/2018.
  */
-class AppbarElevationRecyclerScrollListener(private val appBarLayout: AppBarLayout) : RecyclerView.OnScrollListener() {
+class AppbarElevationRecyclerScrollListener(
+        private val appBarLayout: AppBarLayout,
+        recyclerView: RecyclerView
+) : RecyclerView.OnScrollListener() {
 
     companion object {
         const val SCROLL_DIRECTION_UP = -1
@@ -21,15 +24,16 @@ class AppbarElevationRecyclerScrollListener(private val appBarLayout: AppBarLayo
     private var isDisplayingAppBarElevation = false
 
     init {
-        val appbarElevation = appBarLayout.resources.getDimension(R.dimen.appbar_elevation)
+        val recyclerViewDefaultElevation = recyclerView.elevation
+        val appbarElevation = recyclerViewDefaultElevation + appBarLayout.resources.getDimension(R.dimen.appbar_elevation)
 
-        displayElevationValueAnimator = ValueAnimator.ofFloat(0F, appbarElevation)
+        displayElevationValueAnimator = ValueAnimator.ofFloat(recyclerViewDefaultElevation, appbarElevation)
         displayElevationValueAnimator.duration = ELEVATION_ANIMATION_DURATION
         displayElevationValueAnimator.addUpdateListener { valueAnimator ->
             appBarLayout.elevation = valueAnimator.animatedValue as Float
         }
 
-        hideElevationValueAnimator = ValueAnimator.ofFloat(appbarElevation, 0F)
+        hideElevationValueAnimator = ValueAnimator.ofFloat(appbarElevation, recyclerViewDefaultElevation)
         hideElevationValueAnimator.duration = ELEVATION_ANIMATION_DURATION
         hideElevationValueAnimator.addUpdateListener { valueAnimator ->
             appBarLayout.elevation = valueAnimator.animatedValue as Float

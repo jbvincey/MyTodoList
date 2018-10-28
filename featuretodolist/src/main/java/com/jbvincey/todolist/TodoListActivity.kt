@@ -54,7 +54,7 @@ class TodoListActivity : AppCompatActivity() {
     private fun initRecycler() {
         todoRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        todoRecyclerView.addOnScrollListener(AppbarElevationRecyclerScrollListener(appbarLayout))
+        todoRecyclerView.addOnScrollListener(AppbarElevationRecyclerScrollListener(appbarLayout, todoRecyclerView))
 
         val adapter = CheckableCellAdapter()
         todoRecyclerView.adapter = adapter

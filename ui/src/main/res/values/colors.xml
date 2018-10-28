@@ -2,7 +2,6 @@
 <resources>
     <color name="colorPrimary">@color/background_white</color>
     <color name="colorPrimaryDark">@color/background_white</color>
-    <!--<color name="colorPrimaryDark">#7F4A39</color>-->
     <color name="colorAccent">#00A64A</color>
 
     <color name="background_white">#fdfdfd</color>
@@ -10,4 +9,6 @@
     <color name="grey_dark_1">#1B1B1B</color>
 
     <color name="grey_light_1">#989898</color>
+    <color name="grey_light_2">#eeeeee</color>
+
 </resources>
