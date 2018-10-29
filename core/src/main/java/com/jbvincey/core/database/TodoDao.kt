@@ -22,6 +22,12 @@ interface TodoDao {
     @Query("SELECT * FROM todos")
     fun getAllTodos(): LiveData<List<Todo>>
 
+    @Query("SELECT * FROM todos WHERE archived = 1")
+    fun getAllArchivedTodos(): LiveData<List<Todo>>
+
+    @Query("SELECT * FROM todos WHERE archived = 0")
+    fun getAllUnarchivedTodos(): LiveData<List<Todo>>
+
     @Query("SELECT * FROM todos WHERE id = :id")
     fun getTodoById(id: Long): LiveData<Todo>
 

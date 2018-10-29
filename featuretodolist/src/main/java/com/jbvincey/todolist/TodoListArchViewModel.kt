@@ -18,10 +18,6 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
                             private val todoTransformer: TodoTransformer)
     : ViewModel(), CheckableCellCallback {
 
-    init {
-        todoTransformer.checkableCellCallback = this
-    }
-
     companion object {
 
         // comparator sorting Todos: uncompleted todos fist and completed last, then sort by creation date
@@ -34,7 +30,17 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
         }
     }
 
-    private val todoList: LiveData<List<Todo>> = todoRepository.getAllTodos()
+    init {
+        todoTransformer.checkableCellCallback = this
+    }
+
+    val todoListType = MutableLiveData<TodoListType>()
+    private val todoList: LiveData<List<Todo>> = Transformations.switchMap(todoListType) { type ->
+        when(type) {
+            TodoListType.UNARCHIVED ->todoRepository.getAllUnarchivedTodos()
+            TodoListType.ARCHIVED -> todoRepository.getAllArchivedTodos()
+        }
+    }
     val checkableCellViewModelList: LiveData<List<CheckableCellViewModel>> = Transformations.map(todoList) {
         sortAndTransformTodoList(it)
     }
@@ -56,5 +62,10 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
     override fun onClick(id: Long) {
         todoClicked.value = id
     }
+}
+
+enum class TodoListType {
+    UNARCHIVED,
+    ARCHIVED
 }
 

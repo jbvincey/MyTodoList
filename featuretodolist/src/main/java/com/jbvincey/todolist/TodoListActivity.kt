@@ -37,6 +37,8 @@ class TodoListActivity : AppCompatActivity() {
         initToolbar()
         initFabButton()
         initRecycler()
+        initBottomNavigation()
+        initTodoListType()
         observeTodoClick()
     }
 
@@ -61,6 +63,30 @@ class TodoListActivity : AppCompatActivity() {
         viewModel.checkableCellViewModelList.observe(this, Observer {
             updateCheckableCellListWithDelay(it, adapter)
         })
+    }
+
+    private fun initBottomNavigation() {
+        bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
+
+            when(menuItem.itemId) {
+
+                R.id.action_todo_list -> {
+                    viewModel.todoListType.value = TodoListType.UNARCHIVED
+                    true
+                }
+
+                R.id.action_archived_list -> {
+                    viewModel.todoListType.value = TodoListType.ARCHIVED
+                    true
+                }
+
+                else -> false
+            }
+        }
+    }
+
+    private fun initTodoListType() {
+        viewModel.todoListType.value = TodoListType.UNARCHIVED
     }
 
     private fun updateCheckableCellListWithDelay(checkableCellList: List<CheckableCellViewModel>?,

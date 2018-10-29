@@ -1,6 +1,11 @@
 <resources>
     <string name="action_settings">Settings</string>
 
+    <!-- menu -->
+    <string name="action_todo_list">Todo list</string>
+    <string name="action_archived_list">Archived</string>
+
+
     <!-- navigation -->
     <string name="feature_path_todolist">/todolist</string>
 

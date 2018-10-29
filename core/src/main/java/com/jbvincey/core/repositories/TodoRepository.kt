@@ -13,6 +13,10 @@ interface TodoRepository {
 
     fun getAllTodos(): LiveData<List<Todo>>
 
+    fun getAllArchivedTodos(): LiveData<List<Todo>>
+
+    fun getAllUnarchivedTodos(): LiveData<List<Todo>>
+
     fun getTodoById(id: Long): LiveData<Todo>
 
     fun addTodo(todoName: String): Completable
@@ -32,6 +36,10 @@ interface TodoRepository {
 class TodoRepositoryImpl(private val todoDao: TodoDao): TodoRepository {
 
     override fun getAllTodos(): LiveData<List<Todo>> = todoDao.getAllTodos()
+
+    override fun getAllArchivedTodos(): LiveData<List<Todo>> = todoDao.getAllArchivedTodos()
+
+    override fun getAllUnarchivedTodos(): LiveData<List<Todo>> = todoDao.getAllUnarchivedTodos()
 
     override fun getTodoById(id: Long): LiveData<Todo> = todoDao.getTodoById(id)
 
