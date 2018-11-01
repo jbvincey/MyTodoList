@@ -6,6 +6,7 @@
 
     <string name="error_message">An error occurred</string>
     <string name="retry">retry</string>
+    <string name="archive_success">%1$s was archived</string>
     <string name="unarchive_success">%1$s was unarchived</string>
 
     <!-- menu -->

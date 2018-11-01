@@ -67,6 +67,7 @@ class EditTodoActivity : AppCompatActivity() {
     private fun initEditText() {
         viewModel.todo.observe(this, Observer { todo ->
             addTodoEditText.setText(todo?.name)
+            addTodoEditText.isEnabled = !(todo?.archived ?: false)
             invalidateOptionsMenu()
         })
         addTodoEditText.validationInputEditTextListener = ValidationInputEditTextListener { saveTodo() }
@@ -105,7 +106,7 @@ class EditTodoActivity : AppCompatActivity() {
     private fun observeArchiveTodoState() {
         viewModel.archiveTodoState.observe(this, Observer { state ->
             when (state) {
-                is ArchiveTodoState.Success -> finish()
+                is ArchiveTodoState.Success -> displaySnack(R.string.archive_success, viewModel.todo.value!!.name)
                 is ArchiveTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { archiveTodo() }
             }
         })
