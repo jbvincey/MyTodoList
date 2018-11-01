@@ -2,6 +2,8 @@ package com.jbvincey.todolist
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.transition.ChangeBounds
+import android.support.transition.TransitionManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.jbvincey.navigation.NavigationHandler
@@ -19,11 +21,11 @@ import java.util.concurrent.TimeUnit
 class TodoListActivity : AppCompatActivity() {
 
     companion object {
-        const val CHECKABLE_CELL_UPDATE_DELAY = 150L
+        private const val CHECKABLE_CELL_UPDATE_DELAY = 300L
+        private val RECYCLER_UPDATE_ANIMATION = ChangeBounds()
     }
 
     private val viewModel: TodoListArchViewModel by viewModel()
-
     private val navigationHandler: NavigationHandler by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,13 +35,15 @@ class TodoListActivity : AppCompatActivity() {
         initView()
     }
 
+    //region view setup
+
     private fun initView() {
         initToolbar()
         initFabButton()
         initRecycler()
         initBottomNavigation()
-        initTodoListType()
         observeTodoClick()
+        viewModel.showUnarchivedTodos()
     }
 
     private fun initToolbar() {
@@ -68,15 +72,15 @@ class TodoListActivity : AppCompatActivity() {
     private fun initBottomNavigation() {
         bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
 
-            when(menuItem.itemId) {
+            when (menuItem.itemId) {
 
                 R.id.action_todo_list -> {
-                    viewModel.todoListType.value = TodoListType.UNARCHIVED
+                    viewModel.showUnarchivedTodos()
                     true
                 }
 
                 R.id.action_archived_list -> {
-                    viewModel.todoListType.value = TodoListType.ARCHIVED
+                    viewModel.showArchivedTodos()
                     true
                 }
 
@@ -85,24 +89,40 @@ class TodoListActivity : AppCompatActivity() {
         }
     }
 
-    private fun initTodoListType() {
-        viewModel.todoListType.value = TodoListType.UNARCHIVED
+    //endregion
+
+    //action user actions
+
+    private fun observeTodoClick() {
+        viewModel.todoClicked.observe(this, Observer { todoId ->
+            startEditActivity(todoId!!)
+        })
     }
 
     private fun updateCheckableCellListWithDelay(checkableCellList: List<CheckableCellViewModel>?,
                                                  adapter: CheckableCellAdapter) {
-
         Completable.timer(CHECKABLE_CELL_UPDATE_DELAY, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { checkableCellList?.let(adapter::submitList) }
+                .subscribe {
+                    TransitionManager.beginDelayedTransition(todoRecyclerView, RECYCLER_UPDATE_ANIMATION)
+                    checkableCellList?.let(adapter::submitList)
+                }
     }
 
-    private fun observeTodoClick() {
-        viewModel.todoClicked.observe(this, Observer { todoId ->
-            if (todoId != null) {
-                startActivity(navigationHandler.buildEditTodoIntent(this, todoId))
-            }
-        })
+    //endregion
+
+    //region navigation
+
+    private fun startEditActivity(todoId: Long) {
+        startActivity(navigationHandler.buildEditTodoIntent(this, todoId))
+    }
+
+    override fun onBackPressed() {
+        if (viewModel.isShowingAchivedTodos()) {
+            bottomNavigation.selectedItemId = R.id.action_todo_list
+        } else {
+            super.onBackPressed()
+        }
     }
 
 }

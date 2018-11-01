@@ -25,6 +25,7 @@ class AppbarElevationRecyclerScrollListener(
 
     init {
         val recyclerViewDefaultElevation = recyclerView.elevation
+        appBarLayout.elevation = recyclerViewDefaultElevation
         val appbarElevation = recyclerViewDefaultElevation + appBarLayout.resources.getDimension(R.dimen.appbar_elevation)
 
         displayElevationValueAnimator = ValueAnimator.ofFloat(recyclerViewDefaultElevation, appbarElevation)
@@ -38,7 +39,6 @@ class AppbarElevationRecyclerScrollListener(
         hideElevationValueAnimator.addUpdateListener { valueAnimator ->
             appBarLayout.elevation = valueAnimator.animatedValue as Float
         }
-
     }
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

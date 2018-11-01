@@ -30,11 +30,12 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
         }
     }
 
+    private val todoListType = MutableLiveData<TodoListType>()
+
     init {
         todoTransformer.checkableCellCallback = this
     }
 
-    val todoListType = MutableLiveData<TodoListType>()
     private val todoList: LiveData<List<Todo>> = Transformations.switchMap(todoListType) { type ->
         when(type) {
             TodoListType.UNARCHIVED ->todoRepository.getAllUnarchivedTodos()
@@ -61,6 +62,18 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
 
     override fun onClick(id: Long) {
         todoClicked.value = id
+    }
+
+    fun showUnarchivedTodos() {
+        todoListType.value = TodoListType.UNARCHIVED
+    }
+
+    fun showArchivedTodos() {
+        todoListType.value = TodoListType.ARCHIVED
+    }
+
+    fun isShowingAchivedTodos(): Boolean {
+        return todoListType.value == TodoListType.ARCHIVED
     }
 }
 

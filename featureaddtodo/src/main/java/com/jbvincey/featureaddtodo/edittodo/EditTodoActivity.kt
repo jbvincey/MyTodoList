@@ -21,7 +21,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 /**
  * Created by jbvincey on 27/10/2018.
  */
-class EditTodoActivity: AppCompatActivity() {
+class EditTodoActivity : AppCompatActivity() {
 
     companion object {
         private const val MENU_EDIT = Menu.FIRST
@@ -133,15 +133,11 @@ class EditTodoActivity: AppCompatActivity() {
     //region menu
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menu.clear()
-        val todo = viewModel.todo.value
-        if (todo?.completed == true) {
-            if (todo.archived) {
-                addMenu(menu, MENU_UNARCHIVE, R.string.action_unarchive_todo, R.drawable.ic_baseline_unarchive_24px)
-            } else {
-                addMenu(menu, MENU_ARCHIVE, R.string.action_archive_todo, R.drawable.ic_baseline_archive_24px)
-            }
+        if (viewModel.shouldShowUnarchiveMenu()) {
+            addMenu(menu, MENU_UNARCHIVE, R.string.action_unarchive_todo, R.drawable.ic_baseline_unarchive_24px)
+        } else if(viewModel.shouldShowArchiveMenu()) {
+            addMenu(menu, MENU_ARCHIVE, R.string.action_archive_todo, R.drawable.ic_baseline_archive_24px)
         }
         addMenu(menu, MENU_DELETE, R.string.action_delete_todo, R.drawable.ic_baseline_delete_24px)
         addMenu(menu, MENU_EDIT, R.string.action_edit_todo, R.drawable.ic_baseline_done_24px)

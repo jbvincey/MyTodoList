@@ -46,7 +46,7 @@ class AddTodoActivity : AppCompatActivity() {
 
     //endregion
 
-    //region addtodo
+    //region user actions
 
     private fun observeAddTodoState() {
         viewModel.addTodoState.observe(this, Observer { state ->

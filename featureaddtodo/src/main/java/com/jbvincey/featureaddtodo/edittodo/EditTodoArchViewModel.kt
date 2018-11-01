@@ -4,8 +4,10 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import android.view.Menu
 import com.jbvincey.core.models.Todo
 import com.jbvincey.core.repositories.TodoRepository
+import com.jbvincey.featureaddtodo.R
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 /**
@@ -56,6 +58,16 @@ class EditTodoArchViewModel(private val todoRepository: TodoRepository): ViewMod
                         { unarchiveTodoState.value = UnarchiveTodoState.Success },
                         { unarchiveTodoState.value = UnarchiveTodoState.UnknownError }
                 )
+    }
+
+    fun shouldShowArchiveMenu(): Boolean {
+        val todo = todo.value
+        return todo?.completed == true && !todo.archived
+    }
+
+    fun shouldShowUnarchiveMenu(): Boolean {
+        val todo = todo.value
+        return todo?.completed == true && todo.archived
     }
 }
 
