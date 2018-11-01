@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:checked="@{viewModel.completed}"
             android:layout_marginEnd="@dimen/list_margin_horizontal"
+            android:enabled="@{!viewModel.archived}"
             android:onCheckedChanged="@{(view, checked) -> viewModel.completed != checked ? viewModel.callback.onCheckChanged(viewModel.id) : void}"
             app:layout_constraintTop_toTopOf="@+id/cell_checkable_title"
             app:layout_constraintBottom_toBottomOf="@+id/cell_checkable_title"
