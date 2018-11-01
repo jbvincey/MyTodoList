@@ -3,6 +3,7 @@ package com.jbvincey.todolist
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.transition.ChangeBounds
+import android.support.transition.Transition
 import android.support.transition.TransitionManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -22,8 +23,10 @@ class TodoListActivity : AppCompatActivity() {
 
     companion object {
         private const val CHECKABLE_CELL_UPDATE_DELAY = 300L
-        private val RECYCLER_UPDATE_ANIMATION = ChangeBounds()
+        private const val RECYCLER_TRANSITION_ANIMATION_DURATION = 150L
     }
+
+    private lateinit var recyclerTransitionAnimation: Transition
 
     private val viewModel: TodoListArchViewModel by viewModel()
     private val navigationHandler: NavigationHandler by inject()
@@ -58,8 +61,10 @@ class TodoListActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
-        todoRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerTransitionAnimation = ChangeBounds()
+        recyclerTransitionAnimation.duration = RECYCLER_TRANSITION_ANIMATION_DURATION
 
+        todoRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         todoRecyclerView.addOnScrollListener(AppbarElevationRecyclerScrollListener(appbarLayout, todoRecyclerView))
 
         val adapter = CheckableCellAdapter()
@@ -104,7 +109,7 @@ class TodoListActivity : AppCompatActivity() {
         Completable.timer(CHECKABLE_CELL_UPDATE_DELAY, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    TransitionManager.beginDelayedTransition(todoRecyclerView, RECYCLER_UPDATE_ANIMATION)
+                    TransitionManager.beginDelayedTransition(todoRecyclerView, recyclerTransitionAnimation)
                     checkableCellList?.let(adapter::submitList)
                 }
     }
