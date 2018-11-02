@@ -35,7 +35,9 @@
             android:maxLines="1"
             app:errorText="@string/validation_todo_name_errortext"
             app:validationRegex="@string/validation_todo_name_regex"
-            app:validateTextOnEditorAction="true" />
+            app:validateTextOnEditorAction="true">
+            <requestFocus />
+        </com.jbvincey.design.widget.ValidationInputEditText>
 
     </android.support.design.widget.TextInputLayout>
 
