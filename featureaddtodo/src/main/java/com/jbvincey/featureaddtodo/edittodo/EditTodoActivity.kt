@@ -47,6 +47,7 @@ class EditTodoActivity : AppCompatActivity() {
         setupTodoId()
         initToolbar()
         initEditText()
+        observeTodo()
 
         observeEditTodoState()
         observeDeleteTodoState()
@@ -65,12 +66,16 @@ class EditTodoActivity : AppCompatActivity() {
     }
 
     private fun initEditText() {
+        addTodoEditText.validationInputEditTextListener = ValidationInputEditTextListener { saveTodo() }
+    }
+
+    private fun observeTodo() {
         viewModel.todo.observe(this, Observer { todo ->
+            title = todo?.name
             addTodoEditText.setText(todo?.name)
             addTodoEditText.isEnabled = !(todo?.archived ?: false)
             invalidateOptionsMenu()
         })
-        addTodoEditText.validationInputEditTextListener = ValidationInputEditTextListener { saveTodo() }
     }
 
     //endregion

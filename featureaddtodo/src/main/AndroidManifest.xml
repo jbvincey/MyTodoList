@@ -24,8 +24,7 @@
 
         <activity
             android:name="com.jbvincey.featureaddtodo.edittodo.EditTodoActivity"
-            android:windowSoftInputMode="stateVisible"
-            android:label="@string/add_todo_title">
+            android:windowSoftInputMode="stateVisible">
 
             <!-- navigation deeplink -->
             <intent-filter>
