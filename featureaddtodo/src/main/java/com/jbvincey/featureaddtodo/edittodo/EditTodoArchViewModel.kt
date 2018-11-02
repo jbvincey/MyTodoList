@@ -4,16 +4,17 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import android.view.Menu
 import com.jbvincey.core.models.Todo
 import com.jbvincey.core.repositories.TodoRepository
-import com.jbvincey.featureaddtodo.R
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 
 /**
  * Created by jbvincey on 27/10/2018.
  */
 class EditTodoArchViewModel(private val todoRepository: TodoRepository): ViewModel() {
+
+    private val disposables = CompositeDisposable()
 
     val todoId: MutableLiveData<Long> = MutableLiveData()
     val todo: LiveData<Todo> = Transformations.switchMap(todoId) {todoId ->
@@ -25,39 +26,39 @@ class EditTodoArchViewModel(private val todoRepository: TodoRepository): ViewMod
     val unarchiveTodoState = MutableLiveData<UnarchiveTodoState>()
 
     fun editTodo(todoName: String) {
-        todoRepository.editTodo(todoName, todoId.value!!)
+        disposables.add(todoRepository.editTodo(todoName, todoId.value!!)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { editTodoState.value = EditTodoState.Success },
                         { editTodoState.value = EditTodoState.UnknownError }
-                )
+                ))
     }
 
     fun deleteTodo() {
-        todoRepository.deleteTodo(todoId.value!!)
+        disposables.add(todoRepository.deleteTodo(todoId.value!!)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { deleteTodoState.value = DeleteTodoState.Success },
                         { deleteTodoState.value = DeleteTodoState.UnknownError }
-                )
+                ))
     }
 
     fun archiveTodo() {
-        todoRepository.archiveTodo(todoId.value!!)
+        disposables.add(todoRepository.archiveTodo(todoId.value!!)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { archiveTodoState.value = ArchiveTodoState.Success },
                         { archiveTodoState.value = ArchiveTodoState.UnknownError }
-                )
+                ))
     }
 
     fun unarchiveTodo() {
-        todoRepository.unarchiveTodo(todoId.value!!)
+        disposables.add(todoRepository.unarchiveTodo(todoId.value!!)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { unarchiveTodoState.value = UnarchiveTodoState.Success },
                         { unarchiveTodoState.value = UnarchiveTodoState.UnknownError }
-                )
+                ))
     }
 
     fun shouldShowArchiveMenu(): Boolean {
@@ -68,6 +69,11 @@ class EditTodoArchViewModel(private val todoRepository: TodoRepository): ViewMod
     fun shouldShowUnarchiveMenu(): Boolean {
         val todo = todo.value
         return todo?.completed == true && todo.archived
+    }
+
+    override fun onCleared() {
+        disposables.clear()
+        super.onCleared()
     }
 }
 

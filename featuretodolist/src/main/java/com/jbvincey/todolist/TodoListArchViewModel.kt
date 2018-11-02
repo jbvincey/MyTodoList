@@ -9,6 +9,7 @@ import com.jbvincey.core.repositories.TodoRepository
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellCallback
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 
 /**
@@ -30,7 +31,9 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
         }
     }
 
+    private val disposables = CompositeDisposable()
     private val todoListType = MutableLiveData<TodoListType>()
+    val todoClicked: MutableLiveData<Long> = MutableLiveData()
 
     init {
         todoTransformer.checkableCellCallback = this
@@ -46,8 +49,6 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
         sortAndTransformTodoList(it)
     }
 
-    val todoClicked: MutableLiveData<Long> = MutableLiveData()
-
     private fun sortAndTransformTodoList(todoList: List<Todo>): List<CheckableCellViewModel> {
         val sortedTodoList = todoList.toMutableList()
         sortedTodoList.sortWith(TODO_COMPARATOR)
@@ -55,9 +56,9 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
     }
 
     override fun onCheckChanged(id: Long) {
-        todoRepository.changeTodoCompleted(id)
+        disposables.add(todoRepository.changeTodoCompleted(id)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
+                .subscribe())
     }
 
     override fun onClick(id: Long) {
@@ -74,6 +75,11 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
 
     fun isShowingAchivedTodos(): Boolean {
         return todoListType.value == TodoListType.ARCHIVED
+    }
+
+    override fun onCleared() {
+        disposables.clear()
+        super.onCleared()
     }
 }
 
