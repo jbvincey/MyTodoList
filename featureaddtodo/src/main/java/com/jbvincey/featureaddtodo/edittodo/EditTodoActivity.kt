@@ -1,17 +1,15 @@
 package com.jbvincey.featureaddtodo.edittodo
 
 import android.arch.lifecycle.Observer
-import android.content.Context
 import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import com.jbvincey.design.widget.ValidationInputEditTextListener
+import com.jbvincey.displayActionSnack
+import com.jbvincey.displaySnack
 import com.jbvincey.featureaddtodo.R
 import com.jbvincey.navigation.EditTodoNavigationHandler
 import kotlinx.android.synthetic.main.activity_add_todo.*
@@ -181,33 +179,4 @@ class EditTodoActivity : AppCompatActivity() {
 
     //endregion
 
-    //todo move to extension function
-    private fun displaySnack(@StringRes messageRes: Int, vararg formatArgs: Any) {
-        hideSoftKeyboard()
-        val message = getString(messageRes, *formatArgs)
-        Snackbar.make(findViewById(R.id.addTodoRoot), message, Snackbar.LENGTH_LONG)
-                .show()
-    }
-
-    private fun displayActionSnack(@StringRes messageRes: Int,
-                                   @StringRes actionRes: Int,
-                                   action: () -> Unit) {
-        hideSoftKeyboard()
-        Snackbar.make(findViewById(R.id.addTodoRoot), messageRes, Snackbar.LENGTH_LONG)
-                .setAction(actionRes) { action() }
-                .show()
-    }
-
-    private fun hideSoftKeyboard() {
-        if (currentFocus != null) {
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
-        }
-    }
-
-    private fun showSoftKeyboard(view: View) {
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        view.requestFocus()
-        inputMethodManager.showSoftInput(view, 0)
-    }
 }

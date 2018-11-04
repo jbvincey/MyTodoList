@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.jbvincey.design.widget.ValidationInputEditTextListener
+import com.jbvincey.displayActionSnack
 import com.jbvincey.featureaddtodo.R
 import kotlinx.android.synthetic.main.activity_add_todo.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -52,7 +53,7 @@ class AddTodoActivity : AppCompatActivity() {
         viewModel.addTodoState.observe(this, Observer { state ->
             when(state) {
                 is Success -> finish()
-                is UnknownError -> displayErrorSnack(R.string.error_message, R.string.retry) { saveTodo() }
+                is UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { saveTodo() }
             }
         })
     }
@@ -85,14 +86,5 @@ class AddTodoActivity : AppCompatActivity() {
     }
 
     //endregion
-
-
-    private fun displayErrorSnack(@StringRes messageRes: Int,
-                                  @StringRes actionRes: Int,
-                                  action: () -> Unit) {
-        Snackbar.make(findViewById(R.id.addTodoRoot), messageRes, Snackbar.LENGTH_LONG)
-                .setAction(actionRes) { action() }
-                .show()
-    }
 
 }
