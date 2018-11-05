@@ -1,4 +1,4 @@
-package com.jbvincey
+package com.jbvincey.ui.utils.activity
 
 import android.app.Activity
 import android.content.Context
@@ -11,7 +11,7 @@ import android.view.inputmethod.InputMethodManager
  * Created by jbvincey on 02/11/2018.
  */
 
- fun Activity.displaySnack(@StringRes messageRes: Int, vararg formatArgs: Any) {
+fun Activity.displaySnack(@StringRes messageRes: Int, vararg formatArgs: Any) {
     hideSoftKeyboard()
     val message = getString(messageRes, *formatArgs)
     Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG)
@@ -26,6 +26,7 @@ fun Activity.displayActionSnack(@StringRes messageRes: Int,
             .setAction(actionRes) { action() }
             .show()
 }
+
 
 fun Activity.hideSoftKeyboard() {
     if (currentFocus != null) {

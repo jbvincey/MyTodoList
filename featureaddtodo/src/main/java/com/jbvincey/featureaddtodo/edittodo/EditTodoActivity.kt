@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.jbvincey.design.widget.ValidationInputEditTextListener
-import com.jbvincey.displayActionSnack
-import com.jbvincey.displaySnack
+import com.jbvincey.ui.utils.activity.displayActionSnack
+import com.jbvincey.ui.utils.activity.displaySnack
 import com.jbvincey.featureaddtodo.R
 import com.jbvincey.navigation.EditTodoNavigationHandler
 import kotlinx.android.synthetic.main.activity_add_todo.*
