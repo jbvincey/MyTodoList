@@ -1,16 +1,25 @@
 package com.jbvincey.todolist
 
 import android.arch.lifecycle.Observer
+import android.graphics.Color
 import android.os.Bundle
 import android.support.transition.ChangeBounds
 import android.support.transition.Transition
 import android.support.transition.TransitionManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.helper.ItemTouchHelper
+import android.view.View
 import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.ui.appbar.AppbarElevationRecyclerScrollListener
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellAdapter
+import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellView
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel
+import com.jbvincey.ui.recycler.cells.helpers.SwipeController
+import com.jbvincey.ui.recycler.cells.helpers.SwipeControllerListener
+import com.jbvincey.ui.recycler.cells.helpers.SwipeControllerModel
+import com.jbvincey.ui.utils.activity.displayActionSnack
+import com.jbvincey.ui.utils.activity.displaySnack
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 
@@ -45,7 +54,10 @@ class TodoListActivity : AppCompatActivity() {
         initFabButton()
         initRecycler()
         initBottomNavigation()
+
         observeTodoClick()
+        observeDeleteTodoState()
+        observeArchiveTodoState()
         viewModel.showUnarchivedTodos()
     }
 
@@ -61,6 +73,23 @@ class TodoListActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
+
+        val swipeControllerModelStart = SwipeControllerModel(
+                Color.RED,
+                getDrawable(R.drawable.ic_baseline_delete_white_24px),
+                resources.getDimensionPixelSize(R.dimen.swipe_aciton_margin),
+                SwipeControllerListener { view -> onViewSwipedStart(view) }
+        )
+        val swipeControllerModelEnd = SwipeControllerModel(
+                getColor(R.color.colorAccent),
+                getDrawable(R.drawable.ic_baseline_archive_white_24px),
+                resources.getDimensionPixelSize(R.dimen.swipe_aciton_margin),
+                SwipeControllerListener { view -> onViewSwipedEnd(view) }
+        )
+
+        val itemTouchHelper = ItemTouchHelper(SwipeController(swipeControllerModelStart, swipeControllerModelEnd, this))
+        itemTouchHelper.attachToRecyclerView(todoRecyclerView)
+
         recyclerTransitionAnimation = ChangeBounds()
         recyclerTransitionAnimation.duration = RECYCLER_TRANSITION_ANIMATION_DURATION
 
@@ -112,6 +141,32 @@ class TodoListActivity : AppCompatActivity() {
                     TransitionManager.beginDelayedTransition(todoRecyclerView, recyclerTransitionAnimation)
                     checkableCellList?.let(adapter::submitList)
                 }
+    }
+
+    private fun onViewSwipedStart(view: View) {
+        viewModel.deleteTodo((view as CheckableCellView).getViewModelId())
+    }
+
+    private fun observeDeleteTodoState() {
+        viewModel.deleteTodoState.observe(this, Observer { state ->
+            when (state) {
+                is DeleteTodoState.Success -> displaySnack(R.string.delete_success)
+                is DeleteTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { /*TODO*/ }
+            }
+        })
+    }
+
+    private fun onViewSwipedEnd(view: View) {
+        viewModel.archiveTodo((view as CheckableCellView).getViewModelId())
+    }
+
+    private fun observeArchiveTodoState() {
+        viewModel.archiveTodoState.observe(this, Observer { state ->
+            when (state) {
+                is ArchiveTodoState.Success -> displaySnack(R.string.archive_success)
+                is ArchiveTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { /*TODO*/ }
+            }
+        })
     }
 
     //endregion

@@ -35,6 +35,9 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
     private val todoListType = MutableLiveData<TodoListType>()
     val todoClicked: MutableLiveData<Long> = MutableLiveData()
 
+    val deleteTodoState = MutableLiveData<DeleteTodoState>()
+    val archiveTodoState = MutableLiveData<ArchiveTodoState>()
+
     init {
         todoTransformer.checkableCellCallback = this
     }
@@ -77,6 +80,24 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
         return todoListType.value == TodoListType.ARCHIVED
     }
 
+    fun deleteTodo(todoId: Long) {
+        disposables.add(todoRepository.deleteTodo(todoId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { deleteTodoState.value = DeleteTodoState.Success },
+                        { deleteTodoState.value = DeleteTodoState.UnknownError }
+                ))
+    }
+
+    fun archiveTodo(todoId: Long) {
+        disposables.add(todoRepository.archiveTodo(todoId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { archiveTodoState.value = ArchiveTodoState.Success },
+                        { archiveTodoState.value = ArchiveTodoState.UnknownError }
+                ))
+    }
+
     override fun onCleared() {
         disposables.clear()
         super.onCleared()
@@ -86,5 +107,15 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
 enum class TodoListType {
     UNARCHIVED,
     ARCHIVED
+}
+
+sealed class DeleteTodoState {
+    object Success : DeleteTodoState()
+    object UnknownError : DeleteTodoState()
+}
+
+sealed class ArchiveTodoState {
+    object Success : ArchiveTodoState()
+    object UnknownError : ArchiveTodoState()
 }
 
