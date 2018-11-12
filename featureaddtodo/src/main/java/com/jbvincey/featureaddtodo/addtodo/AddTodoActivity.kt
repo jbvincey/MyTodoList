@@ -35,7 +35,7 @@ class AddTodoActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         setSupportActionBar(toolbar)
-        toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24px)
+        toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_white_24px)
         toolbar.setNavigationOnClickListener { finish() }
     }
 

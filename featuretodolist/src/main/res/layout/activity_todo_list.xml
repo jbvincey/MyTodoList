@@ -6,7 +6,7 @@
     style="@style/AppTheme.Activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_light_4"
+    android:background="@color/grey_dark_2"
     tools:context="com.jbvincey.todolist.TodoListActivity">
 
     <android.support.design.widget.CoordinatorLayout
@@ -46,7 +46,7 @@
             android:id="@+id/todoRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background_white"
+            android:background="@color/background_dark"
             android:elevation="@dimen/recycler_elevation"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

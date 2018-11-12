@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/background_white</color>
-    <color name="colorPrimaryDark">@color/background_white</color>
+    <color name="colorPrimary">@color/background_dark</color>
+    <color name="colorPrimaryDark">@color/background_dark</color>
     <color name="colorAccent">#00A64A</color>
 
-    <color name="background_white">#fdfdfd</color>
+    <color name="background_dark">#333333</color>
 
     <color name="grey_dark_1">#1B1B1B</color>
     <color name="grey_dark_2">#3B3B3B</color>
@@ -15,5 +15,7 @@
     <color name="grey_light_2">#ABABAB</color>
     <color name="grey_light_3">#CBCBCB</color>
     <color name="grey_light_4">#EBEBEB</color>
+
+    <color name="red_1">#B52209</color>
 
 </resources>

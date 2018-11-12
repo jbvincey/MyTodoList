@@ -59,7 +59,7 @@ class EditTodoActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         setSupportActionBar(toolbar)
-        toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24px)
+        toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_white_24px)
         toolbar.setNavigationOnClickListener { finish() }
     }
 
@@ -139,12 +139,12 @@ class EditTodoActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menu.clear()
         if (viewModel.shouldShowUnarchiveMenu()) {
-            addMenu(menu, MENU_UNARCHIVE, R.string.action_unarchive_todo, R.drawable.ic_baseline_unarchive_24px)
+            addMenu(menu, MENU_UNARCHIVE, R.string.action_unarchive_todo, R.drawable.ic_baseline_unarchive_white_24px)
         } else if(viewModel.shouldShowArchiveMenu()) {
-            addMenu(menu, MENU_ARCHIVE, R.string.action_archive_todo, R.drawable.ic_baseline_archive_24px)
+            addMenu(menu, MENU_ARCHIVE, R.string.action_archive_todo, R.drawable.ic_baseline_archive_white_24px)
         }
-        addMenu(menu, MENU_DELETE, R.string.action_delete_todo, R.drawable.ic_baseline_delete_24px)
-        addMenu(menu, MENU_EDIT, R.string.action_edit_todo, R.drawable.ic_baseline_done_24px)
+        addMenu(menu, MENU_DELETE, R.string.action_delete_todo, R.drawable.ic_baseline_delete_white_24px)
+        addMenu(menu, MENU_EDIT, R.string.action_edit_todo, R.drawable.ic_baseline_done_white_24px)
         return true
     }
 

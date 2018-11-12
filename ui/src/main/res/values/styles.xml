@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat">
 
         <!-- colors -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -10,7 +10,6 @@
 
         <!-- App bar -->
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowLightStatusBar">true</item>
 
         <!-- Font -->
         <item name="android:fontFamily">@font/noto_sans</item>
@@ -23,12 +22,12 @@
     </style>
 
     <style name="AppTheme.Activity">
-        <item name="android:background">@color/background_white</item>
+        <item name="android:background">@color/background_dark</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
     <style name="AppTheme.Toolbar.Title" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textStyle">normal</item>
@@ -42,7 +41,6 @@
 
     <style name="Cell.Checkable.Title">
         <item name="android:textSize">@dimen/cell_checkable_title_fontSize</item>
-        <item name="android:textColor">@color/cell_checkable_title</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>

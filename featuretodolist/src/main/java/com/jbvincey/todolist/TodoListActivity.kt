@@ -75,7 +75,7 @@ class TodoListActivity : AppCompatActivity() {
     private fun initRecycler() {
 
         val swipeControllerModelStart = SwipeControllerModel(
-                Color.RED,
+                getColor(R.color.red_1),
                 getDrawable(R.drawable.ic_baseline_delete_white_24px),
                 resources.getDimensionPixelSize(R.dimen.swipe_aciton_margin),
                 SwipeControllerListener { view -> onViewSwipedStart(view) }

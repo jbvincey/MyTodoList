@@ -23,7 +23,8 @@
         android:layout_margin="@dimen/add_todo_edittext_margin"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:errorTextAppearance="@style/AddTodo.TextInput.Error">
 
         <com.jbvincey.design.widget.ValidationInputEditText
             android:id="@+id/addTodoEditText"

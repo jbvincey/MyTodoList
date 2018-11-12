@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AddTodo.TextInput.Error" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/red_1</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+</resources>
