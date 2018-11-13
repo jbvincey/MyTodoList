@@ -22,7 +22,7 @@
     </style>
 
     <style name="AppTheme.Activity">
-        <item name="android:background">@color/background_dark</item>
+        <item name="android:background">@color/background_dark_1</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark" />

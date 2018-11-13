@@ -18,7 +18,7 @@ class CheckableCellView @JvmOverloads constructor(
 ) : AbstractCellView<CheckableCellViewModel, ViewCheckableCellBinding>(context, attrs, defStyleAttr), SwipeableView {
 
     init {
-        setBackgroundResource(R.color.background_dark)
+        setBackgroundResource(R.color.background_dark_1)
     }
 
     override fun getLayout() = R.layout.view_checkable_cell
