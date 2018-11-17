@@ -36,7 +36,9 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
     val todoClicked: MutableLiveData<Long> = MutableLiveData()
 
     val deleteTodoState = MutableLiveData<DeleteTodoState>()
+    val undeleteTodoState = MutableLiveData<UndeleteTodoState>()
     val archiveTodoState = MutableLiveData<ArchiveTodoState>()
+    val unarchiveTodoState = MutableLiveData<UnarchiveTodoState>()
 
     init {
         todoTransformer.checkableCellCallback = this
@@ -84,8 +86,17 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
         disposables.add(todoRepository.deleteTodo(todoId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { deleteTodoState.value = DeleteTodoState.Success },
-                        { deleteTodoState.value = DeleteTodoState.UnknownError }
+                        { deleteTodoState.value = DeleteTodoState.Success(todoId, getTodoName(todoId)) },
+                        { deleteTodoState.value = DeleteTodoState.UnknownError(todoId) }
+                ))
+    }
+
+    fun undeleteTodo(todoId: Long) {
+        disposables.add(todoRepository.undeleteTodo(todoId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { undeleteTodoState.value = UndeleteTodoState.Success },
+                        { undeleteTodoState.value = UndeleteTodoState.UnknownError(todoId) }
                 ))
     }
 
@@ -93,9 +104,22 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
         disposables.add(todoRepository.archiveTodo(todoId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { archiveTodoState.value = ArchiveTodoState.Success },
-                        { archiveTodoState.value = ArchiveTodoState.UnknownError }
+                        { archiveTodoState.value = ArchiveTodoState.Success(todoId, getTodoName(todoId)) },
+                        { archiveTodoState.value = ArchiveTodoState.UnknownError(todoId) }
                 ))
+    }
+
+    fun unarchiveTodo(todoId: Long) {
+        disposables.add(todoRepository.unarchiveTodo(todoId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { unarchiveTodoState.value = UnarchiveTodoState.Success },
+                        { unarchiveTodoState.value = UnarchiveTodoState.UnknownError(todoId) }
+                ))
+    }
+
+    private fun getTodoName(todoId: Long): String {
+        return todoList.value!!.find { todo -> todo.id == todoId }!!.name
     }
 
     override fun onCleared() {
@@ -110,12 +134,21 @@ enum class TodoListType {
 }
 
 sealed class DeleteTodoState {
-    object Success : DeleteTodoState()
-    object UnknownError : DeleteTodoState()
+    class Success(val todoId: Long, val todoName: String) : DeleteTodoState()
+    class UnknownError(val todoId: Long) : DeleteTodoState()
+}
+
+sealed class UndeleteTodoState {
+    object Success : UndeleteTodoState()
+    class UnknownError(val todoId: Long) : UndeleteTodoState()
 }
 
 sealed class ArchiveTodoState {
-    object Success : ArchiveTodoState()
-    object UnknownError : ArchiveTodoState()
+    class Success(val todoId: Long, val todoName: String) : ArchiveTodoState()
+    class UnknownError(val todoId: Long) : ArchiveTodoState()
 }
 
+sealed class UnarchiveTodoState {
+    object Success : UnarchiveTodoState()
+    class UnknownError(val todoId: Long) : UnarchiveTodoState()
+}
