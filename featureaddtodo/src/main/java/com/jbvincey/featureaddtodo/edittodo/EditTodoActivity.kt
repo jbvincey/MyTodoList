@@ -9,9 +9,9 @@ import android.view.Menu
 import android.view.MenuItem
 import com.jbvincey.design.widget.ValidationInputEditTextListener
 import com.jbvincey.ui.utils.activity.displayActionSnack
-import com.jbvincey.ui.utils.activity.displaySnack
 import com.jbvincey.featureaddtodo.R
 import com.jbvincey.navigation.EditTodoNavigationHandler
+import com.jbvincey.ui.utils.activity.displayAlertDialog
 import kotlinx.android.synthetic.main.activity_add_todo.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -109,27 +109,27 @@ class EditTodoActivity : AppCompatActivity() {
     private fun observeArchiveTodoState() {
         viewModel.archiveTodoState.observe(this, Observer { state ->
             when (state) {
-                is ArchiveTodoState.Success -> displaySnack(R.string.archive_success, viewModel.todo.value!!.name)
-                is ArchiveTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { archiveTodo() }
+                is ArchiveTodoState.Success -> if (state.displaySnack) displayActionSnack(R.string.archive_success, R.string.undo, state.todoName) { unarchiveTodo(false) }
+                is ArchiveTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { archiveTodo(true) }
             }
         })
     }
 
-    private fun archiveTodo() {
-        viewModel.archiveTodo()
+    private fun archiveTodo(displaySnackOnSuccess: Boolean) {
+        viewModel.archiveTodo(displaySnackOnSuccess)
     }
 
     private fun observeUnarchiveTodoState() {
         viewModel.unarchiveTodoState.observe(this, Observer { state ->
             when (state) {
-                is UnarchiveTodoState.Success -> displaySnack(R.string.unarchive_success, viewModel.todo.value!!.name)
-                is UnarchiveTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { unarchiveTodo() }
+                is UnarchiveTodoState.Success -> if (state.displaySnack) displayActionSnack(R.string.unarchive_success, R.string.undo, state.todoName) { archiveTodo(false) }
+                is UnarchiveTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { unarchiveTodo(true) }
             }
         })
     }
 
-    private fun unarchiveTodo() {
-        viewModel.unarchiveTodo()
+    private fun unarchiveTodo(displaySnackOnSuccess: Boolean) {
+        viewModel.unarchiveTodo(displaySnackOnSuccess)
     }
 
     //endregion
@@ -162,15 +162,15 @@ class EditTodoActivity : AppCompatActivity() {
                 true
             }
             MENU_DELETE -> {
-                deleteTodo()
+                displayAlertDialog(R.string.confirm_delete_message, R.string.confirm_delete_action, viewModel.todo.value!!.name) { deleteTodo() }
                 true
             }
             MENU_ARCHIVE -> {
-                archiveTodo()
+                archiveTodo(true)
                 true
             }
             MENU_UNARCHIVE -> {
-                unarchiveTodo()
+                unarchiveTodo(true)
                 true
             }
             else -> super.onOptionsItemSelected(item)

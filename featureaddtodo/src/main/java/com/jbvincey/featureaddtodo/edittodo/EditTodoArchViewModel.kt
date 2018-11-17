@@ -43,20 +43,20 @@ class EditTodoArchViewModel(private val todoRepository: TodoRepository): ViewMod
                 ))
     }
 
-    fun archiveTodo() {
+    fun archiveTodo(displaySnackOnSuccess: Boolean) {
         disposables.add(todoRepository.archiveTodo(todoId.value!!)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { archiveTodoState.value = ArchiveTodoState.Success },
+                        { archiveTodoState.value = ArchiveTodoState.Success(displaySnackOnSuccess, todo.value!!.name) },
                         { archiveTodoState.value = ArchiveTodoState.UnknownError }
                 ))
     }
 
-    fun unarchiveTodo() {
+    fun unarchiveTodo(displaySnackOnSuccess: Boolean) {
         disposables.add(todoRepository.unarchiveTodo(todoId.value!!)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { unarchiveTodoState.value = UnarchiveTodoState.Success },
+                        { unarchiveTodoState.value = UnarchiveTodoState.Success(displaySnackOnSuccess, todo.value!!.name) },
                         { unarchiveTodoState.value = UnarchiveTodoState.UnknownError }
                 ))
     }
@@ -88,11 +88,11 @@ sealed class DeleteTodoState {
 }
 
 sealed class ArchiveTodoState {
-    object Success : ArchiveTodoState()
+    class Success(val displaySnack: Boolean, val todoName: String) : ArchiveTodoState()
     object UnknownError : ArchiveTodoState()
 }
 
 sealed class UnarchiveTodoState {
-    object Success : UnarchiveTodoState()
+    class Success(val displaySnack: Boolean, val todoName: String) : UnarchiveTodoState()
     object UnknownError : UnarchiveTodoState()
 }

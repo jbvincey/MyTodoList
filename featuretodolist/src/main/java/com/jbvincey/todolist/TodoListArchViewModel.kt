@@ -59,7 +59,7 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
     }
 
     override fun onCheckChanged(id: Long) {
-        disposables.add(todoRepository.changeTodoCompleted(id)
+        disposables.add(todoRepository.updateTodoCompleted(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe())
     }

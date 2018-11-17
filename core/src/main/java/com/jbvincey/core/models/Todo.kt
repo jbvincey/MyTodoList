@@ -16,9 +16,10 @@ data class Todo(
         val completed: Boolean,
         val creationDate: Date,
         val completionDate: Date?,
-        val archived: Boolean
+        val archived: Boolean,
+        val deleted: Boolean
 ) {
     @Ignore
-    constructor(name: String) : this(0, name, false, Date(), null, false)
+    constructor(name: String) : this(0, name, false, Date(), null, false, false)
 
 }
