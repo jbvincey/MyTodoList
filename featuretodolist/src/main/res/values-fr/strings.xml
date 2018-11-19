@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Paramètres</string>
+
+    <string name="error_message">Une erreur est survenue</string>
+    <string name="retry">Réessayer</string>
+    <string name="undo">Annuler</string>
+    <string name="archive_success">%1$s a été archivé</string>
+    <string name="delete_success">%1$s a été supprimé</string>
+
+    <!-- menu -->
+    <string name="action_todo_list">Todo list</string>
+    <string name="action_archived_list">Archivé</string>
+
+</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- layout -->
+    <string name="add_todo_hint">Nom de la tâche</string>
+    <string name="add_todo_title">Ajouter une tâche</string>
+
+    <string name="confirm_delete_message">Êtes-vous sûr de vouloir supprimer %1$s?</string>
+    <string name="confirm_delete_action">Supprimer</string>
+    <string name="error_message">Une erreur est survenue</string>
+    <string name="retry">Réessayer</string>
+    <string name="undo">Annuler</string>
+    <string name="archive_success">%1$s a été archivé</string>
+    <string name="unarchive_success">%1$s a été désarchivé</string>
+
+    <!-- menu -->
+    <string name="action_add_todo">Ajouter une tâche</string>
+    <string name="action_edit_todo">Éditer une tâche</string>
+    <string name="action_delete_todo">Supprimer une tâche</string>
+    <string name="action_archive_todo">Archiver une tâche</string>
+    <string name="action_unarchive_todo">Désarchiver une tâche</string>
+
+    <!-- Validation -->
+    <string name="validation_todo_name_regex">..*</string>
+    <string name="validation_todo_name_errortext">Le nom d\'une tâche doit comporter au moins 1 caractère</string>
+
+</resources>

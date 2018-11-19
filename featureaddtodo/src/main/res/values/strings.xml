@@ -16,8 +16,8 @@
     <string name="action_add_todo">Add todo</string>
     <string name="action_edit_todo">Edit todo</string>
     <string name="action_delete_todo">Delete todo</string>
-    <string name="action_archive_todo">Delete todo</string>
-    <string name="action_unarchive_todo">Delete todo</string>
+    <string name="action_archive_todo">Archive todo</string>
+    <string name="action_unarchive_todo">Unarchive todo</string>
 
     <!-- navigation -->
     <string name="feature_path_addtodo">/addtodo</string>
