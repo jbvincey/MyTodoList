@@ -2,10 +2,10 @@ package com.jbvincey.ui.recycler.cells.checkablecell
 
 import android.content.Context
 import android.util.AttributeSet
+import com.jbvincey.design.widget.helper.SwipeableView
 import com.jbvincey.ui.R
 import com.jbvincey.ui.databinding.ViewCheckableCellBinding
 import com.jbvincey.ui.recycler.cells.AbstractCellView
-import com.jbvincey.ui.recycler.cells.helpers.SwipeableView
 
 
 /**
@@ -27,11 +27,11 @@ class CheckableCellView @JvmOverloads constructor(
         return binding.viewModel!!.id
     }
 
-    override fun isSwipableStart(): Boolean {
+    override fun isSwipeableStart(): Boolean {
         return true
     }
 
-    override fun isSwipableEnd(): Boolean {
+    override fun isSwipeableEnd(): Boolean {
         val viewModel = binding.viewModel!!
         return viewModel.completed && !viewModel.archived
     }

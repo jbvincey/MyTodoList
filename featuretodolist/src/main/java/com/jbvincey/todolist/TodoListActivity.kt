@@ -9,14 +9,14 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
+import com.jbvincey.design.widget.helper.SwipeCallback
+import com.jbvincey.design.widget.helper.SwipeCallbackListener
+import com.jbvincey.design.widget.helper.SwipeCallbackModel
 import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.ui.appbar.AppbarElevationRecyclerScrollListener
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellAdapter
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellView
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel
-import com.jbvincey.ui.recycler.cells.helpers.SwipeController
-import com.jbvincey.ui.recycler.cells.helpers.SwipeControllerListener
-import com.jbvincey.ui.recycler.cells.helpers.SwipeControllerModel
 import com.jbvincey.ui.utils.activity.displayActionSnack
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -81,20 +81,20 @@ class TodoListActivity : AppCompatActivity() {
 
     private fun initRecycler() {
 
-        val swipeControllerModelStart = SwipeControllerModel(
+        val swipeCallbackModelStart = SwipeCallbackModel(
                 getColor(R.color.colorAccent),
                 getDrawable(R.drawable.ic_baseline_delete_white_24px),
                 resources.getDimensionPixelSize(R.dimen.swipe_aciton_margin),
-                SwipeControllerListener { view -> onViewSwipedStart(view) }
+                SwipeCallbackListener { view -> onViewSwipedStart(view) }
         )
-        val swipeControllerModelEnd = SwipeControllerModel(
+        val swipeCallbackModelEnd = SwipeCallbackModel(
                 getColor(R.color.colorAccent),
                 getDrawable(R.drawable.ic_baseline_archive_white_24px),
                 resources.getDimensionPixelSize(R.dimen.swipe_aciton_margin),
-                SwipeControllerListener { view -> onViewSwipedEnd(view) }
+                SwipeCallbackListener { view -> onViewSwipedEnd(view) }
         )
 
-        val itemTouchHelper = ItemTouchHelper(SwipeController(swipeControllerModelStart, swipeControllerModelEnd, this))
+        val itemTouchHelper = ItemTouchHelper(SwipeCallback(swipeCallbackModelStart, swipeCallbackModelEnd, this))
         itemTouchHelper.attachToRecyclerView(todoRecyclerView)
 
         recyclerTransitionAnimation = ChangeBounds()

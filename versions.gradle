@@ -26,7 +26,7 @@ versions.rxkotlin = "2.2.0"
 versions.stetho = "1.5.0"
 versions.lifecycle = "1.1.1"
 versions.koin = "1.0.0"
-versions.design = "1.0.2"
+versions.design = "2.0"
 
 def deps = [:]
 
