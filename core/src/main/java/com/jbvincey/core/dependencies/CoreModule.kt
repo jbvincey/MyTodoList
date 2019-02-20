@@ -1,6 +1,6 @@
 package com.jbvincey.core.dependencies
 
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import com.jbvincey.core.database.MyTodoListDb
 import com.jbvincey.core.repositories.TodoRepository
 import com.jbvincey.core.repositories.TodoRepositoryImpl

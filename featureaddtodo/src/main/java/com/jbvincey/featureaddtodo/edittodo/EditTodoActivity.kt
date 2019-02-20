@@ -1,16 +1,16 @@
 package com.jbvincey.featureaddtodo.edittodo
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.jbvincey.design.widget.ValidationInputEditTextListener
-import com.jbvincey.ui.utils.activity.displayActionSnack
 import com.jbvincey.featureaddtodo.R
 import com.jbvincey.navigation.EditTodoNavigationHandler
+import com.jbvincey.ui.utils.activity.displayActionSnack
 import com.jbvincey.ui.utils.activity.displayAlertDialog
 import kotlinx.android.synthetic.main.activity_add_todo.*
 import org.koin.android.ext.android.inject

@@ -1,8 +1,8 @@
 package com.jbvincey.ui.appbar
 
 import android.animation.ValueAnimator
-import android.support.design.widget.AppBarLayout
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 import com.jbvincey.ui.R
 
 /**

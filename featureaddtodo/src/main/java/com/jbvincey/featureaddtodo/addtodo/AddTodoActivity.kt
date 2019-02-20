@@ -1,13 +1,13 @@
 package com.jbvincey.featureaddtodo.addtodo
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.jbvincey.design.widget.ValidationInputEditTextListener
-import com.jbvincey.ui.utils.activity.displayActionSnack
 import com.jbvincey.featureaddtodo.R
+import com.jbvincey.ui.utils.activity.displayActionSnack
 import kotlinx.android.synthetic.main.activity_add_todo.*
 import org.koin.android.viewmodel.ext.android.viewModel
 

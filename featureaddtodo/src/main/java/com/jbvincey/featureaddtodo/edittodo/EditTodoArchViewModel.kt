@@ -1,9 +1,9 @@
 package com.jbvincey.featureaddtodo.edittodo
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import com.jbvincey.core.models.Todo
 import com.jbvincey.core.repositories.TodoRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,7 +17,7 @@ class EditTodoArchViewModel(private val todoRepository: TodoRepository): ViewMod
     private val disposables = CompositeDisposable()
 
     val todoId: MutableLiveData<Long> = MutableLiveData()
-    val todo: LiveData<Todo> = Transformations.switchMap(todoId) {todoId ->
+    val todo: LiveData<Todo> = Transformations.switchMap(todoId) { todoId ->
         todoRepository.getTodoById(todoId)
     }
     val editTodoState = MutableLiveData<EditTodoState>()

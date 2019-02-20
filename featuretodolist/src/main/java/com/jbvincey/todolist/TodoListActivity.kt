@@ -1,14 +1,15 @@
 package com.jbvincey.todolist
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.transition.ChangeBounds
-import android.support.transition.Transition
-import android.support.transition.TransitionManager
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.ChangeBounds
+import androidx.transition.Transition
+import androidx.transition.TransitionManager
 import com.jbvincey.design.widget.helper.SwipeCallback
 import com.jbvincey.design.widget.helper.SwipeCallbackListener
 import com.jbvincey.design.widget.helper.SwipeCallbackModel
@@ -21,10 +22,10 @@ import com.jbvincey.ui.utils.activity.displayActionSnack
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-
 import kotlinx.android.synthetic.main.activity_todo_list.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
+
 import java.util.concurrent.TimeUnit
 
 class TodoListActivity : AppCompatActivity() {
@@ -100,7 +101,7 @@ class TodoListActivity : AppCompatActivity() {
         recyclerTransitionAnimation = ChangeBounds()
         recyclerTransitionAnimation.duration = RECYCLER_TRANSITION_ANIMATION_DURATION
 
-        todoRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        todoRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         todoRecyclerView.addOnScrollListener(AppbarElevationRecyclerScrollListener(appbarLayout, todoRecyclerView))
 
         val adapter = CheckableCellAdapter()

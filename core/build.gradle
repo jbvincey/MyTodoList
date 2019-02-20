@@ -29,7 +29,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // appcompat
-    api deps.support.app_compat
+    api deps.app_compat
 
     // lifecycle
     api deps.lifecycle.runtime

@@ -3,11 +3,11 @@ package com.jbvincey.ui.utils.activity
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
-import android.support.annotation.StringRes
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
+import com.google.android.material.snackbar.Snackbar
 import com.jbvincey.ui.R
 
 /**

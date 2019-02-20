@@ -1,6 +1,6 @@
 package com.jbvincey.core.repositories
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import com.jbvincey.core.database.TodoDao
 import com.jbvincey.core.models.Todo
 import io.reactivex.Completable

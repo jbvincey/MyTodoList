@@ -28,7 +28,7 @@ dependencies {
     //implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // app compat
-    api deps.support.app_compat
+    api deps.app_compat
 
     // koin
     implementation deps.koin.kotlin
