@@ -35,18 +35,22 @@ Finally, since features are independent from each other, navigation is handled b
 
 ### The Code Module
 
-The **Core** module carry data models (**Todo** in our case), and exposes repository to manipulate these objects, from a database,
+The **Core** module carries data models (**Todo** in our case), and exposes repository to manipulate these objects, from a database,
 or possibly a server.
 
 
 ### The UI Module
 
-TODO
+The **UI** module embeds UI reusable components, widgets, utils and so on. It is totally separated from the core module and
+therefore entity models, which ensures decoupling between logic and interface. It relies on **ViewModels** (from MVVM, not to
+be mistaken with Architecture Components ViewModels) to pass data to be displayed to the UI (e.g. **CheckableCellViewModel**).
 
 
 ### The Navigation Module
 
-TODO
+The **Navigation** module handles navigation between features, since these don't have access to each other, being 
+in separate modules. To achieve this, navigation relies on **Deep Links**. The **NavigationHandler** builds Deep Link 
+**Intents**, the target feature modules providing **path** and method to build **params**. 
 
 
 ### Overall architecture
