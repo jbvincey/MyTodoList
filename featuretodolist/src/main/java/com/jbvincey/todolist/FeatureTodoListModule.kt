@@ -11,7 +11,7 @@ val featureTodoListModule = module {
 
     viewModel { TodoListArchViewModel(get(), get()) }
 
-    factory { TodoTransformer() }
+    factory { TodoToCheckableCellViewModelTransformer() }
 
     factory { TodoListNavigationHandlerImpl() as TodoListNavigationHandler }
 

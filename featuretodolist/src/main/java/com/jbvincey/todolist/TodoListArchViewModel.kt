@@ -16,7 +16,7 @@ import java.util.*
  * Created by jbvincey on 19/09/2018.
  */
 class TodoListArchViewModel(private val todoRepository: TodoRepository,
-                            private val todoTransformer: TodoTransformer)
+                            private val todoToCheckableCellViewModelTransformer: TodoToCheckableCellViewModelTransformer)
     : ViewModel(), CheckableCellCallback {
 
     companion object {
@@ -41,7 +41,7 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
     val unarchiveTodoState = MutableLiveData<UnarchiveTodoState>()
 
     init {
-        todoTransformer.checkableCellCallback = this
+        todoToCheckableCellViewModelTransformer.checkableCellCallback = this
     }
 
     private val todoList: LiveData<List<Todo>> = Transformations.switchMap(todoListType) { type ->
@@ -57,7 +57,7 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
     private fun sortAndTransformTodoList(todoList: List<Todo>): List<CheckableCellViewModel> {
         val sortedTodoList = todoList.toMutableList()
         sortedTodoList.sortWith(TODO_COMPARATOR)
-        return todoTransformer.transform(sortedTodoList)
+        return todoToCheckableCellViewModelTransformer.transform(sortedTodoList)
     }
 
     override fun onCheckChanged(id: Long) {

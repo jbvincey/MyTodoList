@@ -120,6 +120,19 @@ class TodoListNavigationHandlerImpl: TodoListNavigationHandler {
 ```
 
 
-### Overall architecture
+### Global architecture
 
-TODO
+The architecture of the application is based on **MVVM**.
+Let's take the TodoList feature. The architecture component **ViewModel** gets a **LiveData** of the **Todos** from the
+**TodoRepository**. With the **TodoToCheckableCellViewModelTransformer** it transforms **Todos** to **CheckableCellViewModels**,
+and provides a **LiveData** of **CheckableCellViewModels** to the **Activity**. The **Activity** observes this **LiveData**
+and pass the **CheckableCellViewModels** to the **CheckableCellAdapter**.
+
+
+This way, the **Core** module handles only business entities, with no knowledge to the UI. The **UI** module
+on the other hand only handles views and has no knowledge of business entities. The **Feature** modules is just here to 
+make the link between business entities and views. This architecture ensures reusabilitywith the **core** and 
+**UI** modules, scalability with **feature** modules, and finally a good decoupling and separation of concern, each module
+having a clear and single purpose.
+
+![Global architecture](assets/MyTodoList_global_architecture.svg)

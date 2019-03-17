@@ -8,7 +8,7 @@ import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel
 /**
  * Created by jbvincey on 28/09/2018.
  */
-class TodoTransformer: Transformer<Todo, CheckableCellViewModel> {
+class TodoToCheckableCellViewModelTransformer: Transformer<Todo, CheckableCellViewModel> {
 
     lateinit var checkableCellCallback: CheckableCellCallback
 
