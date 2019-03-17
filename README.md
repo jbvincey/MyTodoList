@@ -49,8 +49,75 @@ be mistaken with Architecture Components ViewModels) to pass data to be displaye
 ### The Navigation Module
 
 The **Navigation** module handles navigation between features, since these don't have access to each other, being 
-in separate modules. To achieve this, navigation relies on **Deep Links**. The **NavigationHandler** builds Deep Link 
+in separate modules. To achieve this, navigation relies on **DeepLinks**. The **NavigationHandler** builds Deep Link 
 **Intents**, the target feature modules providing **path** and method to build **params**. 
+
+**NavigationHandler** (navigation module): handles navigation to every feature. It relies on **FeatureNavigationHandlers**
+for each feature.
+```kotlin
+interface NavigationHandler {
+
+    fun buildTodoListIntent(context: Context): Intent
+
+    fun buildAddTodoIntent(context: Context): Intent
+
+    fun buildEditTodoIntent(context: Context, todoId: Long): Intent
+
+}
+
+class NavigationHandlerImpl(
+        private val todoListNavigationHandler: TodoListNavigationHandler,
+        private val addTodoNavigationHandler: AddTodoNavigationHandler,
+        private val editTodoNavigationHandler: EditTodoNavigationHandler
+): NavigationHandler {
+
+    override fun buildTodoListIntent(context: Context): Intent {
+        return buildIntent(
+                todoListNavigationHandler.buildFeaturePath(context),
+                todoListNavigationHandler.buildIntentParams(),
+                context
+        )
+    }
+
+    override fun buildAddTodoIntent(context: Context): Intent {
+        return buildIntent(
+                addTodoNavigationHandler.buildFeaturePath(context),
+                addTodoNavigationHandler.buildIntentParams(),
+                context
+        )
+    }
+}  
+```
+
+**FeatureNavigationHandler** (navigation module): defines interface for specific **FeatureNavigationHandlers** to be implemented
+and provided by feature modules. 
+```kotlin
+interface FeatureNavigationHandler {
+
+    fun buildFeaturePath(context: Context, vararg parameters: Any): String
+
+    fun buildIntentParams(vararg parameters: Any): Bundle? {
+        return null
+    }
+
+}
+
+interface TodoListNavigationHandler: FeatureNavigationHandler
+
+interface AddTodoNavigationHandler: FeatureNavigationHandler
+```
+
+**TodoListNavigationHandlerImpl** (featuretodolist module): an example of **FeatureNavigationHandler** implementation, 
+injected in **NavigationHandlerImpl**, that provides the path to build TodoList **DeepLink**.
+```kotlin
+class TodoListNavigationHandlerImpl: TodoListNavigationHandler {
+
+    override fun buildFeaturePath(context: Context, vararg parameters: Any): String {
+        return context.resources.getString(R.string.feature_path_todolist)
+    }
+
+}
+```
 
 
 ### Overall architecture
