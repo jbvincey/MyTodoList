@@ -18,7 +18,7 @@ The **App** module contains barely anything, only the **Application** class hand
 The app declares every feature module dependencies it intends to include. At least one of these modules needs to contain
 a launcher activity. In our case, this is the **featuretodolist** module.
 
-![App module dependencies](assets/MyTodoList_App_module.jpg)
+![App module dependencies](assets/MyTodoList_App_module.svg)
 
 
 ### The Feature Modules
@@ -30,7 +30,7 @@ don't have any access to other feature codes.
 All code common to features is itself embedded in other modules, the **Code** and the **UI** modules in this project. 
 Finally, since features are independent from each other, navigation is handled by a **Navigation** module.
 
-![Feature module dependencies](assets/MyTodoList_Feature_module.jpg)
+![Feature module dependencies](assets/MyTodoList_Feature_module.svg)
 
 
 ### The Code Module
