@@ -5,7 +5,8 @@ import com.jbvincey.core.database.MyTodoListDb
 import com.jbvincey.core.repositories.TodoRepository
 import com.jbvincey.core.repositories.TodoRepositoryImpl
 import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module.module
+import org.koin.dsl.module
+
 
 /**
  * Created by jbvincey on 01/10/2018.

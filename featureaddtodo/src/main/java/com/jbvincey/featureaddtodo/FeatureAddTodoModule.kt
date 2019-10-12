@@ -6,8 +6,8 @@ import com.jbvincey.featureaddtodo.edittodo.EditTodoArchViewModel
 import com.jbvincey.featureaddtodo.edittodo.EditTodoNavigationHandlerImpl
 import com.jbvincey.navigation.AddTodoNavigationHandler
 import com.jbvincey.navigation.EditTodoNavigationHandler
-import org.koin.android.viewmodel.ext.koin.viewModel
-import org.koin.dsl.module.module
+import org.koin.android.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 
 /**
  * Created by jbvincey on 19/09/2018.

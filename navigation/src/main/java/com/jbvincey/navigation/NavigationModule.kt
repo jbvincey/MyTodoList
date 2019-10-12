@@ -1,6 +1,6 @@
 package com.jbvincey.navigation
 
-import org.koin.dsl.module.module
+import org.koin.dsl.module
 
 /**
  * Created by jbvincey on 09/10/2018.
