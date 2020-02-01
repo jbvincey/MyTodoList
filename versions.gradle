@@ -25,7 +25,7 @@ versions.rxandroid = "2.1.0"
 versions.rxjava2 = "2.2.2"
 versions.rxkotlin = "2.2.0"
 versions.stetho = "1.5.1"
-versions.lifecycle = "2.1.0"
+versions.lifecycle = "2.2.0"
 versions.koin = "2.0.1"
 versions.design = "2.0"
 
