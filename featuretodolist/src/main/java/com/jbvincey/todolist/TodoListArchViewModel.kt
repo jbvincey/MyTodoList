@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.jbvincey.core.models.Todo
 import com.jbvincey.core.repositories.TodoRepository
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellCallback
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.launch
 import java.util.*
 
 /**
@@ -31,7 +31,6 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
         }
     }
 
-    private val disposables = CompositeDisposable()
     private val todoListType = MutableLiveData<TodoListType>()
     val todoClicked: MutableLiveData<Long> = MutableLiveData()
 
@@ -61,9 +60,9 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
     }
 
     override fun onCheckChanged(id: Long) {
-        disposables.add(todoRepository.updateTodoCompleted(id)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe())
+        viewModelScope.launch {
+            todoRepository.updateTodoCompleted(id)
+        }
     }
 
     override fun onClick(id: Long) {
@@ -83,48 +82,51 @@ class TodoListArchViewModel(private val todoRepository: TodoRepository,
     }
 
     fun deleteTodo(todoId: Long) {
-        disposables.add(todoRepository.deleteTodo(todoId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { deleteTodoState.value = DeleteTodoState.Success(todoId, getTodoName(todoId)) },
-                        { deleteTodoState.value = DeleteTodoState.UnknownError(todoId) }
-                ))
+        viewModelScope.launch {
+            try {
+                todoRepository.deleteTodo(todoId)
+                deleteTodoState.value = DeleteTodoState.Success(todoId, getTodoName(todoId))
+            } catch (e: Exception) {
+                deleteTodoState.value = DeleteTodoState.UnknownError(todoId)
+            }
+        }
     }
 
     fun undeleteTodo(todoId: Long) {
-        disposables.add(todoRepository.undeleteTodo(todoId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { undeleteTodoState.value = UndeleteTodoState.Success },
-                        { undeleteTodoState.value = UndeleteTodoState.UnknownError(todoId) }
-                ))
+        viewModelScope.launch {
+            try {
+                todoRepository.undeleteTodo(todoId)
+                undeleteTodoState.value = UndeleteTodoState.Success
+            } catch (e: Exception) {
+                undeleteTodoState.value = UndeleteTodoState.UnknownError(todoId)
+            }
+        }
     }
 
     fun archiveTodo(todoId: Long) {
-        disposables.add(todoRepository.archiveTodo(todoId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { archiveTodoState.value = ArchiveTodoState.Success(todoId, getTodoName(todoId)) },
-                        { archiveTodoState.value = ArchiveTodoState.UnknownError(todoId) }
-                ))
+        viewModelScope.launch {
+            try {
+                todoRepository.archiveTodo(todoId)
+                archiveTodoState.value = ArchiveTodoState.Success(todoId, getTodoName(todoId))
+            } catch (e: Exception) {
+                archiveTodoState.value = ArchiveTodoState.UnknownError(todoId)
+            }
+        }
     }
 
     fun unarchiveTodo(todoId: Long) {
-        disposables.add(todoRepository.unarchiveTodo(todoId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { unarchiveTodoState.value = UnarchiveTodoState.Success },
-                        { unarchiveTodoState.value = UnarchiveTodoState.UnknownError(todoId) }
-                ))
+        viewModelScope.launch {
+            try {
+                todoRepository.unarchiveTodo(todoId)
+                unarchiveTodoState.value = UnarchiveTodoState.Success
+            } catch (e: Exception) {
+                unarchiveTodoState.value = UnarchiveTodoState.UnknownError(todoId)
+            }
+        }
     }
 
     private fun getTodoName(todoId: Long): String {
         return todoList.value!!.find { todo -> todo.id == todoId }!!.name
-    }
-
-    override fun onCleared() {
-        disposables.clear()
-        super.onCleared()
     }
 }
 

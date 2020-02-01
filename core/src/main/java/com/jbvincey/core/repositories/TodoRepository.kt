@@ -3,8 +3,9 @@ package com.jbvincey.core.repositories
 import androidx.lifecycle.LiveData
 import com.jbvincey.core.database.TodoDao
 import com.jbvincey.core.models.Todo
-import io.reactivex.Completable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Created by jbvincey on 19/09/2018.
@@ -19,23 +20,25 @@ interface TodoRepository {
 
     fun getTodoById(id: Long): LiveData<Todo>
 
-    fun addTodo(todoName: String): Completable
+    suspend fun addTodo(todoName: String)
 
-    fun editTodo(todoName: String, todoId: Long): Completable
+    suspend fun editTodo(todoName: String, todoId: Long)
 
-    fun updateTodoCompleted(id: Long): Completable
+    suspend fun updateTodoCompleted(id: Long)
 
-    fun deleteTodo(id: Long): Completable
+    suspend fun deleteTodo(id: Long)
 
-    fun undeleteTodo(id: Long): Completable
+    suspend  fun undeleteTodo(id: Long)
 
-    fun archiveTodo(id: Long): Completable
+    suspend fun archiveTodo(id: Long)
 
-    fun unarchiveTodo(id: Long): Completable
+    suspend fun unarchiveTodo(id: Long)
 
 }
 
 class TodoRepositoryImpl(private val todoDao: TodoDao): TodoRepository {
+
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     override fun getAllTodos(): LiveData<List<Todo>> = todoDao.getAllTodos()
 
@@ -45,53 +48,46 @@ class TodoRepositoryImpl(private val todoDao: TodoDao): TodoRepository {
 
     override fun getTodoById(id: Long): LiveData<Todo> = todoDao.getTodoById(id)
 
-    override fun addTodo(todoName: String): Completable {
-        return Completable.create {
+    override suspend fun addTodo(todoName: String) {
+        withContext(ioDispatcher) {
             todoDao.insertTodo(Todo(todoName))
-            it.onComplete()
-        }.subscribeOn(Schedulers.io())
+        }
     }
 
-    override fun editTodo(todoName: String, todoId: Long): Completable {
-        return Completable.create {
+    override suspend fun editTodo(todoName: String, todoId: Long) {
+        withContext(ioDispatcher) {
             todoDao.updateTodoName(todoName, todoId)
-            it.onComplete()
-        }.subscribeOn(Schedulers.io())
+        }
     }
 
-    override fun updateTodoCompleted(id: Long): Completable {
-        return Completable.create {
+    override suspend fun updateTodoCompleted(id: Long) {
+        withContext(ioDispatcher) {
             todoDao.updateTodoCompleted(id)
-            it.onComplete()
-        }.subscribeOn(Schedulers.io())
+        }
     }
 
-    override fun deleteTodo(id: Long): Completable {
-        return Completable.create {
+    override suspend fun deleteTodo(id: Long) {
+        withContext(ioDispatcher) {
             todoDao.updateTodoDeleted(id, true)
-            it.onComplete()
-        }.subscribeOn(Schedulers.io())
+        }
     }
 
-    override fun undeleteTodo(id: Long): Completable {
-        return Completable.create {
+    override suspend fun undeleteTodo(id: Long) {
+        withContext(ioDispatcher) {
             todoDao.updateTodoDeleted(id, false)
-            it.onComplete()
-        }.subscribeOn(Schedulers.io())
+        }
     }
 
-    override fun archiveTodo(id: Long): Completable {
-        return Completable.create {
+    override suspend fun archiveTodo(id: Long) {
+        withContext(ioDispatcher) {
             todoDao.updateTodoArchived(id, true)
-            it.onComplete()
-        }.subscribeOn(Schedulers.io())
+        }
     }
 
-    override fun unarchiveTodo(id: Long): Completable {
-        return Completable.create {
+    override suspend fun unarchiveTodo(id: Long) {
+        withContext(ioDispatcher) {
             todoDao.updateTodoArchived(id, false)
-            it.onComplete()
-        }.subscribeOn(Schedulers.io())
+        }
     }
 
 }

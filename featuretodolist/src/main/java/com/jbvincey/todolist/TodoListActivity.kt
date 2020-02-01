@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,14 +20,11 @@ import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellAdapter
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellView
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel
 import com.jbvincey.ui.utils.activity.displayActionSnack
-import io.reactivex.Completable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_todo_list.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
-
-import java.util.concurrent.TimeUnit
 
 class TodoListActivity : AppCompatActivity() {
 
@@ -39,18 +37,12 @@ class TodoListActivity : AppCompatActivity() {
 
     private val viewModel: TodoListArchViewModel by viewModel()
     private val navigationHandler: NavigationHandler by inject()
-    private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_todo_list)
 
         initView()
-    }
-
-    override fun onDestroy() {
-        disposables.clear()
-        super.onDestroy()
     }
 
     //region view setup
@@ -143,13 +135,11 @@ class TodoListActivity : AppCompatActivity() {
 
     private fun updateCheckableCellListWithDelay(checkableCellList: List<CheckableCellViewModel>?,
                                                  adapter: CheckableCellAdapter) {
-        disposables.add(Completable.timer(CHECKABLE_CELL_UPDATE_DELAY, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    TransitionManager.beginDelayedTransition(todoRecyclerView, recyclerTransitionAnimation)
-                    checkableCellList?.let(adapter::submitList)
-                }
-        )
+        lifecycleScope.launch {
+            delay(CHECKABLE_CELL_UPDATE_DELAY)
+            TransitionManager.beginDelayedTransition(todoRecyclerView, recyclerTransitionAnimation)
+            checkableCellList?.let(adapter::submitList)
+        }
     }
 
     private fun onViewSwipedStart(view: View) {

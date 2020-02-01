@@ -36,10 +36,9 @@ dependencies {
     api deps.lifecycle.extensions
     api deps.lifecycle.livedata
 
-    // rxjava
-    api deps.rxjava.rxandroid
-    api deps.rxjava.rxjava2
-    api deps.rxjava.rxkotlin
+    // coroutines
+    api deps.coroutines.core
+    api deps.coroutines.android
 
     // koin
     api deps.koin.kotlin

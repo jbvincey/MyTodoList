@@ -33,6 +33,10 @@ dependencies {
     api project(":core")
     api project(":navigation")
 
+    // coroutines
+    implementation deps.coroutines.lifecycle_viewmodel
+    implementation deps.coroutines.lifecycle_runtime
+
     // tests
     testImplementation deps.junit
     androidTestImplementation deps.atsl.runner
