@@ -89,11 +89,11 @@ sealed class DeleteTodoState {
 }
 
 sealed class ArchiveTodoState {
-    class Success(val displaySnack: Boolean, val todoName: String) : ArchiveTodoState()
+    data class Success(val displaySnack: Boolean, val todoName: String) : ArchiveTodoState()
     object UnknownError : ArchiveTodoState()
 }
 
 sealed class UnarchiveTodoState {
-    class Success(val displaySnack: Boolean, val todoName: String) : UnarchiveTodoState()
+    data class Success(val displaySnack: Boolean, val todoName: String) : UnarchiveTodoState()
     object UnknownError : UnarchiveTodoState()
 }

@@ -136,21 +136,21 @@ enum class TodoListType {
 }
 
 sealed class DeleteTodoState {
-    class Success(val todoId: Long, val todoName: String) : DeleteTodoState()
-    class UnknownError(val todoId: Long) : DeleteTodoState()
+    data class Success(val todoId: Long, val todoName: String) : DeleteTodoState()
+    data class UnknownError(val todoId: Long) : DeleteTodoState()
 }
 
 sealed class UndeleteTodoState {
     object Success : UndeleteTodoState()
-    class UnknownError(val todoId: Long) : UndeleteTodoState()
+    data class UnknownError(val todoId: Long) : UndeleteTodoState()
 }
 
 sealed class ArchiveTodoState {
-    class Success(val todoId: Long, val todoName: String) : ArchiveTodoState()
-    class UnknownError(val todoId: Long) : ArchiveTodoState()
+    data class Success(val todoId: Long, val todoName: String) : ArchiveTodoState()
+    data class UnknownError(val todoId: Long) : ArchiveTodoState()
 }
 
 sealed class UnarchiveTodoState {
     object Success : UnarchiveTodoState()
-    class UnknownError(val todoId: Long) : UnarchiveTodoState()
+    data class UnknownError(val todoId: Long) : UnarchiveTodoState()
 }
