@@ -12,7 +12,7 @@ ext {
 
 ext.deps = [:]
 def versions = [:]
-versions.android_gradle_plugin = '3.5.3'
+versions.android_gradle_plugin = '4.0.0'
 versions.appcompat = "1.1.0"
 versions.material = "1.1.0-rc02"
 versions.room = "2.2.3"
