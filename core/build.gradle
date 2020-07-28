@@ -43,6 +43,7 @@ dependencies {
     api deps.lifecycle.runtime
     api deps.lifecycle.extensions
     api deps.lifecycle.livedata
+    api deps.lifecycle.livedata_ktx
 
     // coroutines
     api deps.coroutines.core

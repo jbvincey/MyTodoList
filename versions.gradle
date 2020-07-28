@@ -65,6 +65,7 @@ lifecycle.runtime = "androidx.lifecycle:lifecycle-runtime:$versions.lifecycle"
 lifecycle.extensions = "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
 lifecycle.compiler = "androidx.lifecycle:lifecycle-compiler:$versions.lifecycle"
 lifecycle.livedata = "androidx.lifecycle:lifecycle-livedata:$versions.lifecycle"
+lifecycle.livedata_ktx = "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
 deps.lifecycle = lifecycle
 
 def koin = [:]
