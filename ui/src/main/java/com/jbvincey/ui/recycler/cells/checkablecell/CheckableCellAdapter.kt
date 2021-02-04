@@ -16,6 +16,9 @@ class CheckableCellAdapter: DataBindingListAdapter<CheckableCellViewModel>(DiffC
         override fun areContentsTheSame(p0: CheckableCellViewModel, p1: CheckableCellViewModel) = p0 == p1
     }
 
-    override fun getItemViewType(position: Int) = R.layout.item_checkable_cell
+    override fun getItemViewType(position: Int) = R.layout.view_checkable_cell
+
+    override fun createView(context: Context): AbstractCellView<CheckableCellViewModel<T>, ViewCheckableCellBinding> =
+        CheckableCellView(context)
 
 }

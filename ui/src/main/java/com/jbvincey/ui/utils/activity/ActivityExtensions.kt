@@ -6,7 +6,7 @@ import android.content.DialogInterface
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.jbvincey.ui.R
 
@@ -21,10 +21,12 @@ fun Activity.displaySnack(@StringRes messageRes: Int, vararg formatArgs: Any) {
             .show()
 }
 
-fun Activity.displayActionSnack(@StringRes messageRes: Int,
-                                @StringRes actionRes: Int,
-                                vararg formatArgs: Any,
-                                action: () -> Unit) {
+fun Activity.displayActionSnack(
+    @StringRes messageRes: Int,
+    @StringRes actionRes: Int,
+    vararg formatArgs: Any,
+    action: () -> Unit
+) {
     hideSoftKeyboard()
     val message = getString(messageRes, *formatArgs)
     Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG)
@@ -32,14 +34,16 @@ fun Activity.displayActionSnack(@StringRes messageRes: Int,
             .show()
 }
 
-fun Activity.displayAlertDialog(@StringRes messageRes: Int,
-                                @StringRes actionRes: Int,
-                                vararg formatArgs: Any,
-                                action: () -> Unit) {
+fun Activity.displayAlertDialog(
+    @StringRes messageRes: Int,
+    @StringRes actionRes: Int,
+    vararg formatArgs: Any,
+    action: () -> Unit
+) {
     hideSoftKeyboard()
     val message = getString(messageRes, *formatArgs)
 
-    AlertDialog.Builder(this)
+    MaterialAlertDialogBuilder(this)
             .setMessage(message)
             .setPositiveButton(actionRes) { dialog: DialogInterface, _: Int ->
                 run {

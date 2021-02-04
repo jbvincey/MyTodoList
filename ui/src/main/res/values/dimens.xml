@@ -1,15 +1,16 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
 
-    <!-- AppBar -->
-    <dimen name="appbar_elevation">4dp</dimen>
-
     <!-- Lists -->
     <dimen name="list_margin_horizontal">16dp</dimen>
 
+    <!-- Sticky notes -->
+    <dimen name="stickynote_title_textSize">16sp</dimen>
+    <dimen name="stickynote_subtitle_textSize">12sp</dimen>
+
     <!-- Checkable cells -->
-    <dimen name="cell_checkable_height">48dp</dimen>
-    <dimen name="cell_checkable_title_fontSize">18sp</dimen>
+    <dimen name="cell_checkable_minheight">48dp</dimen>
+    <dimen name="cell_checkable_title_textSize">18sp</dimen>
     <dimen name="cell_checkable_title_marginEnd">8dp</dimen>
 
 </resources>

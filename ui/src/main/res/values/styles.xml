@@ -1,37 +1,66 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
 
-        <!-- colors -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/theme_color_primary</item>
+        <item name="colorPrimaryVariant">@color/theme_color_secondary</item>
+        <item name="colorOnPrimary">@android:color/black</item>
 
-        <!-- App bar -->
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="colorSecondary">@color/theme_color_primary</item>
+        <item name="colorSecondaryVariant">@color/theme_color_secondary</item>
+        <item name="colorOnSecondary">@android:color/black</item>
+        
+        <item name="colorSurface">@color/theme_background_2</item>
+        <item name="colorOnSurface">@color/theme_text_primary</item>
+
+        <item name="android:colorBackground">@color/theme_background_2</item>
+        <item name="colorOnBackground">@color/theme_text_primary</item>
+
+        <item name="colorError">@color/red_1</item>
+        <item name="colorOnError">@android:color/black</item>-->
 
         <!-- Font -->
         <item name="android:fontFamily">@font/noto_sans</item>
 
+        <!-- Text field -->
+        <item name="textInputStyle">@style/Widget.AppTheme.TextInputLayout</item>
+
+        <!-- Toolbar -->
+        <item name="toolbarStyle">@style/Widget.AppTheme.Toolbar</item>
+
+        <!-- BottomNavigation -->
+        <item name="bottomNavigationStyle">@style/Widget.AppTheme.BottomNavigationView</item>
+
+        <!-- status / navigation -->
+        <item name="android:statusBarColor" tools:ignore="NewApi">@color/theme_background_1</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+        <item name="android:navigationBarColor" tools:ignore="NewApi">@color/theme_background_1</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <!-- Text field -->
+    <style name="Widget.AppTheme.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox" />
+
+    <!-- Toolbar -->
+    <style name="Widget.AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">@color/theme_background_1</item>
     </style>
 
-    <style name="AppTheme.Activity">
-        <item name="android:background">@color/background_dark_1</item>
+    <!-- BottomNavigation -->
+    <style name="Widget.AppTheme.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/theme_background_1</item>
+        <item name="itemIconTint">@color/bottomsheet_icon</item>
+        <item name="itemTextAppearanceInactive">@style/Widget.AppTheme.BottomNavigationView.TextAppearanceInactive</item>
+        <item name="itemTextAppearanceActive">@style/Widget.AppTheme.BottomNavigationView.TextAppearanceActive</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+    <style name="Widget.AppTheme.BottomNavigationView.TextAppearanceInactive">
+        <item name="android:color">@color/theme_color_secondary</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
-
-    <style name="AppTheme.Toolbar.Title" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textStyle">normal</item>
-        <item name="android:fontFamily">@font/noto_sans</item>
+    <style name="Widget.AppTheme.BottomNavigationView.TextAppearanceActive">
+        <item name="android:color">@color/theme_color_primary</item>
     </style>
 
     <!-- Items -->

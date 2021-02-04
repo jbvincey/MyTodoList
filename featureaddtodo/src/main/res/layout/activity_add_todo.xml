@@ -6,15 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/addTodoToolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
+        android:layout_height="wrap_content" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/addTodoInputLayout"
@@ -23,17 +18,16 @@
         android:layout_margin="@dimen/add_todo_edittext_margin"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:errorTextAppearance="@style/AddTodo.TextInput.Error">
+        app:layout_constraintTop_toBottomOf="@+id/addTodoToolbar">
 
         <com.jbvincey.design.widget.ValidationInputEditText
             android:id="@+id/addTodoEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/add_todo_hint"
             android:imeOptions="actionGo"
             android:inputType="text"
             android:maxLines="1"
+            android:hint="@string/add_todo_hint"
             app:errorText="@string/validation_todo_name_errortext"
             app:validationRegex="@string/validation_todo_name_regex"
             app:validateTextOnEditorAction="true">

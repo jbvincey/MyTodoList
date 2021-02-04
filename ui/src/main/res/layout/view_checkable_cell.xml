@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="androidx.core.content.ContextCompat" />
+
         <variable
             name="viewModel"
             type="com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel" />
@@ -13,7 +15,7 @@
 
     <merge
         tools:layout_width="match_parent"
-        tools:layout_height="@dimen/cell_checkable_height"
+        tools:layout_height="@dimen/cell_checkable_minheight"
         tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
         <TextView
@@ -24,9 +26,9 @@
             android:paddingEnd="@dimen/list_margin_horizontal"
             android:layout_marginEnd="@dimen/cell_checkable_title_marginEnd"
             android:text="@{viewModel.name}"
-            android:textColor="@{viewModel.completed ? @color/grey_dark_4 : @color/grey_light_4}"
+            android:textColor="@{viewModel.completed ? @color/theme_text_secondary : @color/theme_text_primary}"
             android:gravity="center_vertical"
-            android:onClickListener="@{(view) -> viewModel.callback.onClick(viewModel.id)}"
+            android:onClickListener="@{(view) -> viewModel.callback.onClick(viewModel.data)}"
             style="@style/Cell.Checkable.Title"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -38,9 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="@{viewModel.completed}"
-            android:layout_marginEnd="@dimen/list_margin_horizontal"
             android:enabled="@{!viewModel.archived}"
-            android:onCheckedChanged="@{(view, checked) -> viewModel.completed != checked ? viewModel.callback.onCheckChanged(viewModel.id) : void}"
+            android:onCheckedChanged="@{(view, checked) -> viewModel.completed != checked ? viewModel.callback.onCheckChanged(viewModel.data) : void}"
             app:layout_constraintTop_toTopOf="@+id/cell_checkable_title"
             app:layout_constraintBottom_toBottomOf="@+id/cell_checkable_title"
             app:layout_constraintEnd_toEndOf="parent" />
