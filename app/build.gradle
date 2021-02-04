@@ -16,7 +16,12 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            minifyEnabled false
         }
     }
     dataBinding {
@@ -45,6 +50,9 @@ dependencies {
     implementation project(":featuretodolistpicker")
     implementation project(":featuretodolist")
     implementation project(":featureaddtodo")
+
+    debugImplementation deps.flipper.soloader
+    debugImplementation deps.flipper.flipper
 
     // tests
     testImplementation deps.junit
