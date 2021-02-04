@@ -16,14 +16,14 @@ interface TodoDao {
     @Delete
     fun deleteTodo(todo: Todo)
 
-    @Query("SELECT * FROM todos WHERE deleted = 0")
-    fun getAllTodos(): LiveData<List<Todo>>
+    @Query("SELECT * FROM todos WHERE deleted = 0 AND todoListId = :todoListId")
+    fun getAllTodosFromTodoList(todoListId: Long): LiveData<List<Todo>>
 
-    @Query("SELECT * FROM todos WHERE archived = 1 AND deleted = 0")
-    fun getAllArchivedTodos(): LiveData<List<Todo>>
+    @Query("SELECT * FROM todos WHERE archived = 1 AND deleted = 0 AND todoListId = :todoListId")
+    fun getAllArchivedTodosFromTodoList(todoListId: Long): LiveData<List<Todo>>
 
-    @Query("SELECT * FROM todos WHERE archived = 0 AND deleted = 0")
-    fun getAllUnarchivedTodos(): LiveData<List<Todo>>
+    @Query("SELECT * FROM todos WHERE archived = 0 AND deleted = 0 AND todoListId = :todoListId")
+    fun getAllUnarchivedTodosFromTodoList(todoListId: Long): LiveData<List<Todo>>
 
     @Query("SELECT * FROM todos WHERE id = :id")
     fun getTodoById(id: Long): LiveData<Todo>

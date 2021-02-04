@@ -12,15 +12,15 @@ import kotlinx.coroutines.withContext
  */
 interface TodoRepository {
 
-    fun getAllTodos(): LiveData<List<Todo>>
+    fun getAllTodosFromTodoList(todoListId: Long): LiveData<List<Todo>>
 
-    fun getAllArchivedTodos(): LiveData<List<Todo>>
+    fun getAllArchivedTodosFromTodoList(todoListId: Long): LiveData<List<Todo>>
 
-    fun getAllUnarchivedTodos(): LiveData<List<Todo>>
+    fun getAllUnarchivedTodosFromTodoList(todoListId: Long): LiveData<List<Todo>>
 
     fun getTodoById(id: Long): LiveData<Todo>
 
-    suspend fun addTodo(todoName: String)
+    suspend fun addTodo(todoName: String, todoListId: Long)
 
     suspend fun editTodo(todoName: String, todoId: Long)
 
@@ -40,17 +40,17 @@ class TodoRepositoryImpl(private val todoDao: TodoDao): TodoRepository {
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    override fun getAllTodos(): LiveData<List<Todo>> = todoDao.getAllTodos()
+    override fun getAllTodosFromTodoList(todoListId: Long): LiveData<List<Todo>> = todoDao.getAllTodosFromTodoList(todoListId)
 
-    override fun getAllArchivedTodos(): LiveData<List<Todo>> = todoDao.getAllArchivedTodos()
+    override fun getAllArchivedTodosFromTodoList(todoListId: Long): LiveData<List<Todo>> = todoDao.getAllArchivedTodosFromTodoList(todoListId)
 
-    override fun getAllUnarchivedTodos(): LiveData<List<Todo>> = todoDao.getAllUnarchivedTodos()
+    override fun getAllUnarchivedTodosFromTodoList(todoListId: Long): LiveData<List<Todo>> = todoDao.getAllUnarchivedTodosFromTodoList(todoListId)
 
     override fun getTodoById(id: Long): LiveData<Todo> = todoDao.getTodoById(id)
 
-    override suspend fun addTodo(todoName: String) {
+    override suspend fun addTodo(todoName: String, todoListId: Long) {
         withContext(ioDispatcher) {
-            todoDao.insertTodo(Todo(todoName))
+            todoDao.insertTodo(Todo(todoName, todoListId))
         }
     }
 

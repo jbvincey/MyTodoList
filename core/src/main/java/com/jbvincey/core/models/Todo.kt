@@ -1,6 +1,8 @@
 package com.jbvincey.core.models
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.util.*
@@ -17,9 +19,25 @@ data class Todo(
         val creationDate: Date,
         val completionDate: Date?,
         val archived: Boolean,
-        val deleted: Boolean
+        val deleted: Boolean,
+        @ForeignKey(
+            entity = TodoList::class,
+            parentColumns = ["id"],
+            childColumns = ["todoListId"],
+            onDelete = CASCADE
+        )
+        val todoListId: Long
 ) {
     @Ignore
-    constructor(name: String) : this(0, name, false, Date(), null, false, false)
+    constructor(name: String, todoListId: Long) : this(
+        id = 0,
+        name = name,
+        completed = false,
+        creationDate = Date(),
+        completionDate = null,
+        archived = false,
+        deleted = false,
+        todoListId = todoListId
+    )
 
 }
