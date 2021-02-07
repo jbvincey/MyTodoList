@@ -1,0 +1,33 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.jbvincey.todolistpicker">
+
+    <application>
+
+        <activity android:name="com.jbvincey.todolistpicker.TodoListPickerActivity"
+            android:label="@string/app_name">
+
+            <!-- launcher activity -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- navigation deeplink -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="@string/app_host"
+                    android:path="@string/feature_path_todolistpicker"
+                    android:scheme="@string/app_scheme" />
+            </intent-filter>
+
+        </activity>
+
+    </application>
+
+
+</manifest>

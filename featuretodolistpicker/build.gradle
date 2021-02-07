@@ -1,32 +1,28 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
+
     defaultConfig {
-        applicationId "com.sample.mytodolist"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.versionCode
         versionName rootProject.versionName
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
+
     buildTypes {
         release {
             minifyEnabled false
-            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug {
-            debuggable true
-            minifyEnabled false
-        }
     }
-    dataBinding {
-        enabled = true
-    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -40,24 +36,17 @@ android {
 dependencies {
     //implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    // kotlin runner
-    implementation deps.kotlin.stdlib
-
-    // stetho
-    implementation deps.stetho
-
     // internal modules
-    implementation project(":featuretodolistpicker")
-    implementation project(":featureaddtodolist")
-    implementation project(":featuretodolist")
-    implementation project(":featureaddtodo")
+    api project(":ui")
+    api project(":core")
+    api project(":navigation")
 
-    debugImplementation deps.flipper.soloader
-    debugImplementation deps.flipper.flipper
+    // coroutines
+    implementation deps.coroutines.lifecycle_viewmodel
+    implementation deps.coroutines.lifecycle_runtime
 
     // tests
     testImplementation deps.junit
-    testImplementation deps.koin.test
     androidTestImplementation deps.atsl.runner
     androidTestImplementation deps.espresso.core
 }
