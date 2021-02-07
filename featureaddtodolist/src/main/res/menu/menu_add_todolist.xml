@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.jbvincey.featureaddtodo.addtodo.AddTodoListActivity">
+    <item
+        android:id="@+id/action_add_todolist"
+        android:title="@string/action_add_todolist"
+        android:icon="@drawable/ic_baseline_done_24px"
+        app:showAsAction="always" />
+</menu>

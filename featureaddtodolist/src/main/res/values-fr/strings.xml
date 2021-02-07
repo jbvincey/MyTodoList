@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- layout -->
+    <string name="add_todolist_hint">Nom du post-it</string>
+    <string name="add_todolist_title">Ajouter un post-it</string>
+
+    <string name="confirm_delete_message">Êtes-vous sûr de vouloir supprimer %1$s?</string>
+    <string name="confirm_delete_action">Supprimer</string>
+    <string name="error_message">Une erreur est survenue</string>
+    <string name="retry">Réessayer</string>
+    <string name="undo">Annuler</string>
+
+    <!-- menu -->
+    <string name="action_add_todolist">Ajouter un post-it</string>
+    <string name="action_edit_todolist">Éditer un post-it</string>
+    <string name="action_delete_todolist">Supprimer un post-it</string>
+
+    <!-- Validation -->
+    <string name="validation_todolist_name_regex">..*</string>
+    <string name="validation_todolist_name_errortext">Le nom d\'un post-it doit comporter au moins 1 caractère</string>
+
+</resources>

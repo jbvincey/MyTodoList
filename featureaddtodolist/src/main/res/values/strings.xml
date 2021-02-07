@@ -1,0 +1,27 @@
+<resources>
+
+    <!-- layout -->
+    <string name="add_todolist_hint">Sticky note name</string>
+    <string name="add_todolist_title">Add a sticky note</string>
+
+    <string name="confirm_delete_message">Are you sure you want to delete %1$s?</string>
+    <string name="confirm_delete_action">Delete</string>
+    <string name="error_message">An error occurred</string>
+    <string name="retry">retry</string>
+    <string name="undo">undo</string>
+
+    <!-- menu -->
+    <string name="action_add_todolist">Add sticky note</string>
+    <string name="action_edit_todolist">Edit sticky note</string>
+    <string name="action_delete_todolist">Delete sticky note</string>
+
+    <!-- navigation -->
+    <string name="feature_path_addtodolist">/addtodolist</string>
+    <string name="feature_path_edittodolist">/edittodolist</string>
+
+
+    <!-- Validation -->
+    <string name="validation_todolist_name_regex">..*</string>
+    <string name="validation_todolist_name_errortext">Sticky note name needs at least one character</string>
+
+</resources>

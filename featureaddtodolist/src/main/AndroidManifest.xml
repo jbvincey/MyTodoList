@@ -1,0 +1,44 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="deezer.android.featureaddtodolist">
+
+    <application>
+
+        <activity
+            android:name="com.jbvincey.featureaddtodolist.add.AddTodoListActivity"
+            android:label="@string/add_todolist_title"
+            android:windowSoftInputMode="stateVisible">
+
+            <!-- navigation deeplink -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="@string/app_host"
+                    android:path="@string/feature_path_addtodolist"
+                    android:scheme="@string/app_scheme" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name="com.jbvincey.featureaddtodolist.edit.EditTodoListActivity"
+            android:windowSoftInputMode="stateVisible">
+
+            <!-- navigation deeplink -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="@string/app_host"
+                    android:path="@string/feature_path_edittodolist"
+                    android:scheme="@string/app_scheme" />
+            </intent-filter>
+
+        </activity>
+
+    </application>
+</manifest>
