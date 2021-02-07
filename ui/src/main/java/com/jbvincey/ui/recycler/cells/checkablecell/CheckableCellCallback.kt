@@ -3,10 +3,10 @@ package com.jbvincey.ui.recycler.cells.checkablecell
 /**
  * Created by jbvincey on 15/10/2018.
  */
-interface CheckableCellCallback {
+interface CheckableCellCallback<T> {
 
-    fun onCheckChanged(id: Long)
+    fun onCheckChanged(data: T)
 
-    fun onClick(id: Long)
+    fun onClick(data: T)
 
 }

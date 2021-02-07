@@ -24,13 +24,8 @@ abstract class AbstractCellView<ViewModel, Binding : ViewDataBinding>(
     @LayoutRes
     abstract fun getLayout(): Int
 
-    fun bindViewModelToView(viewModel: ViewModel) {
+    open fun bindViewModelToView(viewModel: ViewModel) {
         binding.setVariable(BR.viewModel, viewModel)
         binding.executePendingBindings()
     }
-}
-
-@BindingAdapter("viewModel")
-fun <ViewModel> bindViewModelToView(view: AbstractCellView<ViewModel, out ViewDataBinding>, viewModel: ViewModel) {
-    view.bindViewModelToView(viewModel)
 }
