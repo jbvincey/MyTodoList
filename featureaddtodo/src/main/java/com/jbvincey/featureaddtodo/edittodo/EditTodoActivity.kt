@@ -3,11 +3,10 @@ package com.jbvincey.featureaddtodo.edittodo
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import com.jbvincey.design.widget.ValidationInputEditTextListener
+import com.jbvincey.core.utils.exhaustive
 import com.jbvincey.featureaddtodo.R
 import com.jbvincey.navigation.EditTodoNavigationHandler
 import com.jbvincey.ui.utils.activity.displayActionSnack
@@ -21,16 +20,11 @@ import org.koin.android.viewmodel.ext.android.viewModel
  */
 class EditTodoActivity : AppCompatActivity() {
 
-    companion object {
-        private const val MENU_EDIT = Menu.FIRST
-        private const val MENU_DELETE = MENU_EDIT + 1
-        private const val MENU_ARCHIVE = MENU_DELETE + 1
-        private const val MENU_UNARCHIVE = MENU_ARCHIVE + 1
-    }
-
     private val viewModel: EditTodoArchViewModel by viewModel()
 
     private val navigationHandler: EditTodoNavigationHandler by inject()
+
+    private val backgroundColorRes: Int by lazy { navigationHandler.retrieveBackgroundColorRes(intent) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,91 +39,65 @@ class EditTodoActivity : AppCompatActivity() {
         setupTodoId()
         initToolbar()
         initEditText()
-        observeTodo()
 
-        observeEditTodoState()
-        observeDeleteTodoState()
-        observeArchiveTodoState()
-        observeUnarchiveTodoState()
+        observeTodoName()
+        observeTodoArchived()
+        observeViewActions()
     }
 
     private fun setupTodoId() {
-        viewModel.todoId.value = navigationHandler.retrieveTodoId(intent)
+        viewModel.setTodoId(navigationHandler.retrieveTodoId(intent))
     }
 
     private fun initToolbar() {
-        setSupportActionBar(toolbar)
-        toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_white_24px)
-        toolbar.setNavigationOnClickListener { finish() }
+        val colorInt = ContextCompat.getColor(this, backgroundColorRes)
+        addTodoToolbar.setBackgroundColor(colorInt)
+        window.statusBarColor = colorInt
+        setSupportActionBar(addTodoToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun initEditText() {
-        addTodoEditText.validationInputEditTextListener = ValidationInputEditTextListener { saveTodo() }
+        addTodoEditText.validationInputEditTextListener = viewModel.editTextListener()
     }
 
-    private fun observeTodo() {
-        viewModel.todo.observe(this, Observer { todo ->
-            title = todo?.name
-            addTodoEditText.setText(todo?.name)
-            addTodoEditText.isEnabled = !(todo?.archived ?: false)
+    private fun observeTodoName() {
+        viewModel.todoName.observe(this, Observer { todoName ->
+            title = todoName
+            addTodoEditText.setText(todoName)
+        })
+    }
+
+    private fun observeTodoArchived() {
+        viewModel.todoArchived.observe(this, Observer { todoArchived ->
+            addTodoEditText.isEnabled = !(todoArchived ?: false)
             invalidateOptionsMenu()
         })
     }
 
     //endregion
 
-    //region user actions
+    //region view actions
 
-    private fun observeEditTodoState() {
-        viewModel.editTodoState.observe(this, Observer { state ->
-            when (state) {
-                is EditTodoState.Success -> finish()
-                is EditTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { saveTodo() }
-            }
+    private fun observeViewActions() {
+        viewModel.viewActions.observe(this, Observer { action ->
+            when (action) {
+                EditTodoArchViewModel.ViewAction.Close -> finish()
+                EditTodoArchViewModel.ViewAction.ValidateText -> addTodoEditText.validateText().let{}
+                is EditTodoArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
+                    messageRes = action.messageRes,
+                    actionRes = action.actionRes,
+                    formatArgs = *action.formatArgs,
+                    action = action.action
+                )
+                is EditTodoArchViewModel.ViewAction.DisplayAlertDialog -> displayAlertDialog(
+                    messageRes = action.messageRes,
+                    actionRes = action.actionRes,
+                    formatArgs = *action.formatArgs,
+                    action = action.action
+                )
+            }.exhaustive
         })
-    }
-
-    private fun saveTodo() {
-        viewModel.editTodo(addTodoEditText.text.toString())
-    }
-
-    private fun observeDeleteTodoState() {
-        viewModel.deleteTodoState.observe(this, Observer { state ->
-            when (state) {
-                is DeleteTodoState.Success -> finish()
-                is DeleteTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { deleteTodo() }
-            }
-        })
-    }
-
-    private fun deleteTodo() {
-        viewModel.deleteTodo()
-    }
-
-    private fun observeArchiveTodoState() {
-        viewModel.archiveTodoState.observe(this, Observer { state ->
-            when (state) {
-                is ArchiveTodoState.Success -> if (state.displaySnack) displayActionSnack(R.string.archive_success, R.string.undo, state.todoName) { unarchiveTodo(false) }
-                is ArchiveTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { archiveTodo(true) }
-            }
-        })
-    }
-
-    private fun archiveTodo(displaySnackOnSuccess: Boolean) {
-        viewModel.archiveTodo(displaySnackOnSuccess)
-    }
-
-    private fun observeUnarchiveTodoState() {
-        viewModel.unarchiveTodoState.observe(this, Observer { state ->
-            when (state) {
-                is UnarchiveTodoState.Success -> if (state.displaySnack) displayActionSnack(R.string.unarchive_success, R.string.undo, state.todoName) { archiveTodo(false) }
-                is UnarchiveTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { unarchiveTodo(true) }
-            }
-        })
-    }
-
-    private fun unarchiveTodo(displaySnackOnSuccess: Boolean) {
-        viewModel.unarchiveTodo(displaySnackOnSuccess)
     }
 
     //endregion
@@ -137,43 +105,18 @@ class EditTodoActivity : AppCompatActivity() {
     //region menu
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menu.clear()
-        if (viewModel.shouldShowUnarchiveMenu()) {
-            addMenu(menu, MENU_UNARCHIVE, R.string.action_unarchive_todo, R.drawable.ic_baseline_unarchive_white_24px)
-        } else if(viewModel.shouldShowArchiveMenu()) {
-            addMenu(menu, MENU_ARCHIVE, R.string.action_archive_todo, R.drawable.ic_baseline_archive_white_24px)
-        }
-        addMenu(menu, MENU_DELETE, R.string.action_delete_todo, R.drawable.ic_baseline_delete_white_24px)
-        addMenu(menu, MENU_EDIT, R.string.action_edit_todo, R.drawable.ic_baseline_done_white_24px)
+        viewModel.onCreateOptionsMenu(menu)
         return true
-    }
-
-    private fun addMenu(menu: Menu, menuId: Int, @StringRes menuTextRest: Int, @DrawableRes menuIconRes: Int) {
-        menu.add(0, menuId, Menu.NONE, menuTextRest).setIcon(menuIconRes).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            MENU_EDIT -> {
-                addTodoEditText.validateText()
-                true
-            }
-            MENU_DELETE -> {
-                displayAlertDialog(R.string.confirm_delete_message, R.string.confirm_delete_action, viewModel.todo.value!!.name) { deleteTodo() }
-                true
-            }
-            MENU_ARCHIVE -> {
-                archiveTodo(true)
-                true
-            }
-            MENU_UNARCHIVE -> {
-                unarchiveTodo(true)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+        return if (viewModel.onOptionItemsSelected(item.itemId)) {
+            true
+        } else {
+            super.onOptionsItemSelected(item)
         }
     }
 

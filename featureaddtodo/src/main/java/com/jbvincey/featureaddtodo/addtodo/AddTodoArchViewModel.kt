@@ -1,30 +1,64 @@
 package com.jbvincey.featureaddtodo.addtodo
 
-import androidx.lifecycle.MutableLiveData
+import androidx.annotation.StringRes
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jbvincey.core.livedata.SingleLiveEvent
 import com.jbvincey.core.repositories.TodoRepository
+import com.jbvincey.design.widget.ValidationInputEditTextListener
+import com.jbvincey.featureaddtodo.R
 import kotlinx.coroutines.launch
+import kotlin.properties.Delegates
 
 /**
  * Created by jbvincey on 24/09/2018.
  */
-class AddTodoArchViewModel(private val todoRepository: TodoRepository): ViewModel() {
+internal class AddTodoArchViewModel(private val todoRepository: TodoRepository): ViewModel() {
 
-    val addTodoState = MutableLiveData<AddTodoState>()
+    var todoListId by Delegates.notNull<Long>()
 
-    fun addTodo(todoName: String) {
+    private val _viewAction = SingleLiveEvent<ViewAction>()
+    val viewAction: LiveData<ViewAction>
+        get() = _viewAction
+
+    fun editTextListener() = ValidationInputEditTextListener { name -> name?.let { addTodo(it) } }
+
+    private fun addTodo(todoName: String) {
         viewModelScope.launch {
             try {
-                todoRepository.addTodo(todoName)
-                addTodoState.value = Success
+                todoRepository.addTodo(todoName, todoListId)
+                _viewAction.value = ViewAction.Close
             } catch (e: Exception) {
-                addTodoState.value = UnknownError
+                _viewAction.value = ViewAction.ShowSnack(
+                    R.string.error_message,
+                    R.string.retry,
+                ) { addTodo(todoName) }
             }
         }
     }
+
+    fun onOptionsItemSelected(itemId: Int): Boolean = when (itemId) {
+        R.id.action_add_todo -> {
+            _viewAction.value = ViewAction.ValidateText
+            true
+        }
+        android.R.id.home -> {
+            _viewAction.value = ViewAction.Close
+            true
+        }
+        else -> false
+    }
+
+    internal sealed class ViewAction {
+        object Close: ViewAction()
+        object ValidateText: ViewAction()
+        data class ShowSnack(
+            @StringRes val messageRes: Int,
+            @StringRes val actionRes: Int,
+            val action: () -> Unit
+        ): ViewAction()
+    }
 }
 
-sealed class AddTodoState
-object Success: AddTodoState()
-object UnknownError: AddTodoState()
+
