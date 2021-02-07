@@ -64,12 +64,25 @@
     </style>
 
     <!-- Items -->
+    <style name="StickyNote" />
+
+    <style name="StickyNote.Title">
+        <item name="android:textSize">@dimen/stickynote_title_textSize</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/theme_text_primary</item>
+    </style>
+
+    <style name="StickyNote.Description">
+        <item name="android:textSize">@dimen/stickynote_subtitle_textSize</item>
+        <item name="android:textColor">@color/theme_text_secondary</item>
+    </style>
+
     <style name="Cell" />
 
     <style name="Cell.Checkable" />
 
     <style name="Cell.Checkable.Title">
-        <item name="android:textSize">@dimen/cell_checkable_title_fontSize</item>
+        <item name="android:textSize">@dimen/cell_checkable_title_textSize</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>

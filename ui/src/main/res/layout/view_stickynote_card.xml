@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="androidx.core.content.ContextCompat" />
+
+        <variable
+            name="viewModel"
+            type="com.jbvincey.ui.recycler.cells.stickynote.StickyNoteCardViewModel" />
+
+    </data>
+
+    <merge
+        tools:layout_height="128dp"
+        tools:layout_width="128dp"
+        tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
+        tools:background="@color/theme_background_1">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
+            android:onClick="@{() -> viewModel.callback.onClick(viewModel)}"
+            android:onLongClick="@{(view) -> viewModel.callback.onLongClick(viewModel)}"
+            app:cardBackgroundColor="@{ContextCompat.getColor(context, viewModel.backgroundColorRes)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:cardBackgroundColor="@color/background_dark_2">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.name}"
+                    android:textAppearance="@style/StickyNote.Title"
+                    android:ellipsize="end"
+                    app:layout_constrainedHeight="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="TodoList" />
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:textAppearance="@style/StickyNote.Description"
+                    android:maxLines="5"
+                    android:ellipsize="end"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/name"
+                    app:notes="@{viewModel.notes}"
+                    tools:text="-task1\n-task2\n-task3\n-task4\n-task5\n"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </merge>
+
+</layout>
