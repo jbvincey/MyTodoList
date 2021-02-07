@@ -1,6 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="recycler_elevation">4dp</dimen>
 
-    <dimen name="swipe_aciton_margin">16dp</dimen>
+    <dimen name="swipe_action_margin">16dp</dimen>
 </resources>

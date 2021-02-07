@@ -10,6 +10,7 @@
     <!-- menu -->
     <string name="action_todo_list">Todo list</string>
     <string name="action_archived_list">Archived</string>
+    <string name="action_edit_todolist">Edit todo list</string>
 
     <!-- navigation -->
     <string name="feature_path_todolist">/todolist</string>

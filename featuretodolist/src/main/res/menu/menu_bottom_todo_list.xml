@@ -5,12 +5,10 @@
         android:id="@+id/action_todo_list"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_list_24px"
-        android:title="@string/action_todo_list"
-        app:showAsAction="ifRoom" />
+        android:title="@string/action_todo_list" />
     <item
         android:id="@+id/action_archived_list"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_archive_24px"
-        android:title="@string/action_archived_list"
-        app:showAsAction="ifRoom" />
+        android:title="@string/action_archived_list" />
 </menu>

@@ -1,42 +1,35 @@
 package com.jbvincey.todolist
 
 import android.os.Bundle
-import android.view.View
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.ChangeBounds
-import androidx.transition.Transition
-import androidx.transition.TransitionManager
+import com.jbvincey.core.models.Todo
+import com.jbvincey.core.utils.exhaustive
 import com.jbvincey.design.widget.helper.SwipeCallback
-import com.jbvincey.design.widget.helper.SwipeCallbackListener
 import com.jbvincey.design.widget.helper.SwipeCallbackModel
 import com.jbvincey.navigation.NavigationHandler
-import com.jbvincey.ui.appbar.AppbarElevationRecyclerScrollListener
+import com.jbvincey.navigation.TodoListNavigationHandler
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellAdapter
-import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellView
-import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel
 import com.jbvincey.ui.utils.activity.displayActionSnack
 import kotlinx.android.synthetic.main.activity_todo_list.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class TodoListActivity : AppCompatActivity() {
 
-    companion object {
-        private const val CHECKABLE_CELL_UPDATE_DELAY = 300L
-        private const val RECYCLER_TRANSITION_ANIMATION_DURATION = 150L
-    }
-
-    private lateinit var recyclerTransitionAnimation: Transition
-
     private val viewModel: TodoListArchViewModel by viewModel()
     private val navigationHandler: NavigationHandler by inject()
+    private val todoListNavigationHandler: TodoListNavigationHandler by inject()
+    private val backgroundColorRes: Int by lazy { todoListNavigationHandler.retrieveBackgroundColorRes(intent) }
+    private val todoListId: Long by lazy { todoListNavigationHandler.retrieveTodoListId(intent) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,59 +41,59 @@ class TodoListActivity : AppCompatActivity() {
     //region view setup
 
     private fun initView() {
+        viewModel.setBackgroundColor(backgroundColorRes)
+        viewModel.setTodoListId(todoListId)
         initToolbar()
         initFabButton()
         initRecycler()
         initBottomNavigation()
 
-        observeTodoClick()
-        observeDeleteTodoState()
-        observeUndeleteTodoState()
-        observeArchiveTodoState()
-        observeUnarchiveTodoState()
+        observeViewActions()
         viewModel.showUnarchivedTodos()
     }
 
     private fun initToolbar() {
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        val colorInt = ContextCompat.getColor(this@TodoListActivity, backgroundColorRes)
+        setSupportActionBar(todoListToolbar)
+        todoListToolbar.setBackgroundColor(colorInt)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        window.statusBarColor = colorInt
+        viewModel.todoListName.observe(this, Observer { this.title = it })
     }
 
     private fun initFabButton() {
         fabButton.setOnClickListener {
-            startActivity(navigationHandler.buildAddTodoIntent(this))
+            startActivity(navigationHandler.buildAddTodoIntent(
+                context = this,
+                todoListId = todoListId,
+                backgroundColorRes = backgroundColorRes
+            ))
         }
     }
 
     private fun initRecycler() {
-
         val swipeCallbackModelStart = SwipeCallbackModel(
-                getColor(R.color.colorAccent),
-                getDrawable(R.drawable.ic_baseline_delete_white_24px),
-                resources.getDimensionPixelSize(R.dimen.swipe_aciton_margin),
-                SwipeCallbackListener { view -> onViewSwipedStart(view) }
+            getColor(R.color.theme_background_2),
+            AppCompatResources.getDrawable(this, R.drawable.ic_baseline_delete_24px),
+            resources.getDimensionPixelSize(R.dimen.swipe_action_margin),
+            viewModel.buildSwipeStartCallback()
         )
         val swipeCallbackModelEnd = SwipeCallbackModel(
-                getColor(R.color.colorAccent),
-                getDrawable(R.drawable.ic_baseline_archive_white_24px),
-                resources.getDimensionPixelSize(R.dimen.swipe_aciton_margin),
-                SwipeCallbackListener { view -> onViewSwipedEnd(view) }
+            getColor(R.color.theme_background_2),
+            AppCompatResources.getDrawable(this, R.drawable.ic_baseline_archive_24px),
+            resources.getDimensionPixelSize(R.dimen.swipe_action_margin),
+            viewModel.buildSwipeEndCallback()
         )
 
         val itemTouchHelper = ItemTouchHelper(SwipeCallback(swipeCallbackModelStart, swipeCallbackModelEnd, this))
         itemTouchHelper.attachToRecyclerView(todoRecyclerView)
 
-        recyclerTransitionAnimation = ChangeBounds()
-        recyclerTransitionAnimation.duration = RECYCLER_TRANSITION_ANIMATION_DURATION
-
         todoRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        todoRecyclerView.addOnScrollListener(AppbarElevationRecyclerScrollListener(appbarLayout, todoRecyclerView))
+        todoRecyclerView.itemAnimator = DefaultItemAnimator()
 
-        val adapter = CheckableCellAdapter()
+        val adapter = CheckableCellAdapter<Todo>()
         todoRecyclerView.adapter = adapter
-        viewModel.checkableCellViewModelList.observe(this, Observer {
-            updateCheckableCellListWithDelay(it, adapter)
-        })
+        viewModel.checkableCellViewModelList.observe(this, Observer { adapter.submitList(it) })
     }
 
     private fun initBottomNavigation() {
@@ -127,77 +120,64 @@ class TodoListActivity : AppCompatActivity() {
 
     //action user actions
 
-    private fun observeTodoClick() {
-        viewModel.todoClicked.observe(this, Observer { todoId ->
-            startEditActivity(todoId!!)
+    private fun observeViewActions() {
+        viewModel.viewActions.observe(this, Observer { action ->
+            when(action) {
+                TodoListArchViewModel.ViewAction.Close -> finish()
+                TodoListArchViewModel.ViewAction.DisplayUnarchived -> bottomNavigation.selectedItemId = R.id.action_todo_list
+                TodoListArchViewModel.ViewAction.BackPressed -> super.onBackPressed()
+                is TodoListArchViewModel.ViewAction.GoToEditTodoList -> goToEditTodoList(action.todoListId)
+                is TodoListArchViewModel.ViewAction.GoToEditTodo -> goToEditTodo(action.todoId)
+                is TodoListArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
+                    messageRes = action.messageRes,
+                    actionRes = action.actionRes,
+                    action = action.action
+                )
+            }.exhaustive
         })
     }
-
-    private fun updateCheckableCellListWithDelay(checkableCellList: List<CheckableCellViewModel>?,
-                                                 adapter: CheckableCellAdapter) {
-        lifecycleScope.launch {
-            delay(CHECKABLE_CELL_UPDATE_DELAY)
-            TransitionManager.beginDelayedTransition(todoRecyclerView, recyclerTransitionAnimation)
-            checkableCellList?.let(adapter::submitList)
-        }
-    }
-
-    private fun onViewSwipedStart(view: View) {
-        viewModel.deleteTodo((view as CheckableCellView).getViewModelId())
-    }
-
-    private fun observeDeleteTodoState() {
-        viewModel.deleteTodoState.observe(this, Observer { state ->
-            when (state) {
-                is DeleteTodoState.Success -> displayActionSnack(R.string.delete_success, R.string.undo, state.todoName) { viewModel.undeleteTodo(state.todoId) }
-                is DeleteTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { viewModel.deleteTodo(state.todoId) }
-            }
-        })
-    }
-
-    private fun observeUndeleteTodoState() {
-        viewModel.undeleteTodoState.observe(this, Observer { state ->
-            when (state) {
-                is UndeleteTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { viewModel.undeleteTodo(state.todoId) }
-            }
-        })
-    }
-
-    private fun onViewSwipedEnd(view: View) {
-        viewModel.archiveTodo((view as CheckableCellView).getViewModelId())
-    }
-
-    private fun observeArchiveTodoState() {
-        viewModel.archiveTodoState.observe(this, Observer { state ->
-            when (state) {
-                is ArchiveTodoState.Success -> displayActionSnack(R.string.archive_success, R.string.undo, state.todoName) { viewModel.unarchiveTodo(state.todoId) }
-                is ArchiveTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { viewModel.archiveTodo(state.todoId) }
-            }
-        })
-    }
-
-    private fun observeUnarchiveTodoState() {
-        viewModel.unarchiveTodoState.observe(this, Observer { state ->
-            when (state) {
-                is UnarchiveTodoState.UnknownError -> displayActionSnack(R.string.error_message, R.string.retry) { viewModel.unarchiveTodo(state.todoId) }
-            }
-        })
-    }
-
     //endregion
 
     //region navigation
 
-    private fun startEditActivity(todoId: Long) {
-        startActivity(navigationHandler.buildEditTodoIntent(this, todoId))
+    private fun goToEditTodo(todoId: Long) {
+        startActivity(navigationHandler.buildEditTodoIntent(
+            context = this,
+            todoId = todoId,
+            backgroundColorRes = backgroundColorRes
+        ))
+    }
+
+    private fun goToEditTodoList(todoListId: Long) {
+        startActivity(navigationHandler.buildEditTodoListIntent(
+            context = this,
+            todoListId = todoListId,
+            backgroundColorRes = backgroundColorRes
+        ))
     }
 
     override fun onBackPressed() {
-        if (viewModel.isShowingAchivedTodos()) {
-            bottomNavigation.selectedItemId = R.id.action_todo_list
+        viewModel.onBackPressed()
+    }
+
+    //region menu
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        viewModel.onCreateOptionsMenu(menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return if (viewModel.onOptionItemsSelected(item.itemId)) {
+            true
         } else {
-            super.onBackPressed()
+            super.onOptionsItemSelected(item)
         }
     }
+
+    //enregion
 
 }

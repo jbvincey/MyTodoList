@@ -9,7 +9,11 @@ import org.koin.dsl.module
  */
 val featureTodoListModule = module {
 
-    viewModel { TodoListArchViewModel(get(), get()) }
+    viewModel { TodoListArchViewModel(
+        todoRepository = get(),
+        todoListRepository = get(),
+        todoToCheckableCellViewModelTransformer = get()
+    ) }
 
     factory { TodoToCheckableCellViewModelTransformer() }
 

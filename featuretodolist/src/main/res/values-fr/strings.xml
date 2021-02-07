@@ -11,5 +11,6 @@
     <!-- menu -->
     <string name="action_todo_list">Todo list</string>
     <string name="action_archived_list">Archivé</string>
+    <string name="action_edit_todolist">Modifier la liste de tâches</string>
 
 </resources>
