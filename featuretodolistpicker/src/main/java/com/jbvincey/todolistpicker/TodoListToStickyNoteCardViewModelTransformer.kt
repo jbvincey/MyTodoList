@@ -12,7 +12,9 @@ class TodoListToStickyNoteCardViewModelTransformer: Transformer<TodoListWithTodo
     override fun transform(source: TodoListWithTodos) = StickyNoteCardViewModel(
         id = source.todoList.id,
         name = source.todoList.name,
-        notes = source.todos.map { it.name },
+        notes = source.todos
+            .filter { todo -> !todo.completed && !todo.deleted }
+            .map { it.name },
         callback = stickyNoteCallback,
         data = source
     )
