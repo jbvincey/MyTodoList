@@ -131,6 +131,7 @@ class TodoListActivity : AppCompatActivity() {
                 is TodoListArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
                     messageRes = action.messageRes,
                     actionRes = action.actionRes,
+                    formatArgs = *action.formatArgs,
                     action = action.action
                 )
             }.exhaustive
