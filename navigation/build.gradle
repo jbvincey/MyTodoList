@@ -38,6 +38,9 @@ dependencies {
     // app compat
     api deps.app_compat
 
+    // material for transitions
+    implementation deps.material
+
     // koin
     implementation deps.koin.kotlin
     implementation deps.koin.ext

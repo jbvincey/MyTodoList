@@ -37,6 +37,9 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
         <item name="android:navigationBarColor" tools:ignore="NewApi">@color/theme_background_1</item>
+
+        <!-- transition -->
+        <item name="android:windowActivityTransitions">true</item>
     </style>
 
     <!-- Text field -->
