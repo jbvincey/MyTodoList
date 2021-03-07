@@ -8,24 +8,32 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.jbvincey.core.utils.exhaustive
 import com.jbvincey.navigation.EditTodoListNavigationHandler
+import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.ui.utils.activity.displayActionSnack
 import com.jbvincey.ui.utils.activity.displayAlertDialog
-import deezer.android.featureaddtodolist.R
+import com.jbvincey.ui.utils.activity.showSoftKeyboardWithDelay
+import deezer.android.featureaddtodolist.databinding.ActivityAddTodolistBinding
 import org.koin.android.ext.android.inject
-import kotlinx.android.synthetic.main.activity_add_todolist.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class EditTodoListActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityAddTodolistBinding
     private val viewModel: EditTodoListArchViewModel by viewModel()
-
-    private val navigationHandler: EditTodoListNavigationHandler by inject()
-
-    private val backgroundColorRes: Int by lazy { navigationHandler.retrieveBackgroundColorRes(intent) }
+    private val navigationHandler: NavigationHandler by inject()
+    private val featureNavigationHandler: EditTodoListNavigationHandler by inject()
+    private val backgroundColorRes: Int by lazy { featureNavigationHandler.retrieveBackgroundColorRes(intent) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityAddTodolistBinding.inflate(layoutInflater)
+
+        navigationHandler.setupEnterTransition(
+            activity = this,
+            rootView = binding.addTodoListRoot
+        )
+
+        setContentView(binding.root)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_todolist)
 
         initView()
     }
@@ -39,28 +47,33 @@ class EditTodoListActivity : AppCompatActivity() {
 
         observeTodoListName()
         observeViewActions()
+
+        showSoftKeyboardWithDelay(
+            view = binding.addTodoListEditText,
+            delayMillis = SHOW_SOFT_KEYBOARD_DELAY
+        )
     }
 
     private fun setupTodoListId() {
-        viewModel.setTodoListId(navigationHandler.retrieveTodoListId(intent))
+        viewModel.setTodoListId(featureNavigationHandler.retrieveTodoListId(intent))
     }
 
     private fun initToolbar() {
         val colorInt = ContextCompat.getColor(this, backgroundColorRes)
-        addTodoListToolbar.setBackgroundColor(colorInt)
+        binding.addTodoListToolbar.setBackgroundColor(colorInt)
         window.statusBarColor = colorInt
-        setSupportActionBar(addTodoListToolbar)
+        setSupportActionBar(binding.addTodoListToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun initEditText() {
-        addTodoListEditText.validationInputEditTextListener = viewModel.editTextListener()
+        binding.addTodoListEditText.validationInputEditTextListener = viewModel.editTextListener()
     }
 
     private fun observeTodoListName() {
         viewModel.todoListName.observe(this, Observer { todoName ->
             title = todoName
-            addTodoListEditText.setText(todoName)
+            binding.addTodoListEditText.setText(todoName)
         })
     }
 
@@ -72,7 +85,7 @@ class EditTodoListActivity : AppCompatActivity() {
         viewModel.viewActions.observe(this, Observer { action ->
             when (action) {
                 EditTodoListArchViewModel.ViewAction.Close -> finish()
-                EditTodoListArchViewModel.ViewAction.ValidateText -> addTodoListEditText.validateText()
+                EditTodoListArchViewModel.ViewAction.ValidateText -> binding.addTodoListEditText.validateText()
                     .let {}
                 is EditTodoListArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
                     messageRes = action.messageRes,
@@ -115,5 +128,4 @@ class EditTodoListActivity : AppCompatActivity() {
 
 }
 
-private const val MENU_EDIT = Menu.FIRST
-private const val MENU_DELETE = MENU_EDIT + 1
+private const val SHOW_SOFT_KEYBOARD_DELAY = 400L

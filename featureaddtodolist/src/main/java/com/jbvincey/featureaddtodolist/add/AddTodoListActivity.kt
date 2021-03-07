@@ -6,20 +6,34 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.jbvincey.core.utils.exhaustive
+import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.ui.utils.activity.displayActionSnack
+import com.jbvincey.ui.utils.activity.showSoftKeyboardWithDelay
 import deezer.android.featureaddtodolist.R
-import kotlinx.android.synthetic.main.activity_add_todolist.*
+import deezer.android.featureaddtodolist.databinding.ActivityAddTodolistBinding
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class AddTodoListActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityAddTodolistBinding
     private val viewModel: AddTodoListArchViewModel by viewModel()
+    private val navigationHandler: NavigationHandler by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityAddTodolistBinding.inflate(layoutInflater)
+
+        navigationHandler.setupEnterTransition(
+            activity = this,
+            rootView = binding.addTodoListRoot
+        )
+
+        setContentView(binding.root)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_todolist)
+
         initView()
     }
+
 
     //region view setup
 
@@ -27,15 +41,20 @@ class AddTodoListActivity : AppCompatActivity() {
         initToolbar()
         initEditText()
         observeViewActions()
+
+        showSoftKeyboardWithDelay(
+            view = binding.addTodoListEditText,
+            delayMillis = SHOW_SOFT_KEYBOARD_DELAY
+        )
     }
 
     private fun initToolbar() {
-        setSupportActionBar(addTodoListToolbar)
+        setSupportActionBar(binding.addTodoListToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun initEditText() {
-        addTodoListEditText.validationInputEditTextListener = viewModel.editTextListener()
+        binding.addTodoListEditText.validationInputEditTextListener = viewModel.editTextListener()
     }
 
     //endregion
@@ -46,7 +65,7 @@ class AddTodoListActivity : AppCompatActivity() {
         viewModel.viewActions.observe(this, Observer { action ->
             when(action) {
                 AddTodoListArchViewModel.ViewAction.Close -> finish()
-                AddTodoListArchViewModel.ViewAction.ValidateText -> addTodoListEditText.validateText().let{}
+                AddTodoListArchViewModel.ViewAction.ValidateText -> binding.addTodoListEditText.validateText().let{}
                 is AddTodoListArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
                     messageRes = action.messageRes,
                     actionRes = action.actionRes,
@@ -80,3 +99,5 @@ class AddTodoListActivity : AppCompatActivity() {
     //endregion
 
 }
+
+private const val SHOW_SOFT_KEYBOARD_DELAY = 400L
