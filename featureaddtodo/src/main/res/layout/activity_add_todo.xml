@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/addTodoRoot"
+    android:background="@color/theme_background_2"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -30,7 +31,6 @@
             app:errorText="@string/validation_todo_name_errortext"
             app:validationRegex="@string/validation_todo_name_regex"
             app:validateTextOnEditorAction="true">
-            <requestFocus />
         </com.jbvincey.design.widget.ValidationInputEditText>
 
     </com.google.android.material.textfield.TextInputLayout>

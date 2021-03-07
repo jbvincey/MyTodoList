@@ -7,10 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.jbvincey.core.utils.exhaustive
-import com.jbvincey.featureaddtodo.R
+import com.jbvincey.featureaddtodo.databinding.ActivityAddTodoBinding
 import com.jbvincey.navigation.EditTodoNavigationHandler
+import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.ui.utils.activity.displayActionSnack
 import com.jbvincey.ui.utils.activity.displayAlertDialog
+import com.jbvincey.ui.utils.activity.showSoftKeyboardWithDelay
 import kotlinx.android.synthetic.main.activity_add_todo.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -20,15 +22,22 @@ import org.koin.android.viewmodel.ext.android.viewModel
  */
 class EditTodoActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityAddTodoBinding
     private val viewModel: EditTodoArchViewModel by viewModel()
-
-    private val navigationHandler: EditTodoNavigationHandler by inject()
-
-    private val backgroundColorRes: Int by lazy { navigationHandler.retrieveBackgroundColorRes(intent) }
+    private val featureNavigationHandler: EditTodoNavigationHandler by inject()
+    private val navigationHandler: NavigationHandler by inject()
+    private val backgroundColorRes: Int by lazy { featureNavigationHandler.retrieveBackgroundColorRes(intent) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityAddTodoBinding.inflate(layoutInflater)
+
+        navigationHandler.setupEnterTransition(
+            activity = this,
+            rootView = binding.root
+        )
+
+        setContentView(binding.root)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_todo)
 
         initView()
     }
@@ -43,10 +52,15 @@ class EditTodoActivity : AppCompatActivity() {
         observeTodoName()
         observeTodoArchived()
         observeViewActions()
+
+        showSoftKeyboardWithDelay(
+            view = binding.addTodoEditText,
+            delayMillis = SHOW_SOFT_KEYBOARD_DELAY
+        )
     }
 
     private fun setupTodoId() {
-        viewModel.setTodoId(navigationHandler.retrieveTodoId(intent))
+        viewModel.setTodoId(featureNavigationHandler.retrieveTodoId(intent))
     }
 
     private fun initToolbar() {
@@ -123,3 +137,5 @@ class EditTodoActivity : AppCompatActivity() {
     //endregion
 
 }
+
+private const val SHOW_SOFT_KEYBOARD_DELAY = 400L
