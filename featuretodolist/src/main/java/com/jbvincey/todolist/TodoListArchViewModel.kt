@@ -1,6 +1,7 @@
 package com.jbvincey.todolist
 
 import android.view.Menu
+import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -77,8 +78,9 @@ class TodoListArchViewModel(
             }
         }
 
-        override fun onClick(data: Todo) {
-            _viewActions.value = ViewAction.GoToEditTodo(data.id)
+        override fun onLongClick(data: Todo, view: View): Boolean {
+            _viewActions.value = ViewAction.GoToEditTodo(data.id, view)
+            return true
         }
     }
 
@@ -204,7 +206,7 @@ class TodoListArchViewModel(
         object DisplayUnarchived : ViewAction()
         object BackPressed : ViewAction()
         data class GoToEditTodoList(val todoListId: Long): ViewAction()
-        data class GoToEditTodo(val todoId: Long) : ViewAction()
+        data class GoToEditTodo(val todoId: Long, val todoView: View) : ViewAction()
         data class ShowSnack(
             @StringRes val messageRes: Int,
             @StringRes val actionRes: Int,

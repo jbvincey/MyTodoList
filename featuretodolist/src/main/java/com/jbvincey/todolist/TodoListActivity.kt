@@ -3,6 +3,7 @@ package com.jbvincey.todolist
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
@@ -17,14 +18,15 @@ import com.jbvincey.design.widget.helper.SwipeCallback
 import com.jbvincey.design.widget.helper.SwipeCallbackModel
 import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.navigation.TodoListNavigationHandler
+import com.jbvincey.todolist.databinding.ActivityTodoListBinding
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellAdapter
 import com.jbvincey.ui.utils.activity.displayActionSnack
-import kotlinx.android.synthetic.main.activity_todo_list.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class TodoListActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityTodoListBinding
     private val viewModel: TodoListArchViewModel by viewModel()
     private val navigationHandler: NavigationHandler by inject()
     private val todoListNavigationHandler: TodoListNavigationHandler by inject()
@@ -32,8 +34,15 @@ class TodoListActivity : AppCompatActivity() {
     private val todoListId: Long by lazy { todoListNavigationHandler.retrieveTodoListId(intent) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityTodoListBinding.inflate(layoutInflater)
+
+        navigationHandler.setupEnterTransition(
+            activity = this,
+            rootView = binding.root
+        )
+
+        setContentView(binding.root)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_todo_list)
 
         initView()
     }
@@ -54,20 +63,22 @@ class TodoListActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         val colorInt = ContextCompat.getColor(this@TodoListActivity, backgroundColorRes)
-        setSupportActionBar(todoListToolbar)
-        todoListToolbar.setBackgroundColor(colorInt)
+        setSupportActionBar(binding.todoListToolbar)
+        binding.todoListToolbar.setBackgroundColor(colorInt)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         window.statusBarColor = colorInt
+
         viewModel.todoListName.observe(this, Observer { this.title = it })
     }
 
     private fun initFabButton() {
-        fabButton.setOnClickListener {
-            startActivity(navigationHandler.buildAddTodoIntent(
-                context = this,
+        binding.fabButton.setOnClickListener {
+            navigationHandler.goToAddTodo(
+                activity = this,
                 todoListId = todoListId,
-                backgroundColorRes = backgroundColorRes
-            ))
+                backgroundColorRes = backgroundColorRes,
+                addTodoButton = it
+            )
         }
     }
 
@@ -86,18 +97,18 @@ class TodoListActivity : AppCompatActivity() {
         )
 
         val itemTouchHelper = ItemTouchHelper(SwipeCallback(swipeCallbackModelStart, swipeCallbackModelEnd, this))
-        itemTouchHelper.attachToRecyclerView(todoRecyclerView)
+        itemTouchHelper.attachToRecyclerView(binding.todoRecyclerView)
 
-        todoRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        todoRecyclerView.itemAnimator = DefaultItemAnimator()
+        binding.todoRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        binding.todoRecyclerView.itemAnimator = DefaultItemAnimator()
 
         val adapter = CheckableCellAdapter<Todo>()
-        todoRecyclerView.adapter = adapter
+        binding.todoRecyclerView.adapter = adapter
         viewModel.checkableCellViewModelList.observe(this, Observer { adapter.submitList(it) })
     }
 
     private fun initBottomNavigation() {
-        bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
 
@@ -124,10 +135,10 @@ class TodoListActivity : AppCompatActivity() {
         viewModel.viewActions.observe(this, Observer { action ->
             when(action) {
                 TodoListArchViewModel.ViewAction.Close -> finish()
-                TodoListArchViewModel.ViewAction.DisplayUnarchived -> bottomNavigation.selectedItemId = R.id.action_todo_list
+                TodoListArchViewModel.ViewAction.DisplayUnarchived -> binding.bottomNavigation.selectedItemId = R.id.action_todo_list
                 TodoListArchViewModel.ViewAction.BackPressed -> super.onBackPressed()
                 is TodoListArchViewModel.ViewAction.GoToEditTodoList -> goToEditTodoList(action.todoListId)
-                is TodoListArchViewModel.ViewAction.GoToEditTodo -> goToEditTodo(action.todoId)
+                is TodoListArchViewModel.ViewAction.GoToEditTodo -> goToEditTodo(action.todoId, action.todoView)
                 is TodoListArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
                     messageRes = action.messageRes,
                     actionRes = action.actionRes,
@@ -141,20 +152,21 @@ class TodoListActivity : AppCompatActivity() {
 
     //region navigation
 
-    private fun goToEditTodo(todoId: Long) {
-        startActivity(navigationHandler.buildEditTodoIntent(
-            context = this,
+    private fun goToEditTodo(todoId: Long, todoView: View) {
+        navigationHandler.goToEditTodo(
+            activity = this,
             todoId = todoId,
-            backgroundColorRes = backgroundColorRes
-        ))
+            backgroundColorRes = backgroundColorRes,
+            todoView = todoView
+        )
     }
 
     private fun goToEditTodoList(todoListId: Long) {
-        startActivity(navigationHandler.buildEditTodoListIntent(
-            context = this,
+        navigationHandler.goToEditTodoList(
+            activity = this,
             todoListId = todoListId,
             backgroundColorRes = backgroundColorRes
-        ))
+        )
     }
 
     override fun onBackPressed() {
