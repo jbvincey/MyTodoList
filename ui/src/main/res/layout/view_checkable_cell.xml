@@ -28,7 +28,7 @@
             android:text="@{viewModel.name}"
             android:textColor="@{viewModel.completed ? @color/theme_text_secondary : @color/theme_text_primary}"
             android:gravity="center_vertical"
-            android:onClickListener="@{(view) -> viewModel.callback.onClick(viewModel.data)}"
+            android:onLongClick="@{(view) -> viewModel.callback.onLongClick(viewModel.data, view)}"
             style="@style/Cell.Checkable.Title"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
