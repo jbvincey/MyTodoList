@@ -24,8 +24,9 @@ android {
             minifyEnabled false
         }
     }
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        viewBinding true
+        dataBinding true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
