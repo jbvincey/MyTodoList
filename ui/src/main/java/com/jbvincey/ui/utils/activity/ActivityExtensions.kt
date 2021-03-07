@@ -3,9 +3,14 @@ package com.jbvincey.ui.utils.activity
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Handler
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.jbvincey.ui.R
@@ -66,4 +71,21 @@ fun Activity.showSoftKeyboard(view: View) {
     val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     view.requestFocus()
     inputMethodManager.showSoftInput(view, 0)
+}
+
+fun AppCompatActivity.showSoftKeyboardWithDelay(
+    view: View,
+    delayMillis: Long
+) {
+    val handler = Handler()
+    lifecycle.addObserver(object : LifecycleObserver {
+        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        fun removeHandlerCallbacks() {
+            handler.removeCallbacksAndMessages(null)
+        }
+    })
+    handler.postDelayed(
+        { showSoftKeyboard(view) },
+        delayMillis
+    )
 }
