@@ -1,5 +1,6 @@
 package com.jbvincey.todolistpicker
 
+import android.view.View
 import androidx.annotation.ColorRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -31,24 +32,34 @@ class TodoListPickerArchViewModel(
 
     private fun buildStickyNoteCallback() = object: StickyNoteCardCallback<TodoListWithTodos>{
 
-        override fun onClick(data: StickyNoteCardViewModel<TodoListWithTodos>) {
+        override fun onClick(data: StickyNoteCardViewModel<TodoListWithTodos>, view: View) {
             _viewActions.value = ViewAction.OpenTodoList(
                 todoListId = data.data.todoList.id,
-                todoListColorRes = data.backgroundColorRes
+                todoListColorRes = data.backgroundColorRes,
+                view = view
             )
         }
 
-        override fun onLongClick(data: StickyNoteCardViewModel<TodoListWithTodos>): Boolean {
+        override fun onLongClick(data: StickyNoteCardViewModel<TodoListWithTodos>, view: View): Boolean {
             _viewActions.value = ViewAction.OpenEditTodoList(
                 todoListId = data.data.todoList.id,
-                todoListColorRes = data.backgroundColorRes
+                todoListColorRes = data.backgroundColorRes,
+                view = view
             )
             return true
         }
     }
 
     sealed class ViewAction {
-        data class OpenTodoList(val todoListId: Long, @ColorRes val todoListColorRes: Int): ViewAction()
-        data class OpenEditTodoList(val todoListId: Long, @ColorRes val todoListColorRes: Int): ViewAction()
+        data class OpenTodoList(
+            val todoListId: Long,
+            @ColorRes val todoListColorRes: Int,
+            val view: View
+        ): ViewAction()
+        data class OpenEditTodoList(
+            val todoListId: Long,
+            @ColorRes val todoListColorRes: Int,
+            val view: View
+        ): ViewAction()
     }
 }
