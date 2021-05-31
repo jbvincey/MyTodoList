@@ -13,7 +13,6 @@ import com.jbvincey.navigation.AddTodoNavigationHandler
 import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.ui.utils.activity.displayActionSnack
 import com.jbvincey.ui.utils.activity.showSoftKeyboardWithDelay
-import kotlinx.android.synthetic.main.activity_add_todo.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -62,14 +61,14 @@ class AddTodoActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         val colorInt = ContextCompat.getColor(this, backgroundColorRes)
-        addTodoToolbar.setBackgroundColor(colorInt)
+        binding.addTodoToolbar.setBackgroundColor(colorInt)
         window.statusBarColor = colorInt
-        setSupportActionBar(addTodoToolbar)
+        setSupportActionBar(binding.addTodoToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun initEditText() {
-        addTodoEditText.validationInputEditTextListener = viewModel.editTextListener()
+        binding.addTodoEditText.validationInputEditTextListener = viewModel.editTextListener()
     }
 
     //endregion
@@ -80,7 +79,7 @@ class AddTodoActivity : AppCompatActivity() {
         viewModel.viewAction.observe(this, Observer { action ->
             when(action) {
                 AddTodoArchViewModel.ViewAction.Close -> finish()
-                AddTodoArchViewModel.ViewAction.ValidateText -> addTodoEditText.validateText().let{}
+                AddTodoArchViewModel.ViewAction.ValidateText -> binding.addTodoEditText.validateText().let{}
                 is AddTodoArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
                     messageRes = action.messageRes,
                     actionRes = action.actionRes,

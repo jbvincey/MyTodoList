@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -44,7 +43,6 @@ dependencies {
 
     // lifecycle
     api deps.lifecycle.runtime
-    api deps.lifecycle.extensions
     api deps.lifecycle.livedata
     api deps.lifecycle.livedata_ktx
 

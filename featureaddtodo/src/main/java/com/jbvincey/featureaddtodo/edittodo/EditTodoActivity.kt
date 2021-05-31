@@ -13,7 +13,6 @@ import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.ui.utils.activity.displayActionSnack
 import com.jbvincey.ui.utils.activity.displayAlertDialog
 import com.jbvincey.ui.utils.activity.showSoftKeyboardWithDelay
-import kotlinx.android.synthetic.main.activity_add_todo.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -65,26 +64,26 @@ class EditTodoActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         val colorInt = ContextCompat.getColor(this, backgroundColorRes)
-        addTodoToolbar.setBackgroundColor(colorInt)
+        binding.addTodoToolbar.setBackgroundColor(colorInt)
         window.statusBarColor = colorInt
-        setSupportActionBar(addTodoToolbar)
+        setSupportActionBar(binding.addTodoToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun initEditText() {
-        addTodoEditText.validationInputEditTextListener = viewModel.editTextListener()
+        binding.addTodoEditText.validationInputEditTextListener = viewModel.editTextListener()
     }
 
     private fun observeTodoName() {
         viewModel.todoName.observe(this, Observer { todoName ->
             title = todoName
-            addTodoEditText.setText(todoName)
+            binding.addTodoEditText.setText(todoName)
         })
     }
 
     private fun observeTodoArchived() {
         viewModel.todoArchived.observe(this, Observer { todoArchived ->
-            addTodoEditText.isEnabled = !(todoArchived ?: false)
+            binding.addTodoEditText.isEnabled = !(todoArchived ?: false)
             invalidateOptionsMenu()
         })
     }
@@ -97,7 +96,7 @@ class EditTodoActivity : AppCompatActivity() {
         viewModel.viewActions.observe(this, Observer { action ->
             when (action) {
                 EditTodoArchViewModel.ViewAction.Close -> finish()
-                EditTodoArchViewModel.ViewAction.ValidateText -> addTodoEditText.validateText().let{}
+                EditTodoArchViewModel.ViewAction.ValidateText -> binding.addTodoEditText.validateText().let{}
                 is EditTodoArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
                     messageRes = action.messageRes,
                     actionRes = action.actionRes,
