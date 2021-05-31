@@ -26,7 +26,7 @@ versions.lifecycle_viewmodel = "2.2.0"
 versions.lifecycle_runtime = "2.2.0"
 versions.stetho = "1.5.1"
 versions.lifecycle = "2.2.0"
-versions.koin = "2.0.1"
+versions.koin = "2.2.3"
 versions.design = "3.0.2"
 versions.flipper = '0.40.0'
 
@@ -70,12 +70,13 @@ lifecycle.livedata_ktx = "androidx.lifecycle:lifecycle-livedata-ktx:$versions.li
 deps.lifecycle = lifecycle
 
 def koin = [:]
-koin.kotlin = "org.koin:koin-core:$versions.koin"
-koin.ext = "org.koin:koin-core-ext:$versions.koin"
-koin.test = "org.koin:koin-test:$versions.koin"
-koin.android = "org.koin:koin-android:$versions.koin"
-koin.androidscope = "org.koin:koin-android-scope:$versions.koin"
-koin.viewmodel = "org.koin:koin-android-viewmodel:$versions.koin"
+koin.plugin = "io.insert-koin:koin-gradle-plugin:$versions.koin"
+koin.kotlin = "io.insert-koin:koin-core:$versions.koin"
+koin.ext = "io.insert-koin:koin-core-ext:$versions.koin"
+koin.test = "io.insert-koin:koin-test:$versions.koin"
+koin.android = "io.insert-koin:koin-android:$versions.koin"
+koin.androidscope = "io.insert-koin:koin-android-scope:$versions.koin"
+koin.viewmodel = "io.insert-koin:koin-android-viewmodel:$versions.koin"
 deps.koin = koin
 
 deps.stetho = "com.facebook.stetho:stetho:$versions.stetho"
