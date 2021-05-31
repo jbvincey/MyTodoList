@@ -3,9 +3,9 @@
  * maven repositories.
  **/
 ext {
-    compileSdkVersion = 29
+    compileSdkVersion = 30
     minSdkVersion = 23
-    targetSdkVersion = 29
+    targetSdkVersion = 30
     versionCode = 1
     versionName = "1.0"
 }
