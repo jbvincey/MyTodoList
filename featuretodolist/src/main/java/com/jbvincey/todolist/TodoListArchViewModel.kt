@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import com.jbvincey.core.livedata.SingleLiveEvent
 import com.jbvincey.core.models.Todo
 import com.jbvincey.core.repositories.TodoListRepository
 import com.jbvincey.core.repositories.TodoRepository
@@ -20,6 +19,8 @@ import com.jbvincey.design.widget.helper.SwipeCallbackListener
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellCallback
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellView
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -35,9 +36,8 @@ class TodoListArchViewModel(
     private val todoListId = MutableLiveData<Long>()
     private val todoListType = MutableLiveData<TodoListType>()
 
-    private val _viewActions = SingleLiveEvent<ViewAction>()
-    val viewActions: LiveData<ViewAction>
-        get() = _viewActions
+    private val viewActionChannel = Channel<ViewAction>(Channel.BUFFERED)
+    val viewActionFlow = viewActionChannel.receiveAsFlow()
 
     val todoListName: LiveData<String> = todoListId
         .switchMap { todoListRepository.getTodoListById(it) }
@@ -55,7 +55,6 @@ class TodoListArchViewModel(
             .switchMap { type -> getTodoListFromType(type, todoListId) }
             .map { todos -> sortAndTransformTodoList(todos) }
     }
-
 
 
     private fun getTodoListFromType(type: TodoListType, todoListId: Long): LiveData<List<Todo>> =
@@ -79,7 +78,7 @@ class TodoListArchViewModel(
         }
 
         override fun onLongClick(data: Todo, view: View): Boolean {
-            _viewActions.value = ViewAction.GoToEditTodo(data.id, view)
+            viewModelScope.launch { viewActionChannel.send(ViewAction.GoToEditTodo(data.id, view)) }
             return true
         }
     }
@@ -93,10 +92,12 @@ class TodoListArchViewModel(
     }
 
     fun onBackPressed() {
-        _viewActions.value = if (todoListType.value == TodoListType.ARCHIVED) {
-            ViewAction.DisplayUnarchived
-        } else {
-            ViewAction.BackPressed
+        viewModelScope.launch {
+            viewActionChannel.send(if (todoListType.value == TodoListType.ARCHIVED) {
+                ViewAction.DisplayUnarchived
+            } else {
+                ViewAction.BackPressed
+            })
         }
     }
 
@@ -112,16 +113,18 @@ class TodoListArchViewModel(
         viewModelScope.launch {
             try {
                 todoRepository.deleteTodo(todoId)
-                _viewActions.value = ViewAction.ShowSnack(
+                viewActionChannel.send(ViewAction.ShowSnack(
                     messageRes = R.string.delete_success,
                     actionRes = R.string.undo,
                     formatArgs = arrayOf(getTodoName(todoId))
                 ) { undeleteTodo(todoId) }
+                )
             } catch (e: Exception) {
-                _viewActions.value = ViewAction.ShowSnack(
+                viewActionChannel.send(ViewAction.ShowSnack(
                     messageRes = R.string.error_message,
                     actionRes = R.string.retry
                 ) { deleteTodo(todoId) }
+                )
             }
         }
     }
@@ -131,10 +134,11 @@ class TodoListArchViewModel(
             try {
                 todoRepository.undeleteTodo(todoId)
             } catch (e: Exception) {
-                _viewActions.value = ViewAction.ShowSnack(
+                viewActionChannel.send(ViewAction.ShowSnack(
                     messageRes = R.string.error_message,
                     actionRes = R.string.retry
                 ) { undeleteTodo(todoId) }
+                )
             }
         }
     }
@@ -143,16 +147,18 @@ class TodoListArchViewModel(
         viewModelScope.launch {
             try {
                 todoRepository.archiveTodo(todoId)
-                _viewActions.value = ViewAction.ShowSnack(
+                viewActionChannel.send(ViewAction.ShowSnack(
                     messageRes = R.string.archive_success,
                     actionRes = R.string.undo,
                     formatArgs = arrayOf(getTodoName(todoId))
                 ) { unarchiveTodo(todoId) }
+                )
             } catch (e: Exception) {
-                _viewActions.value = ViewAction.ShowSnack(
+                viewActionChannel.send(ViewAction.ShowSnack(
                     messageRes = R.string.error_message,
                     actionRes = R.string.retry
                 ) { archiveTodo(todoId) }
+                )
             }
         }
     }
@@ -162,10 +168,11 @@ class TodoListArchViewModel(
             try {
                 todoRepository.unarchiveTodo(todoId)
             } catch (e: Exception) {
-                _viewActions.value = ViewAction.ShowSnack(
+                viewActionChannel.send(ViewAction.ShowSnack(
                     messageRes = R.string.error_message,
                     actionRes = R.string.retry
                 ) { unarchiveTodo(todoId) }
+                )
             }
         }
     }
@@ -188,12 +195,12 @@ class TodoListArchViewModel(
     fun onOptionItemsSelected(itemId: Int): Boolean = when (itemId) {
         MENU_EDIT -> {
             todoListId.value?.let {
-                _viewActions.value = ViewAction.GoToEditTodoList(it)
+                viewModelScope.launch { viewActionChannel.send(ViewAction.GoToEditTodoList(it)) }
                 true
             } ?: false
         }
         android.R.id.home -> {
-            _viewActions.value = ViewAction.Close
+            viewModelScope.launch { viewActionChannel.send(ViewAction.Close) }
             true
         }
         else -> false
@@ -205,7 +212,7 @@ class TodoListArchViewModel(
         object Close : ViewAction()
         object DisplayUnarchived : ViewAction()
         object BackPressed : ViewAction()
-        data class GoToEditTodoList(val todoListId: Long): ViewAction()
+        data class GoToEditTodoList(val todoListId: Long) : ViewAction()
         data class GoToEditTodo(val todoId: Long, val todoView: View) : ViewAction()
         data class ShowSnack(
             @StringRes val messageRes: Int,

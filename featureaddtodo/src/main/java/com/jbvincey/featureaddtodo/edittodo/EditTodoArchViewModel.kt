@@ -7,12 +7,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jbvincey.core.livedata.SingleLiveEvent
 import com.jbvincey.core.models.Todo
 import com.jbvincey.core.repositories.TodoRepository
 import com.jbvincey.core.utils.add
 import com.jbvincey.design.widget.ValidationInputEditTextListener
 import com.jbvincey.featureaddtodo.R
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -27,9 +28,8 @@ internal class EditTodoArchViewModel(private val todoRepository: TodoRepository)
     val todoName: LiveData<String> = Transformations.map(todo) { it.name }
     val todoArchived: LiveData<Boolean> = Transformations.map(todo) { it.archived }
 
-    private val _viewActions = SingleLiveEvent<ViewAction>()
-    val viewActions: LiveData<ViewAction>
-        get() = _viewActions
+    private val viewActionChannel = Channel<ViewAction>(Channel.BUFFERED)
+    val viewActionFlow = viewActionChannel.receiveAsFlow()
 
     fun setTodoId(todoId: Long) {
         this.todoId.value = todoId
@@ -41,12 +41,13 @@ internal class EditTodoArchViewModel(private val todoRepository: TodoRepository)
         viewModelScope.launch {
             try {
                 todoRepository.editTodo(todoName, todoId.value!!)
-                _viewActions.value = ViewAction.Close
+                viewActionChannel.send(ViewAction.Close)
             } catch (e: Exception) {
-                _viewActions.value = ViewAction.ShowSnack(
+                viewActionChannel.send(ViewAction.ShowSnack(
                     messageRes = R.string.error_message,
                     actionRes = R.string.retry,
                 ) { editTodo(todoName) }
+                )
             }
         }
     }
@@ -55,12 +56,13 @@ internal class EditTodoArchViewModel(private val todoRepository: TodoRepository)
         viewModelScope.launch {
             try {
                 todoRepository.deleteTodo(todoId.value!!)
-                _viewActions.value = ViewAction.Close
+                viewActionChannel.send(ViewAction.Close)
             } catch (e: Exception) {
-                _viewActions.value = ViewAction.ShowSnack(
+                viewActionChannel.send(ViewAction.ShowSnack(
                     messageRes = R.string.error_message,
                     actionRes = R.string.retry
                 ) { deleteTodo() }
+                )
             }
         }
     }
@@ -70,17 +72,19 @@ internal class EditTodoArchViewModel(private val todoRepository: TodoRepository)
             try {
                 todoRepository.archiveTodo(todoId.value!!)
                 if (displaySnackOnSuccess) {
-                    _viewActions.value = ViewAction.ShowSnack(
+                    viewActionChannel.send(ViewAction.ShowSnack(
                         messageRes = R.string.archive_success,
                         actionRes = R.string.cancel,
                         formatArgs = arrayOf(todo.value!!.name),
                     ) { unarchiveTodo(displaySnackOnSuccess = false) }
+                    )
                 }
             } catch (e: Exception) {
-                _viewActions.value = ViewAction.ShowSnack(
+                viewActionChannel.send(ViewAction.ShowSnack(
                     messageRes = R.string.error_message,
                     actionRes = R.string.retry
                 ) { archiveTodo(true) }
+                )
             }
         }
     }
@@ -90,17 +94,19 @@ internal class EditTodoArchViewModel(private val todoRepository: TodoRepository)
             try {
                 todoRepository.unarchiveTodo(todoId.value!!)
                 if (displaySnackOnSuccess) {
-                    _viewActions.value = ViewAction.ShowSnack(
+                    viewActionChannel.send(ViewAction.ShowSnack(
                         messageRes = R.string.unarchive_success,
                         actionRes = R.string.cancel,
                         formatArgs = arrayOf(todo.value!!.name),
                     ) { archiveTodo(displaySnackOnSuccess = false) }
+                    )
                 }
             } catch (e: Exception) {
-                _viewActions.value = ViewAction.ShowSnack(
+                viewActionChannel.send(ViewAction.ShowSnack(
                     messageRes = R.string.error_message,
                     actionRes = R.string.retry
                 ) { unarchiveTodo(true) }
+                )
             }
         }
     }
@@ -130,15 +136,16 @@ internal class EditTodoArchViewModel(private val todoRepository: TodoRepository)
 
     fun onOptionItemsSelected(itemId: Int): Boolean = when(itemId) {
         MENU_EDIT -> {
-            _viewActions.value = ViewAction.ValidateText
+            viewModelScope.launch { viewActionChannel.send(ViewAction.ValidateText) }
             true
         }
         MENU_DELETE -> {
-            _viewActions.value = ViewAction.DisplayAlertDialog(
+            viewModelScope.launch { viewActionChannel.send(ViewAction.DisplayAlertDialog(
                 messageRes = R.string.confirm_delete_message,
                 actionRes = R.string.confirm_delete_action,
                 formatArgs = arrayOf(todoName.value!!)
             ) { deleteTodo() }
+            ) }
             true
         }
         MENU_ARCHIVE -> {
@@ -150,7 +157,7 @@ internal class EditTodoArchViewModel(private val todoRepository: TodoRepository)
             true
         }
         android.R.id.home -> {
-            _viewActions.value = ViewAction.Close
+            viewModelScope.launch { viewActionChannel.send(ViewAction.Close) }
             true
         }
         else -> false

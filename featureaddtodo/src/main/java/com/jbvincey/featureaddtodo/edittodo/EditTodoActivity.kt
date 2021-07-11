@@ -5,7 +5,10 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.jbvincey.core.utils.exhaustive
 import com.jbvincey.featureaddtodo.databinding.ActivityAddTodoBinding
 import com.jbvincey.navigation.EditTodoNavigationHandler
@@ -13,6 +16,8 @@ import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.ui.utils.activity.displayActionSnack
 import com.jbvincey.ui.utils.activity.displayAlertDialog
 import com.jbvincey.ui.utils.activity.showSoftKeyboardWithDelay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -25,7 +30,9 @@ class EditTodoActivity : AppCompatActivity() {
     private val viewModel: EditTodoArchViewModel by viewModel()
     private val featureNavigationHandler: EditTodoNavigationHandler by inject()
     private val navigationHandler: NavigationHandler by inject()
-    private val backgroundColorRes: Int by lazy { featureNavigationHandler.retrieveBackgroundColorRes(intent) }
+    private val backgroundColorRes: Int by lazy {
+        featureNavigationHandler.retrieveBackgroundColorRes(intent)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityAddTodoBinding.inflate(layoutInflater)
@@ -93,24 +100,29 @@ class EditTodoActivity : AppCompatActivity() {
     //region view actions
 
     private fun observeViewActions() {
-        viewModel.viewActions.observe(this, Observer { action ->
-            when (action) {
-                EditTodoArchViewModel.ViewAction.Close -> finish()
-                EditTodoArchViewModel.ViewAction.ValidateText -> binding.addTodoEditText.validateText().let{}
-                is EditTodoArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
-                    messageRes = action.messageRes,
-                    actionRes = action.actionRes,
-                    formatArgs = *action.formatArgs,
-                    action = action.action
-                )
-                is EditTodoArchViewModel.ViewAction.DisplayAlertDialog -> displayAlertDialog(
-                    messageRes = action.messageRes,
-                    actionRes = action.actionRes,
-                    formatArgs = *action.formatArgs,
-                    action = action.action
-                )
-            }.exhaustive
-        })
+        lifecycleScope.launch {
+            viewModel.viewActionFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { action ->
+                    when (action) {
+                        EditTodoArchViewModel.ViewAction.Close -> finish()
+                        EditTodoArchViewModel.ViewAction.ValidateText -> binding.addTodoEditText.validateText()
+                            .let {}
+                        is EditTodoArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
+                            messageRes = action.messageRes,
+                            actionRes = action.actionRes,
+                            formatArgs = *action.formatArgs,
+                            action = action.action
+                        )
+                        is EditTodoArchViewModel.ViewAction.DisplayAlertDialog -> displayAlertDialog(
+                            messageRes = action.messageRes,
+                            actionRes = action.actionRes,
+                            formatArgs = *action.formatArgs,
+                            action = action.action
+                        )
+                    }.exhaustive
+                }
+        }
     }
 
     //endregion

@@ -5,7 +5,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.jbvincey.core.utils.exhaustive
 import com.jbvincey.featureaddtodo.R
 import com.jbvincey.featureaddtodo.databinding.ActivityAddTodoBinding
@@ -13,6 +15,8 @@ import com.jbvincey.navigation.AddTodoNavigationHandler
 import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.ui.utils.activity.displayActionSnack
 import com.jbvincey.ui.utils.activity.showSoftKeyboardWithDelay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -25,7 +29,9 @@ class AddTodoActivity : AppCompatActivity() {
     private val viewModel: AddTodoArchViewModel by viewModel()
     private val navigationHandler: NavigationHandler by inject()
     private val featureNavigationHandler: AddTodoNavigationHandler by inject()
-    private val backgroundColorRes: Int by lazy { featureNavigationHandler.retrieveBackgroundColorRes(intent) }
+    private val backgroundColorRes: Int by lazy {
+        featureNavigationHandler.retrieveBackgroundColorRes(intent)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityAddTodoBinding.inflate(layoutInflater)
@@ -37,7 +43,7 @@ class AddTodoActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         super.onCreate(savedInstanceState)
-        
+
         initView()
     }
 
@@ -76,17 +82,22 @@ class AddTodoActivity : AppCompatActivity() {
     //region view actions
 
     private fun observeViewActions() {
-        viewModel.viewAction.observe(this, Observer { action ->
-            when(action) {
-                AddTodoArchViewModel.ViewAction.Close -> finish()
-                AddTodoArchViewModel.ViewAction.ValidateText -> binding.addTodoEditText.validateText().let{}
-                is AddTodoArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
-                    messageRes = action.messageRes,
-                    actionRes = action.actionRes,
-                    action = action.action
-                )
-            }.exhaustive
-        })
+        lifecycleScope.launch {
+            viewModel.viewActionFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { action ->
+                    when (action) {
+                        AddTodoArchViewModel.ViewAction.Close -> finish()
+                        AddTodoArchViewModel.ViewAction.ValidateText -> binding.addTodoEditText.validateText()
+                            .let {}
+                        is AddTodoArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
+                            messageRes = action.messageRes,
+                            actionRes = action.actionRes,
+                            action = action.action
+                        )
+                    }.exhaustive
+                }
+        }
     }
 
     //endregion
@@ -103,7 +114,7 @@ class AddTodoActivity : AppCompatActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        return if(viewModel.onOptionsItemSelected(item.itemId)) {
+        return if (viewModel.onOptionsItemSelected(item.itemId)) {
             true
         } else {
             super.onOptionsItemSelected(item)

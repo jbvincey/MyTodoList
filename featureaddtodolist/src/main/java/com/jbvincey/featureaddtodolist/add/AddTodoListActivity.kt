@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.jbvincey.core.utils.exhaustive
 import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.ui.utils.activity.displayActionSnack
 import com.jbvincey.ui.utils.activity.showSoftKeyboardWithDelay
 import deezer.android.featureaddtodolist.R
 import deezer.android.featureaddtodolist.databinding.ActivityAddTodolistBinding
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -62,17 +66,22 @@ class AddTodoListActivity : AppCompatActivity() {
     //region user actions
 
     private fun observeViewActions() {
-        viewModel.viewActions.observe(this, Observer { action ->
-            when(action) {
-                AddTodoListArchViewModel.ViewAction.Close -> finish()
-                AddTodoListArchViewModel.ViewAction.ValidateText -> binding.addTodoListEditText.validateText().let{}
-                is AddTodoListArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
-                    messageRes = action.messageRes,
-                    actionRes = action.actionRes,
-                    action = action.action
-                )
-            }.exhaustive
-        })
+        lifecycleScope.launch {
+            viewModel.viewActionFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { action ->
+                    when (action) {
+                        AddTodoListArchViewModel.ViewAction.Close -> finish()
+                        AddTodoListArchViewModel.ViewAction.ValidateText -> binding.addTodoListEditText.validateText()
+                            .let {}
+                        is AddTodoListArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
+                            messageRes = action.messageRes,
+                            actionRes = action.actionRes,
+                            action = action.action
+                        )
+                    }.exhaustive
+                }
+        }
     }
 
     //endregion

@@ -7,7 +7,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +24,8 @@ import com.jbvincey.navigation.TodoListNavigationHandler
 import com.jbvincey.todolist.databinding.ActivityTodoListBinding
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellAdapter
 import com.jbvincey.ui.utils.activity.displayActionSnack
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -132,21 +137,27 @@ class TodoListActivity : AppCompatActivity() {
     //action user actions
 
     private fun observeViewActions() {
-        viewModel.viewActions.observe(this, Observer { action ->
-            when(action) {
-                TodoListArchViewModel.ViewAction.Close -> finish()
-                TodoListArchViewModel.ViewAction.DisplayUnarchived -> binding.bottomNavigation.selectedItemId = R.id.action_todo_list
-                TodoListArchViewModel.ViewAction.BackPressed -> super.onBackPressed()
-                is TodoListArchViewModel.ViewAction.GoToEditTodoList -> goToEditTodoList(action.todoListId)
-                is TodoListArchViewModel.ViewAction.GoToEditTodo -> goToEditTodo(action.todoId, action.todoView)
-                is TodoListArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
-                    messageRes = action.messageRes,
-                    actionRes = action.actionRes,
-                    formatArgs = *action.formatArgs,
-                    action = action.action
-                )
-            }.exhaustive
-        })
+        lifecycleScope.launch {
+            viewModel.viewActionFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { action ->
+                    when (action) {
+                        TodoListArchViewModel.ViewAction.Close -> finish()
+                        TodoListArchViewModel.ViewAction.DisplayUnarchived -> binding.bottomNavigation.selectedItemId = R.id.action_todo_list
+                        TodoListArchViewModel.ViewAction.BackPressed -> super.onBackPressed()
+                        is TodoListArchViewModel.ViewAction.GoToEditTodoList -> goToEditTodoList(
+                            action.todoListId)
+                        is TodoListArchViewModel.ViewAction.GoToEditTodo -> goToEditTodo(action.todoId,
+                            action.todoView)
+                        is TodoListArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
+                            messageRes = action.messageRes,
+                            actionRes = action.actionRes,
+                            formatArgs = *action.formatArgs,
+                            action = action.action
+                        )
+                    }.exhaustive
+                }
+        }
     }
     //endregion
 

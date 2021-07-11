@@ -5,7 +5,10 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.jbvincey.core.utils.exhaustive
 import com.jbvincey.navigation.EditTodoListNavigationHandler
 import com.jbvincey.navigation.NavigationHandler
@@ -13,6 +16,8 @@ import com.jbvincey.ui.utils.activity.displayActionSnack
 import com.jbvincey.ui.utils.activity.displayAlertDialog
 import com.jbvincey.ui.utils.activity.showSoftKeyboardWithDelay
 import deezer.android.featureaddtodolist.databinding.ActivityAddTodolistBinding
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -82,25 +87,29 @@ class EditTodoListActivity : AppCompatActivity() {
     //region view actions
 
     private fun observeViewActions() {
-        viewModel.viewActions.observe(this, Observer { action ->
-            when (action) {
-                EditTodoListArchViewModel.ViewAction.Close -> finish()
-                EditTodoListArchViewModel.ViewAction.ValidateText -> binding.addTodoListEditText.validateText()
-                    .let {}
-                is EditTodoListArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
-                    messageRes = action.messageRes,
-                    actionRes = action.actionRes,
-                    formatArgs = *action.formatArgs,
-                    action = action.action
-                )
-                is EditTodoListArchViewModel.ViewAction.DisplayAlertDialog -> displayAlertDialog(
-                    messageRes = action.messageRes,
-                    actionRes = action.actionRes,
-                    formatArgs = *action.formatArgs,
-                    action = action.action
-                )
-            }.exhaustive
-        })
+        lifecycleScope.launch {
+            viewModel.viewActionFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { action ->
+                    when (action) {
+                        EditTodoListArchViewModel.ViewAction.Close -> finish()
+                        EditTodoListArchViewModel.ViewAction.ValidateText -> binding.addTodoListEditText.validateText()
+                            .let {}
+                        is EditTodoListArchViewModel.ViewAction.ShowSnack -> displayActionSnack(
+                            messageRes = action.messageRes,
+                            actionRes = action.actionRes,
+                            formatArgs = *action.formatArgs,
+                            action = action.action
+                        )
+                        is EditTodoListArchViewModel.ViewAction.DisplayAlertDialog -> displayAlertDialog(
+                            messageRes = action.messageRes,
+                            actionRes = action.actionRes,
+                            formatArgs = *action.formatArgs,
+                            action = action.action
+                        )
+                    }.exhaustive
+                }
+        }
     }
 
     //endregion

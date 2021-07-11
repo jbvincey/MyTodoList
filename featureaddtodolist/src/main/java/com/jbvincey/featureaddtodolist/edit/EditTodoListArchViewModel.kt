@@ -7,12 +7,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jbvincey.core.livedata.SingleLiveEvent
 import com.jbvincey.core.models.TodoList
 import com.jbvincey.core.repositories.TodoListRepository
 import com.jbvincey.core.utils.add
 import com.jbvincey.design.widget.ValidationInputEditTextListener
 import deezer.android.featureaddtodolist.R
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class EditTodoListArchViewModel(
@@ -25,9 +26,8 @@ class EditTodoListArchViewModel(
     }
     val todoListName: LiveData<String> = Transformations.map(todoList) { it.name }
 
-    private val _viewActions = SingleLiveEvent<ViewAction>()
-    val viewActions: LiveData<ViewAction>
-        get() = _viewActions
+    private val viewActionChannel = Channel<ViewAction>(Channel.BUFFERED)
+    val viewActionFlow = viewActionChannel.receiveAsFlow()
 
     fun setTodoListId(todoId: Long) {
         this.todoListId.value = todoId
@@ -39,12 +39,13 @@ class EditTodoListArchViewModel(
         viewModelScope.launch {
             try {
                 todoListRepository.editTodoList(todoName, todoListId.value!!)
-                _viewActions.value = ViewAction.Close
+                viewActionChannel.send(ViewAction.Close)
             } catch (e: Exception) {
-                _viewActions.value = ViewAction.ShowSnack(
+                viewActionChannel.send(ViewAction.ShowSnack(
                     messageRes = R.string.error_message,
                     actionRes = R.string.retry,
                 ) { editListTodo(todoName) }
+                )
             }
         }
     }
@@ -53,12 +54,13 @@ class EditTodoListArchViewModel(
         viewModelScope.launch {
             try {
                 todoListRepository.deleteTodoList(todoListId.value!!)
-                _viewActions.value = ViewAction.Close
+                viewActionChannel.send(ViewAction.Close)
             } catch (e: Exception) {
-                _viewActions.value = ViewAction.ShowSnack(
+                viewActionChannel.send(ViewAction.ShowSnack(
                     messageRes = R.string.error_message,
                     actionRes = R.string.retry
                 ) { deleteTodo() }
+                )
             }
         }
     }
@@ -73,19 +75,20 @@ class EditTodoListArchViewModel(
 
     fun onOptionItemsSelected(itemId: Int): Boolean = when(itemId) {
         MENU_EDIT -> {
-            _viewActions.value = ViewAction.ValidateText
+            viewModelScope.launch { viewActionChannel.send(ViewAction.ValidateText) }
             true
         }
         MENU_DELETE -> {
-            _viewActions.value = ViewAction.DisplayAlertDialog(
+            viewModelScope.launch { viewActionChannel.send(ViewAction.DisplayAlertDialog(
                 messageRes = R.string.confirm_delete_message,
                 actionRes = R.string.confirm_delete_action,
                 formatArgs = arrayOf(todoListName.value!!)
             ) { deleteTodo() }
+            ) }
             true
         }
         android.R.id.home -> {
-            _viewActions.value = ViewAction.Close
+            viewModelScope.launch { viewActionChannel.send(ViewAction.Close) }
             true
         }
         else -> false

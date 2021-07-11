@@ -5,7 +5,10 @@ import android.view.View
 import android.view.Window
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
@@ -14,6 +17,8 @@ import com.jbvincey.core.utils.exhaustive
 import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.todolistpicker.databinding.ActivityTodoListPickerBinding
 import com.jbvincey.ui.recycler.cells.stickynote.StickyNoteCardAdapter
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -66,20 +71,24 @@ class TodoListPickerActivity : AppCompatActivity() {
     //endregion
 
     private fun observeviewActions() {
-        viewModel.viewActions.observe(this, Observer { action ->
-            when(action) {
-                is TodoListPickerArchViewModel.ViewAction.OpenTodoList -> openTodoList(
-                    action.todoListId,
-                    action.todoListColorRes,
-                    action.view
-                )
-                is TodoListPickerArchViewModel.ViewAction.OpenEditTodoList -> openEditTodoList(
-                    action.todoListId,
-                    action.todoListColorRes,
-                    action.view
-                )
-            }.exhaustive
-        })
+        lifecycleScope.launch {
+            viewModel.viewActionFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { action ->
+                    when (action) {
+                        is TodoListPickerArchViewModel.ViewAction.OpenTodoList -> openTodoList(
+                            action.todoListId,
+                            action.todoListColorRes,
+                            action.view
+                        )
+                        is TodoListPickerArchViewModel.ViewAction.OpenEditTodoList -> openEditTodoList(
+                            action.todoListId,
+                            action.todoListColorRes,
+                            action.view
+                        )
+                    }.exhaustive
+                }
+        }
     }
 
     private fun openTodoList(todoListId: Long, @ColorRes todoListColorRes: Int, view: View) {

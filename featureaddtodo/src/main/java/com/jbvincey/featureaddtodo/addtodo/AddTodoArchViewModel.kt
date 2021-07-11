@@ -1,13 +1,13 @@
 package com.jbvincey.featureaddtodo.addtodo
 
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jbvincey.core.livedata.SingleLiveEvent
 import com.jbvincey.core.repositories.TodoRepository
 import com.jbvincey.design.widget.ValidationInputEditTextListener
 import com.jbvincey.featureaddtodo.R
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
@@ -18,9 +18,8 @@ internal class AddTodoArchViewModel(private val todoRepository: TodoRepository):
 
     var todoListId by Delegates.notNull<Long>()
 
-    private val _viewAction = SingleLiveEvent<ViewAction>()
-    val viewAction: LiveData<ViewAction>
-        get() = _viewAction
+    private val viewActionChannel = Channel<ViewAction>(Channel.BUFFERED)
+    val viewActionFlow = viewActionChannel.receiveAsFlow()
 
     fun editTextListener() = ValidationInputEditTextListener { name -> name?.let { addTodo(it) } }
 
@@ -28,23 +27,24 @@ internal class AddTodoArchViewModel(private val todoRepository: TodoRepository):
         viewModelScope.launch {
             try {
                 todoRepository.addTodo(todoName, todoListId)
-                _viewAction.value = ViewAction.Close
+                viewActionChannel.send(ViewAction.Close)
             } catch (e: Exception) {
-                _viewAction.value = ViewAction.ShowSnack(
+                viewActionChannel.send(ViewAction.ShowSnack(
                     R.string.error_message,
                     R.string.retry,
                 ) { addTodo(todoName) }
+                )
             }
         }
     }
 
     fun onOptionsItemSelected(itemId: Int): Boolean = when (itemId) {
         R.id.action_add_todo -> {
-            _viewAction.value = ViewAction.ValidateText
+            viewModelScope.launch { viewActionChannel.send(ViewAction.ValidateText) }
             true
         }
         android.R.id.home -> {
-            _viewAction.value = ViewAction.Close
+            viewModelScope.launch { viewActionChannel.send(ViewAction.Close) }
             true
         }
         else -> false
