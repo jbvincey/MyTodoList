@@ -59,6 +59,7 @@ dependencies {
 
     // room
     implementation deps.room.runtime
+    implementation deps.room.ktx
     kapt deps.room.compiler
 
     // tests
