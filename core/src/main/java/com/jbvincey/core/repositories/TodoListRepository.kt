@@ -1,20 +1,20 @@
 package com.jbvincey.core.repositories
 
-import androidx.lifecycle.LiveData
 import com.jbvincey.core.database.TodoListDao
 import com.jbvincey.core.models.TodoList
 import com.jbvincey.core.models.TodoListWithTodos
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 interface TodoListRepository {
 
-    fun getAllTodoLists(): LiveData<List<TodoList>>
+    fun getAllTodoLists(): Flow<List<TodoList>>
 
-    fun getAllTodoListsWithTodos(): LiveData<List<TodoListWithTodos>>
+    fun getAllTodoListsWithTodos(): Flow<List<TodoListWithTodos>>
 
-    fun getTodoListById(id: Long): LiveData<TodoList>
+    fun getTodoListById(id: Long): Flow<TodoList>
 
     suspend fun addTodoList(todoListName: String)
 
@@ -29,11 +29,11 @@ class TodoListRepositoryImpl(private val todoListDao: TodoListDao): TodoListRepo
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    override fun getAllTodoLists(): LiveData<List<TodoList>> = todoListDao.getAllTodoLists()
+    override fun getAllTodoLists(): Flow<List<TodoList>> = todoListDao.getAllTodoLists()
 
-    override fun getAllTodoListsWithTodos(): LiveData<List<TodoListWithTodos>> = todoListDao.getAllTodoListsWithTodos()
+    override fun getAllTodoListsWithTodos(): Flow<List<TodoListWithTodos>> = todoListDao.getAllTodoListsWithTodos()
 
-    override fun getTodoListById(id: Long): LiveData<TodoList> = todoListDao.getTodoListById(id)
+    override fun getTodoListById(id: Long): Flow<TodoList> = todoListDao.getTodoListById(id)
 
     override suspend fun addTodoList(todoListName: String) {
         withContext(ioDispatcher) {

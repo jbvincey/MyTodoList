@@ -1,10 +1,10 @@
 package com.jbvincey.core.repositories
 
-import androidx.lifecycle.LiveData
 import com.jbvincey.core.database.TodoDao
 import com.jbvincey.core.models.Todo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 /**
@@ -12,13 +12,13 @@ import kotlinx.coroutines.withContext
  */
 interface TodoRepository {
 
-    fun getAllTodosFromTodoList(todoListId: Long): LiveData<List<Todo>>
+    fun getAllTodosFromTodoList(todoListId: Long): Flow<List<Todo>>
 
-    fun getAllArchivedTodosFromTodoList(todoListId: Long): LiveData<List<Todo>>
+    fun getAllArchivedTodosFromTodoList(todoListId: Long): Flow<List<Todo>>
 
-    fun getAllUnarchivedTodosFromTodoList(todoListId: Long): LiveData<List<Todo>>
+    fun getAllUnarchivedTodosFromTodoList(todoListId: Long): Flow<List<Todo>>
 
-    fun getTodoById(id: Long): LiveData<Todo>
+    fun getTodoById(id: Long): Flow<Todo>
 
     suspend fun addTodo(todoName: String, todoListId: Long)
 
@@ -40,13 +40,13 @@ class TodoRepositoryImpl(private val todoDao: TodoDao): TodoRepository {
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    override fun getAllTodosFromTodoList(todoListId: Long): LiveData<List<Todo>> = todoDao.getAllTodosFromTodoList(todoListId)
+    override fun getAllTodosFromTodoList(todoListId: Long): Flow<List<Todo>> = todoDao.getAllTodosFromTodoList(todoListId)
 
-    override fun getAllArchivedTodosFromTodoList(todoListId: Long): LiveData<List<Todo>> = todoDao.getAllArchivedTodosFromTodoList(todoListId)
+    override fun getAllArchivedTodosFromTodoList(todoListId: Long): Flow<List<Todo>> = todoDao.getAllArchivedTodosFromTodoList(todoListId)
 
-    override fun getAllUnarchivedTodosFromTodoList(todoListId: Long): LiveData<List<Todo>> = todoDao.getAllUnarchivedTodosFromTodoList(todoListId)
+    override fun getAllUnarchivedTodosFromTodoList(todoListId: Long): Flow<List<Todo>> = todoDao.getAllUnarchivedTodosFromTodoList(todoListId)
 
-    override fun getTodoById(id: Long): LiveData<Todo> = todoDao.getTodoById(id)
+    override fun getTodoById(id: Long): Flow<Todo> = todoDao.getTodoById(id)
 
     override suspend fun addTodo(todoName: String, todoListId: Long) {
         withContext(ioDispatcher) {

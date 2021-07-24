@@ -1,8 +1,8 @@
 package com.jbvincey.core.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.jbvincey.core.models.Todo
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by jbvincey on 16/09/2018.
@@ -17,16 +17,16 @@ interface TodoDao {
     fun deleteTodo(todo: Todo)
 
     @Query("SELECT * FROM todos WHERE deleted = 0 AND todoListId = :todoListId")
-    fun getAllTodosFromTodoList(todoListId: Long): LiveData<List<Todo>>
+    fun getAllTodosFromTodoList(todoListId: Long): Flow<List<Todo>>
 
     @Query("SELECT * FROM todos WHERE archived = 1 AND deleted = 0 AND todoListId = :todoListId")
-    fun getAllArchivedTodosFromTodoList(todoListId: Long): LiveData<List<Todo>>
+    fun getAllArchivedTodosFromTodoList(todoListId: Long): Flow<List<Todo>>
 
     @Query("SELECT * FROM todos WHERE archived = 0 AND deleted = 0 AND todoListId = :todoListId")
-    fun getAllUnarchivedTodosFromTodoList(todoListId: Long): LiveData<List<Todo>>
+    fun getAllUnarchivedTodosFromTodoList(todoListId: Long): Flow<List<Todo>>
 
     @Query("SELECT * FROM todos WHERE id = :id")
-    fun getTodoById(id: Long): LiveData<Todo>
+    fun getTodoById(id: Long): Flow<Todo>
 
     @Query("UPDATE todos Set completed = NOT completed WHERE id = :id")
     fun updateTodoCompleted(id: Long)

@@ -1,6 +1,5 @@
 package com.jbvincey.core.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -8,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.jbvincey.core.models.TodoList
 import com.jbvincey.core.models.TodoListWithTodos
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TodoListDao {
@@ -19,16 +19,16 @@ interface TodoListDao {
     fun deleteTodoList(todoList: TodoList)
 
     @Query("SELECT * FROM todolists WHERE deleted = 0")
-    fun getAllTodoLists(): LiveData<List<TodoList>>
+    fun getAllTodoLists(): Flow<List<TodoList>>
 
     @Query("SELECT * FROM todolists WHERE deleted = 0")
-    fun getAllTodoListsWithTodos(): LiveData<List<TodoListWithTodos>>
+    fun getAllTodoListsWithTodos(): Flow<List<TodoListWithTodos>>
 
     @Query("SELECT * FROM todoLists WHERE id = :id")
-    fun getTodoListById(id: Long): LiveData<TodoList>
+    fun getTodoListById(id: Long): Flow<TodoList>
 
     @Query("SELECT * FROM todoLists WHERE id = :id")
-    fun getTodoListWithTodosById(id: Long): LiveData<TodoListWithTodos>
+    fun getTodoListWithTodosById(id: Long): Flow<TodoListWithTodos>
 
     @Query("UPDATE todoLists Set name = :name WHERE id = :id")
     fun updateTodoListName(name: String, id: Long)
