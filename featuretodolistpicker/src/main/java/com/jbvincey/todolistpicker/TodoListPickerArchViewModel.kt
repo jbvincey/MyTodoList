@@ -2,9 +2,7 @@ package com.jbvincey.todolistpicker
 
 import android.view.View
 import androidx.annotation.ColorRes
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.jbvincey.core.models.TodoListWithTodos
 import com.jbvincey.core.repositories.TodoListRepository
@@ -12,7 +10,11 @@ import com.jbvincey.ui.recycler.cells.stickynote.StickyNoteCardCallback
 
 import com.jbvincey.ui.recycler.cells.stickynote.StickyNoteCardViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class TodoListPickerArchViewModel(
@@ -23,14 +25,14 @@ class TodoListPickerArchViewModel(
     private val viewActionChannel = Channel<ViewAction>(Channel.BUFFERED)
     val viewActionFlow = viewActionChannel.receiveAsFlow()
 
+    val stickyNoteCardViewModelListFlow: StateFlow<List<StickyNoteCardViewModel<TodoListWithTodos>>> =
+        todoListRepository.getAllTodoListsWithTodos()
+            .map { todoListToStickyNoteCardViewModelTransformer.transform(it) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
     init {
         todoListToStickyNoteCardViewModelTransformer.stickyNoteCallback = buildStickyNoteCallback()
     }
-
-    private val todoLists: LiveData<List<TodoListWithTodos>> = todoListRepository.getAllTodoListsWithTodos()
-    val stickyNoteCardViewModelList: LiveData<List<StickyNoteCardViewModel<TodoListWithTodos>>> =
-        todoLists.map { todoListToStickyNoteCardViewModelTransformer.transform(it) }
-
 
     private fun buildStickyNoteCallback() = object : StickyNoteCardCallback<TodoListWithTodos> {
 

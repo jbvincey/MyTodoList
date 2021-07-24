@@ -2,35 +2,39 @@ package com.jbvincey.featureaddtodolist.edit
 
 import android.view.Menu
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jbvincey.core.models.TodoList
 import com.jbvincey.core.repositories.TodoListRepository
 import com.jbvincey.core.utils.add
 import com.jbvincey.design.widget.ValidationInputEditTextListener
 import deezer.android.featureaddtodolist.R
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class EditTodoListArchViewModel(
     private val todoListRepository: TodoListRepository
 ) : ViewModel() {
 
-    private val todoListId: MutableLiveData<Long> = MutableLiveData()
-    private val todoList: LiveData<TodoList> = Transformations.switchMap(todoListId) { todoListId ->
-        todoListRepository.getTodoListById(todoListId)
-    }
-    val todoListName: LiveData<String> = Transformations.map(todoList) { it.name }
+    private val todoListIdFlow: MutableStateFlow<Long?> = MutableStateFlow(null)
+    val todoListNameFlow: StateFlow<String> = todoListIdFlow
+        .filterNotNull()
+        .flatMapLatest { todoListId -> todoListRepository.getTodoListById(todoListId) }
+        .map { it.name }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
 
     private val viewActionChannel = Channel<ViewAction>(Channel.BUFFERED)
     val viewActionFlow = viewActionChannel.receiveAsFlow()
 
     fun setTodoListId(todoId: Long) {
-        this.todoListId.value = todoId
+        this.todoListIdFlow.value = todoId
     }
 
     fun editTextListener() = ValidationInputEditTextListener { name -> name?.let { editListTodo(it) } }
@@ -38,7 +42,7 @@ class EditTodoListArchViewModel(
     private fun editListTodo(todoName: String) {
         viewModelScope.launch {
             try {
-                todoListRepository.editTodoList(todoName, todoListId.value!!)
+                todoListRepository.editTodoList(todoName, todoListIdFlow.value!!)
                 viewActionChannel.send(ViewAction.Close)
             } catch (e: Exception) {
                 viewActionChannel.send(ViewAction.ShowSnack(
@@ -53,7 +57,7 @@ class EditTodoListArchViewModel(
     private fun deleteTodo() {
         viewModelScope.launch {
             try {
-                todoListRepository.deleteTodoList(todoListId.value!!)
+                todoListRepository.deleteTodoList(todoListIdFlow.value!!)
                 viewActionChannel.send(ViewAction.Close)
             } catch (e: Exception) {
                 viewActionChannel.send(ViewAction.ShowSnack(
@@ -82,7 +86,7 @@ class EditTodoListArchViewModel(
             viewModelScope.launch { viewActionChannel.send(ViewAction.DisplayAlertDialog(
                 messageRes = R.string.confirm_delete_message,
                 actionRes = R.string.confirm_delete_action,
-                formatArgs = arrayOf(todoListName.value!!)
+                formatArgs = arrayOf(todoListNameFlow.value!!)
             ) { deleteTodo() }
             ) }
             true

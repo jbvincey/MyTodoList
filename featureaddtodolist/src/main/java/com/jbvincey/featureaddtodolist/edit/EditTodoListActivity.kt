@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.jbvincey.core.utils.exhaustive
@@ -76,10 +75,14 @@ class EditTodoListActivity : AppCompatActivity() {
     }
 
     private fun observeTodoListName() {
-        viewModel.todoListName.observe(this, Observer { todoName ->
-            title = todoName
-            binding.addTodoListEditText.setText(todoName)
-        })
+        lifecycleScope.launch {
+            viewModel.todoListNameFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { todoName ->
+                    title = todoName
+                    binding.addTodoListEditText.setText(todoName)
+                }
+        }
     }
 
     //endregion

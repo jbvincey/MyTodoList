@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -73,7 +72,11 @@ class TodoListActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         window.statusBarColor = colorInt
 
-        viewModel.todoListName.observe(this, Observer { this.title = it })
+        lifecycleScope.launch {
+            viewModel.todoListFlowName
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { name -> this@TodoListActivity.title = name }
+        }
     }
 
     private fun initFabButton() {
@@ -109,7 +112,12 @@ class TodoListActivity : AppCompatActivity() {
 
         val adapter = CheckableCellAdapter<Todo>()
         binding.todoRecyclerView.adapter = adapter
-        viewModel.checkableCellViewModelList.observe(this, Observer { adapter.submitList(it) })
+
+        lifecycleScope.launch {
+            viewModel.checkableCellViewModelListFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { adapter.submitList(it) }
+        }
     }
 
     private fun initBottomNavigation() {

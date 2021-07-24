@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.jbvincey.core.utils.exhaustive
@@ -82,17 +81,25 @@ class EditTodoActivity : AppCompatActivity() {
     }
 
     private fun observeTodoName() {
-        viewModel.todoName.observe(this, Observer { todoName ->
-            title = todoName
-            binding.addTodoEditText.setText(todoName)
-        })
+        lifecycleScope.launch {
+            viewModel.todoNameFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { todoName ->
+                    title = todoName
+                    binding.addTodoEditText.setText(todoName)
+                }
+        }
     }
 
     private fun observeTodoArchived() {
-        viewModel.todoArchived.observe(this, Observer { todoArchived ->
-            binding.addTodoEditText.isEnabled = !(todoArchived ?: false)
-            invalidateOptionsMenu()
-        })
+        lifecycleScope.launch {
+            viewModel.todoArchivedFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { todoArchived ->
+                    binding.addTodoEditText.isEnabled = !todoArchived
+                    invalidateOptionsMenu()
+                }
+        }
     }
 
     //endregion

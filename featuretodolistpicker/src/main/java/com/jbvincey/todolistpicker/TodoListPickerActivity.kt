@@ -6,7 +6,6 @@ import android.view.Window
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -65,7 +64,11 @@ class TodoListPickerActivity : AppCompatActivity() {
             layoutManager = GridLayoutManager(this@TodoListPickerActivity, 2, RecyclerView.VERTICAL, false)
             this.adapter = adapter
         }
-        viewModel.stickyNoteCardViewModelList.observe(this, Observer { adapter.submitList(it) })
+        lifecycleScope.launch {
+            viewModel.stickyNoteCardViewModelListFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { adapter.submitList(it) }
+        }
     }
 
     //endregion

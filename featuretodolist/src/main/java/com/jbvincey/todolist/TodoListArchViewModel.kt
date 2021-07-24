@@ -4,11 +4,7 @@ import android.view.Menu
 import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.jbvincey.core.models.Todo
 import com.jbvincey.core.repositories.TodoListRepository
@@ -20,7 +16,16 @@ import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellCallback
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellView
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -33,31 +38,34 @@ class TodoListArchViewModel(
     private val todoToCheckableCellViewModelTransformer: TodoToCheckableCellViewModelTransformer
 ) : ViewModel() {
 
-    private val todoListId = MutableLiveData<Long>()
-    private val todoListType = MutableLiveData<TodoListType>()
+    private val todoListIdFlow = MutableStateFlow<Long?>(null)
+    private val todoListTypeFlow = MutableStateFlow(TodoListType.UNARCHIVED)
 
     private val viewActionChannel = Channel<ViewAction>(Channel.BUFFERED)
     val viewActionFlow = viewActionChannel.receiveAsFlow()
 
-    val todoListName: LiveData<String> = todoListId
-        .switchMap { todoListRepository.getTodoListById(it) }
+    val todoListFlowName: StateFlow<String> = todoListIdFlow
+        .filterNotNull()
+        .flatMapLatest { todoListRepository.getTodoListById(it) }
         .map { it.name }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
+
+    val checkableCellViewModelListFlow: StateFlow<List<CheckableCellViewModel<Todo>>> = todoListIdFlow
+        .filterNotNull()
+        .combine(todoListTypeFlow) { id, type -> Pair(id, type) }
+        .flatMapLatest { (id, type) -> getTodoListFromType(type, id) }
+        .map { todos -> sortAndTransformTodoList(todos) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     init {
         todoToCheckableCellViewModelTransformer.checkableCellCallback = buildCheckableCellCallback()
     }
 
-    lateinit var checkableCellViewModelList: LiveData<List<CheckableCellViewModel<Todo>>>
-
     fun setTodoListId(todoListId: Long) {
-        this.todoListId.value = todoListId
-        checkableCellViewModelList = todoListType
-            .switchMap { type -> getTodoListFromType(type, todoListId) }
-            .map { todos -> sortAndTransformTodoList(todos) }
+        this.todoListIdFlow.value = todoListId
     }
 
-
-    private fun getTodoListFromType(type: TodoListType, todoListId: Long): LiveData<List<Todo>> =
+    private fun getTodoListFromType(type: TodoListType, todoListId: Long): Flow<List<Todo>> =
         when (type) {
             TodoListType.UNARCHIVED -> todoRepository.getAllUnarchivedTodosFromTodoList(todoListId)
             TodoListType.ARCHIVED -> todoRepository.getAllArchivedTodosFromTodoList(todoListId)
@@ -84,16 +92,16 @@ class TodoListArchViewModel(
     }
 
     fun showUnarchivedTodos() {
-        todoListType.value = TodoListType.UNARCHIVED
+        todoListTypeFlow.value = TodoListType.UNARCHIVED
     }
 
     fun showArchivedTodos() {
-        todoListType.value = TodoListType.ARCHIVED
+        todoListTypeFlow.value = TodoListType.ARCHIVED
     }
 
     fun onBackPressed() {
         viewModelScope.launch {
-            viewActionChannel.send(if (todoListType.value == TodoListType.ARCHIVED) {
+            viewActionChannel.send(if (todoListTypeFlow.value == TodoListType.ARCHIVED) {
                 ViewAction.DisplayUnarchived
             } else {
                 ViewAction.BackPressed
@@ -178,7 +186,7 @@ class TodoListArchViewModel(
     }
 
     private fun getTodoName(todoId: Long): String {
-        return checkableCellViewModelList.value!!.find { cellViewModel -> cellViewModel.id == todoId }!!.name
+        return checkableCellViewModelListFlow.value!!.find { cellViewModel -> cellViewModel.id == todoId }!!.name
     }
 
     fun setBackgroundColor(@ColorRes backgroundColorRes: Int) {
@@ -194,7 +202,7 @@ class TodoListArchViewModel(
 
     fun onOptionItemsSelected(itemId: Int): Boolean = when (itemId) {
         MENU_EDIT -> {
-            todoListId.value?.let {
+            todoListIdFlow.value?.let {
                 viewModelScope.launch { viewActionChannel.send(ViewAction.GoToEditTodoList(it)) }
                 true
             } ?: false
