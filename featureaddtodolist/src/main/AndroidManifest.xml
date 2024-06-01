@@ -1,10 +1,10 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="deezer.android.featureaddtodolist">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
 
         <activity
             android:name="com.jbvincey.featureaddtodolist.add.AddTodoListActivity"
+            android:exported="false"
             android:label="@string/add_todolist_title"
             android:windowSoftInputMode="stateVisible">
 
@@ -24,6 +24,7 @@
 
         <activity
             android:name="com.jbvincey.featureaddtodolist.edit.EditTodoListActivity"
+            android:exported="false"
             android:windowSoftInputMode="stateVisible">
 
             <!-- navigation deeplink -->

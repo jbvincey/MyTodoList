@@ -2,6 +2,7 @@ package com.jbvincey.todolist
 
 import com.jbvincey.core.models.Todo
 import com.jbvincey.core.transformers.Transformer
+import com.jbvincey.ui.R
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellCallback
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel
 

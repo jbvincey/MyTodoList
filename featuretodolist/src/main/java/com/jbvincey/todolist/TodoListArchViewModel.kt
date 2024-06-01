@@ -12,6 +12,7 @@ import com.jbvincey.core.repositories.TodoRepository
 import com.jbvincey.core.utils.add
 import com.jbvincey.core.utils.exhaustive
 import com.jbvincey.design.widget.helper.SwipeCallbackListener
+import com.jbvincey.todolistcom.jbvincey.todolist.R
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellCallback
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellView
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellViewModel
@@ -197,7 +198,7 @@ class TodoListArchViewModel(
 
     fun onCreateOptionsMenu(menu: Menu) {
         menu.clear()
-        menu.add(MENU_EDIT, R.string.action_edit_todolist, R.drawable.ic_baseline_edit_24px)
+        menu.add(MENU_EDIT, R.string.action_edit_todolist, com.jbvincey.ui.R.drawable.ic_baseline_edit_24px)
     }
 
     fun onOptionItemsSelected(itemId: Int): Boolean = when (itemId) {

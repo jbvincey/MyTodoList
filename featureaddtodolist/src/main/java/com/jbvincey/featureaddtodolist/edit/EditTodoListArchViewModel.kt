@@ -73,8 +73,8 @@ class EditTodoListArchViewModel(
 
     fun onCreateOptionsMenu(menu: Menu) {
         menu.clear()
-        menu.add(MENU_DELETE, R.string.action_delete_todolist, R.drawable.ic_baseline_delete_24px)
-        menu.add(MENU_EDIT, R.string.action_edit_todolist, R.drawable.ic_baseline_done_24px)
+        menu.add(MENU_DELETE, R.string.action_delete_todolist, com.jbvincey.ui.R.drawable.ic_baseline_delete_24px)
+        menu.add(MENU_EDIT, R.string.action_edit_todolist, com.jbvincey.ui.R.drawable.ic_baseline_done_24px)
     }
 
     fun onOptionItemsSelected(itemId: Int): Boolean = when(itemId) {

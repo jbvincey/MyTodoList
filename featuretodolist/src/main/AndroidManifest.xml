@@ -1,9 +1,9 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jbvincey.todolist">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
 
         <activity android:name="com.jbvincey.todolist.TodoListActivity"
+            android:exported="false"
             android:label="@string/app_name">
 
             <!-- navigation deeplink -->

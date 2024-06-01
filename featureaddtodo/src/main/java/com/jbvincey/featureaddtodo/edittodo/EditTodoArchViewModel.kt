@@ -87,7 +87,7 @@ internal class EditTodoArchViewModel(private val todoRepository: TodoRepository)
                 if (displaySnackOnSuccess) {
                     viewActionChannel.send(ViewAction.ShowSnack(
                         messageRes = R.string.archive_success,
-                        actionRes = R.string.cancel,
+                        actionRes = com.jbvincey.ui.R.string.cancel,
                         formatArgs = arrayOf(todoNameFlow.value),
                     ) { unarchiveTodo(displaySnackOnSuccess = false) }
                     )
@@ -109,7 +109,7 @@ internal class EditTodoArchViewModel(private val todoRepository: TodoRepository)
                 if (displaySnackOnSuccess) {
                     viewActionChannel.send(ViewAction.ShowSnack(
                         messageRes = R.string.unarchive_success,
-                        actionRes = R.string.cancel,
+                        actionRes = com.jbvincey.ui.R.string.cancel,
                         formatArgs = arrayOf(todoNameFlow.value),
                     ) { archiveTodo(displaySnackOnSuccess = false) }
                     )
@@ -131,14 +131,14 @@ internal class EditTodoArchViewModel(private val todoRepository: TodoRepository)
         if (shouldShowUnarchiveMenu()) {
             menu.add(MENU_UNARCHIVE,
                 R.string.action_unarchive_todo,
-                R.drawable.ic_baseline_unarchive_24px)
+                com.jbvincey.ui.R.drawable.ic_baseline_unarchive_24px)
         } else if (shouldShowArchiveMenu()) {
             menu.add(MENU_ARCHIVE,
                 R.string.action_archive_todo,
-                R.drawable.ic_baseline_archive_24px)
+                com.jbvincey.ui.R.drawable.ic_baseline_archive_24px)
         }
-        menu.add(MENU_DELETE, R.string.action_delete_todo, R.drawable.ic_baseline_delete_24px)
-        menu.add(MENU_EDIT, R.string.action_edit_todo, R.drawable.ic_baseline_done_24px)
+        menu.add(MENU_DELETE, R.string.action_delete_todo, com.jbvincey.ui.R.drawable.ic_baseline_delete_24px)
+        menu.add(MENU_EDIT, R.string.action_edit_todo, com.jbvincey.ui.R.drawable.ic_baseline_done_24px)
     }
 
     private fun shouldShowArchiveMenu(): Boolean {

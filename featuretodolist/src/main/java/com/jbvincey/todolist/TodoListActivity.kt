@@ -20,10 +20,10 @@ import com.jbvincey.design.widget.helper.SwipeCallback
 import com.jbvincey.design.widget.helper.SwipeCallbackModel
 import com.jbvincey.navigation.NavigationHandler
 import com.jbvincey.navigation.TodoListNavigationHandler
-import com.jbvincey.todolist.databinding.ActivityTodoListBinding
+import com.jbvincey.todolistcom.jbvincey.todolist.R
+import com.jbvincey.todolistcom.jbvincey.todolist.databinding.ActivityTodoListBinding
 import com.jbvincey.ui.recycler.cells.checkablecell.CheckableCellAdapter
 import com.jbvincey.ui.utils.activity.displayActionSnack
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -92,14 +92,14 @@ class TodoListActivity : AppCompatActivity() {
 
     private fun initRecycler() {
         val swipeCallbackModelStart = SwipeCallbackModel(
-            getColor(R.color.theme_background_2),
-            AppCompatResources.getDrawable(this, R.drawable.ic_baseline_delete_24px),
+            getColor(com.jbvincey.ui.R.color.theme_background_2),
+            AppCompatResources.getDrawable(this, com.jbvincey.ui.R.drawable.ic_baseline_delete_24px),
             resources.getDimensionPixelSize(R.dimen.swipe_action_margin),
             viewModel.buildSwipeStartCallback()
         )
         val swipeCallbackModelEnd = SwipeCallbackModel(
-            getColor(R.color.theme_background_2),
-            AppCompatResources.getDrawable(this, R.drawable.ic_baseline_archive_24px),
+            getColor(com.jbvincey.ui.R.color.theme_background_2),
+            AppCompatResources.getDrawable(this, com.jbvincey.ui.R.drawable.ic_baseline_archive_24px),
             resources.getDimensionPixelSize(R.dimen.swipe_action_margin),
             viewModel.buildSwipeEndCallback()
         )
@@ -189,6 +189,7 @@ class TodoListActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         viewModel.onBackPressed()
     }
 

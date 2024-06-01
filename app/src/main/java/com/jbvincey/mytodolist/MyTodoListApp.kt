@@ -18,6 +18,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidFileProperties
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 
 /**
  * Created by jbvincey on 16/09/2018.
@@ -27,13 +28,9 @@ class MyTodoListApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        if (BuildConfig.DEBUG) {
-            initializeFlipper()
-        }
-
         startKoin {
             // use AndroidLogger as Koin Logger - default Level.INFO
-            androidLogger()
+            androidLogger(Level.ERROR)
 
             // use the Android context given there
             androidContext(this@MyTodoListApp)
@@ -52,19 +49,9 @@ class MyTodoListApp : Application() {
             ))
         }
 
-        if (BuildConfig.DEBUG) {
-            Stetho.initializeWithDefaults(this)
-        }
+        AppInitializer.initializeFlipper(this)
     }
 
-    private fun initializeFlipper() {
-        SoLoader.init(this, false)
-        if (FlipperUtils.shouldEnableFlipper(this)) {
-            val client = AndroidFlipperClient.getInstance(this)
-            client.addPlugin(InspectorFlipperPlugin(this, DescriptorMapping.withDefaults()))
-            client.addPlugin(DatabasesFlipperPlugin(this))
-            client.start()
-        }
-    }
+
 
 }

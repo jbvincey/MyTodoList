@@ -1,10 +1,10 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jbvincey.featureaddtodo">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
 
         <activity
             android:name="com.jbvincey.featureaddtodo.addtodo.AddTodoActivity"
+            android:exported="false"
             android:windowSoftInputMode="stateVisible"
             android:label="@string/add_todo_title">
 
@@ -24,6 +24,7 @@
 
         <activity
             android:name="com.jbvincey.featureaddtodo.edittodo.EditTodoActivity"
+            android:exported="false"
             android:windowSoftInputMode="stateVisible">
 
             <!-- navigation deeplink -->
